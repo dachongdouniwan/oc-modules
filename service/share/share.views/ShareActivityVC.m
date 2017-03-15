@@ -8,8 +8,6 @@
 
 #import "ShareActivityVC.h"
 #import "CenterAlignView.h"
-#import "HyPopMenuView.h"
-#import "MenuLabel.h"
 #import "SNShareService.h"
 #import "SNShareLink.h"
 #import "SNShareQQ.h"
@@ -18,7 +16,6 @@
 #import "SNShareSina.h"
 #import "SNShareWechat.h"
 #import "_appearance.h"
-#import "_popup.h"
 
 static const float kTitleIconSpace = 8.0;
 
@@ -56,11 +53,6 @@ static const float kTitleIconSpace = 8.0;
 @property (nonatomic, assign) UIStatusBarStyle statusBarStyle;
 
 @property (nonatomic, strong) ShareParamBuilder *paramBuilder;
-
-/**
- *  这个房子不好！
- */
-@property (nonatomic, strong) HyPopMenuView *animateView;
 
 @end
 
@@ -208,72 +200,72 @@ static const float kTitleIconSpace = 8.0;
 
 #pragma mark -
 
-- (void)shareAnimatedWithWithParamBuilder:(ShareParamBuilder *)paramBuilder {
-    self.paramBuilder   = paramBuilder;
-    
-    // 沿用
-    _shareTitle     = paramBuilder.title;
-    _shareDetail    = paramBuilder.detail;
-    _shareURL       = paramBuilder.url;
-    _shareImage     = paramBuilder.image;
-    _objectID       = paramBuilder.objectId;
-    
-    [self showPopupAnimatedWithValidRect:CGRectZero];
-}
+//- (void)shareAnimatedWithWithParamBuilder:(ShareParamBuilder *)paramBuilder {
+//    self.paramBuilder   = paramBuilder;
+//    
+//    // 沿用
+//    _shareTitle     = paramBuilder.title;
+//    _shareDetail    = paramBuilder.detail;
+//    _shareURL       = paramBuilder.url;
+//    _shareImage     = paramBuilder.image;
+//    _objectID       = paramBuilder.objectId;
+//    
+//    [self showPopupAnimatedWithValidRect:CGRectZero];
+//}
+//
+//- (void)shareAnimatedWithWithParamBuilder:(ShareParamBuilder *)paramBuilder validRect:(CGRect)validRect {
+//    self.paramBuilder   = paramBuilder;
+//    
+//    // 沿用
+//    _shareTitle     = paramBuilder.title;
+//    _shareDetail    = paramBuilder.detail;
+//    _shareURL       = paramBuilder.url;
+//    _shareImage     = paramBuilder.image;
+//    _objectID       = paramBuilder.objectId;
+//    
+//    [self showPopupAnimatedWithValidRect:validRect];
+//}
 
-- (void)shareAnimatedWithWithParamBuilder:(ShareParamBuilder *)paramBuilder validRect:(CGRect)validRect {
-    self.paramBuilder   = paramBuilder;
-    
-    // 沿用
-    _shareTitle     = paramBuilder.title;
-    _shareDetail    = paramBuilder.detail;
-    _shareURL       = paramBuilder.url;
-    _shareImage     = paramBuilder.image;
-    _objectID       = paramBuilder.objectId;
-    
-    [self showPopupAnimatedWithValidRect:validRect];
-}
+//- (void)showPopupAnimatedWithValidRect:(CGRect)validRect {
+//#define Objs @[[MenuLabel CreatelabelIconName:@"wecast" Title:@"微信好友"],[MenuLabel CreatelabelIconName:@"friend" Title:@"朋友圈"]]
+//    
+//#if 0
+//    //自定义的头部视图
+//    UIImageView *topView = [[ImageView alloc] initWithFrame:CGRectMake(x, y, w, h)];
+//    topView.image = [UIImage imageNamed:@"compose_slogan"];
+//    topView.contentMode = UIViewContentModeScaleAspectFit;
+//    
+//    NSMutableDictionary *AudioDictionary = [NSMutableDictionary dictionary];
+//    
+//    //添加弹出菜单音效
+//    [AudioDictionary setObject:@"composer_open" forKey:kHyPopMenuViewOpenAudioNameKey];
+//    [AudioDictionary setObject:@"wav" forKey:kHyPopMenuViewOpenAudioTypeKey];
+//    //添加取消菜单音效
+//    [AudioDictionary setObject:@"composer_close" forKey:kHyPopMenuViewCloseAudioNameKey];
+//    [AudioDictionary setObject:@"wav" forKey:kHyPopMenuViewCloseAudioTypeKey];
+//    //添加选中按钮音效
+//    [AudioDictionary setObject:@"composer_select" forKey:kHyPopMenuViewSelectAudioNameKey];
+//    [AudioDictionary setObject:@"wav" forKey:kHyPopMenuViewSelectAudioTypeKey];
+//#endif
+//    
+//    [HyPopMenuView setAnimateValidRect:validRect];
+//    
+//    self.animateView = [HyPopMenuView CreatingPopMenuObjectItmes:Objs
+//                                      TopView:nil
+//                   OpenOrCloseAudioDictionary:nil
+//                       SelectdCompletionBlock:^(MenuLabel *menuLabel, NSInteger index) {
+//                           LOG(@"title = %@, index = %@", menuLabel.title, @(index));
+//                           
+//                           [self didClickOnCenterAlignViewTitle:menuLabel.title];
+//    } willSelectBlock:^{
+//        [_Popup dismiss];
+//    }];
+//    
+//}
 
-- (void)showPopupAnimatedWithValidRect:(CGRect)validRect {
-#define Objs @[[MenuLabel CreatelabelIconName:@"wecast" Title:@"微信好友"],[MenuLabel CreatelabelIconName:@"friend" Title:@"朋友圈"]]
-    
-#if 0
-    //自定义的头部视图
-    UIImageView *topView = [[ImageView alloc] initWithFrame:CGRectMake(x, y, w, h)];
-    topView.image = [UIImage imageNamed:@"compose_slogan"];
-    topView.contentMode = UIViewContentModeScaleAspectFit;
-    
-    NSMutableDictionary *AudioDictionary = [NSMutableDictionary dictionary];
-    
-    //添加弹出菜单音效
-    [AudioDictionary setObject:@"composer_open" forKey:kHyPopMenuViewOpenAudioNameKey];
-    [AudioDictionary setObject:@"wav" forKey:kHyPopMenuViewOpenAudioTypeKey];
-    //添加取消菜单音效
-    [AudioDictionary setObject:@"composer_close" forKey:kHyPopMenuViewCloseAudioNameKey];
-    [AudioDictionary setObject:@"wav" forKey:kHyPopMenuViewCloseAudioTypeKey];
-    //添加选中按钮音效
-    [AudioDictionary setObject:@"composer_select" forKey:kHyPopMenuViewSelectAudioNameKey];
-    [AudioDictionary setObject:@"wav" forKey:kHyPopMenuViewSelectAudioTypeKey];
-#endif
-    
-    [HyPopMenuView setAnimateValidRect:validRect];
-    
-    self.animateView = [HyPopMenuView CreatingPopMenuObjectItmes:Objs
-                                      TopView:nil
-                   OpenOrCloseAudioDictionary:nil
-                       SelectdCompletionBlock:^(MenuLabel *menuLabel, NSInteger index) {
-                           LOG(@"title = %@, index = %@", menuLabel.title, @(index));
-                           
-                           [self didClickOnCenterAlignViewTitle:menuLabel.title];
-    } willSelectBlock:^{
-        [_Popup dismiss];
-    }];
-    
-}
-
-- (void)dismissSharePopupAnimated {
-    [self.animateView dismiss];
-}
+//- (void)dismissSharePopupAnimated {
+//    [self.animateView dismiss];
+//}
 
 #pragma mark - Getters & Setters
 

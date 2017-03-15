@@ -39,7 +39,7 @@
  *  @param paramBuilder ...
  *  @param validRect    默认屏幕大小
  */
-- (void)shareAnimatedWithWithParamBuilder:(ShareParamBuilder *)paramBuilder validRect:(CGRect)validRect;
+//- (void)shareAnimatedWithWithParamBuilder:(ShareParamBuilder *)paramBuilder validRect:(CGRect)validRect;
 
 /**
  *  消失
