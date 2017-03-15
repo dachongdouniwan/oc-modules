@@ -6,7 +6,7 @@
 //
 //
 
-#import "BaseRequest.h"
+#import "_base_net_command.h"
 
 typedef enum : NSUInteger {
     UploadImageType_Big = 1,
@@ -17,7 +17,7 @@ typedef enum : NSUInteger {
     UploadImageChannelType_Default = 0,
 } UploadImageChannelType;
 
-@interface GetUploadImageurlRequest : BaseRequest
+@interface GetUploadImageurlRequest : _BaseRequest
 
 // 必要, 0:默认渠道
 @property (nonatomic, assign) int32_t channel;
@@ -31,7 +31,7 @@ typedef enum : NSUInteger {
 
 #pragma mark -
 
-@interface GetUploadImageUrlResponse : BaseResponse
+@interface GetUploadImageUrlResponse : _BaseResponse
 
 @property (nonatomic, strong) NSString *info; // 图片的唯一UUID
 
@@ -39,7 +39,7 @@ typedef enum : NSUInteger {
 
 #pragma mark - 
 
-@interface UploadImageRequest : BaseUploadRequest
+@interface UploadImageRequest : _BaseUploadRequest
 
 - (NSString *)buildUrl;
 
@@ -47,7 +47,7 @@ typedef enum : NSUInteger {
 
 #pragma mark -
 
-@interface UploadImageResponse : BaseResponse
+@interface UploadImageResponse : _BaseResponse
 
 @property (nonatomic, strong) NSString *info;
 
@@ -55,7 +55,7 @@ typedef enum : NSUInteger {
 
 #pragma mark -
 
-@interface UploadHDImageResponse : BaseResponse
+@interface UploadHDImageResponse : _BaseResponse
 
 @property (nonatomic, assign) int32_t errCode;
 

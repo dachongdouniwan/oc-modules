@@ -6,17 +6,18 @@
 //
 //
 
-#import "_tools.h"
+#import "_base_net_command.h"
+
 
 @interface GrowthApi : _Model
 
 @end
 
-@interface UpLoadGrowthRequest : BaseRequest
+@interface UpLoadGrowthRequest : _BaseRequest
 
 @end
 
 
-@interface UpLoadGrowthResponse : BaseResponse
+@interface UpLoadGrowthResponse : _BaseResponse
 
 @end
