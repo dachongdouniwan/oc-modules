@@ -11,29 +11,14 @@
 
 #ifdef USE_NETWORK_LIGHT_KIT
 
-@implementation _base_restful_dao
+@implementation _BaseRestfulDao
 
 #ifdef USE_NETWORK_LIGHT_KIT
 
 - (instancetype)init {
     if (self = [super init]) {
-        NSMutableDictionary *defaultHeader = [@{} mutableCopy];
-        NSString *token = LOGINTOKEN; // tk
-        NSString *sessionId = LOGINSESSIONID; // si
-        
-        // content type
-        [defaultHeader addEntriesFromDictionary:@{@"Accept":@"application/json", @"Content-Type":@"application/json;charset=utf-8"}];
-        
-        if (token.length) {
-            [defaultHeader setObject:token forKey:@"tk"];
-        }
-        
-        if (sessionId.length) {
-            [defaultHeader setObject:sessionId forKey:@"si"];
-        }
-        
-        self.host.defaultHeaders = defaultHeader;
-        self.host.hostName = api_main_service;
+        self.host.defaultHeaders = [self defaultHeader];
+        self.host.hostName = [self hostname];
         self.host.defaultParameterEncoding = MKNKParameterEncodingJSON;
     }
     
@@ -42,13 +27,12 @@
 
 - (void)GET:(NSString *)url success:(ObjectBlock)successHandler failure:(ErrorBlock)failureHandler {
     // 显示指示器
-    [SVProgressHUD show];
+    [self showHud];
     
     _NetworkHostRequest *request = [self.host requestWithURLString:url];
-    //    [request addHeaders:];
     [request addCompletionHandler:^(_NetworkHostRequest *completedRequest) {
         // 隐藏指示器
-        [SVProgressHUD dismiss];
+        [self dismissHud];
         
         if (completedRequest.error) { // http error
             failureHandler(completedRequest.error);
@@ -68,13 +52,14 @@
 
 - (void)GET:(NSString *)path param:(NSDictionary *)param success:(ObjectBlock)successHandler failure:(ErrorBlock)failureHandler {
     // 显示指示器
-    [SVProgressHUD show];
+    [self showHud];
     
     _NetworkHostRequest *request = [self.host requestWithPath:path params:param httpMethod:@"GET"];
-    
+    NSDictionary *addingHeader = [self constructHeaderWith:request api:path];
+    [request addHeaders:addingHeader];
     [request addCompletionHandler:^(_NetworkHostRequest *completedRequest) {
         // 隐藏指示器
-        [SVProgressHUD dismiss];
+        [self dismissHud];
         
         if (completedRequest.error) { // http error
             failureHandler(completedRequest.error);
@@ -94,16 +79,20 @@
 
 - (void)POST:(NSString *)url parameters:(NSDictionary *)parameters headers:(NSDictionary *)headers successHandler:(ObjectBlock)successHandler failure:(ErrorBlock)failureHandler {
     // 显示指示器
-    [SVProgressHUD show];
+    [self showHud];
     
     _NetworkHostRequest *request = [self.host requestWithPath:url params:parameters httpMethod:@"POST"];
     if (headers.allKeys.count) {
         [request addHeaders:headers];
     }
+    
+    NSDictionary *addingHeader = [self constructHeaderWith:request api:url];
+    [request addHeaders:addingHeader];
+    
     [request addCompletionHandler:^(_NetworkHostRequest *completedRequest) {
         
         // 隐藏指示器
-        [SVProgressHUD dismiss];
+        [self dismissHud];
         
         if (completedRequest.error) { // http error
             failureHandler(completedRequest.error);
@@ -172,11 +161,47 @@
 
 #endif
 
-#pragma mark -
-#pragma mark - Database
+#pragma mark - _BaseDaoRequestConstructProtocol
+
+- (NSDictionary *)defaultHeader {
+//    NSMutableDictionary *defaultHeader = [@{} mutableCopy];
+//    NSString *token = LOGINTOKEN; // tk
+//    NSString *sessionId = LOGINSESSIONID; // si
+//    
+//    // content type
+//    [defaultHeader addEntriesFromDictionary:@{@"Accept":@"application/json", @"Content-Type":@"application/json;charset=utf-8"}];
+//    
+//    if (token.length) {
+//        [defaultHeader setObject:token forKey:@"tk"];
+//    }
+//    
+//    if (sessionId.length) {
+//        [defaultHeader setObject:sessionId forKey:@"si"];
+//    }
+    
+    return @{@"Accept":@"application/json", @"Content-Type":@"application/json;charset=utf-8"};
+}
+
+- (NSDictionary *)constructHeaderWith:(id)request api:(NSString *)api {
+    return nil;
+}
+
+- (NSString *)hostname {
+    return @"";
+}
+
+#pragma mark - _BaseDaoHuddingProtocol
+
+- (void)showHud {
+    
+}
+
+- (void)dismissHud {
+    
+}
 
 #pragma mark -
-#pragma mark - DB
+#pragma mark - Database
 
 //- (void)createTable:(NSString *)sql {
 //    FMDatabase *db = [[Database sharedInstance] openDatabase];

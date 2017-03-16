@@ -15,7 +15,7 @@
 // Class code
 // ----------------------------------
 
-@interface _base_restful_dao : NSObject
+@interface _BaseRestfulDao : NSObject <_BaseDaoRequestConstructProtocol, _BaseDaoHuddingProtocol>
 
 @prop_instance(_NetworkHost, host)
 
