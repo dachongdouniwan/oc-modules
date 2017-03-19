@@ -31,4 +31,5 @@
 @def_prop_dynamic( BOOL,				inactive );
 @def_prop_dynamic( BOOL,				background );
 
+
 @end

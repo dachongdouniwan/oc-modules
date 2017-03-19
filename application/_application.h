@@ -15,23 +15,35 @@
 
 @protocol ApplicationLifeStyleProtocol <NSObject> // 应用生命周期
 
-- (void)willLaunch;
+- (void)willLaunch; // 程序即将加载
 
-- (void)didLaunch;
+- (void)didLaunch; // 程序加载完毕
 
-- (void)willTerminate;
+- (void)willTerminate; // 程序即将终止
 
-- (void)didBecomeActive;
+- (void)didBecomeActive; // 程序获取焦点
 
-- (void)willEnterForeground;
+- (void)willEnterForeground; // 程序即将从后台，回到前台
 
-- (void)willEnterBackground;
+- (void)willEnterBackground; // 程序即将从前台，退到后台
 
-- (void)willResignActive;
+- (void)willResignActive; // 程序即将失去焦点
+
+- (void)
 
 @end
 
-@protocol ApplicationRuntimePeriodProtocol <NSObject>
+@protocol ApplicationNofiticationProtocol <NSObject> // 应用推送回调（外部不关心api版本问题）
+
+
+
+@end
+
+@protocol ApplicationProtocol <NSObject>
+
+@end
+
+@protocol ApplicationRuntimePeriodProtocol <NSObject> // 非必要的业务流程回调
 
 - (void)onLaunch;
 
