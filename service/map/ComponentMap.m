@@ -20,7 +20,7 @@
 
 + (void)load {
 
-    exceptioning(@"请配置api key")
+//    exceptioning(@"请配置api key")
 //    [AppConfig adapterAppHairDresser:^{
 //        [self sharedInstance].config.apiKey = SdkKey_GaoDe_HairDresser;
 //    } appCustomer:^{
