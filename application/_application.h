@@ -29,8 +29,6 @@
 
 - (void)willResignActive; // 程序即将失去焦点
 
-- (void)
-
 @end
 
 @protocol ApplicationNofiticationProtocol <NSObject> // 应用推送回调（外部不关心api版本问题）
@@ -39,7 +37,9 @@
 
 @end
 
-@protocol ApplicationProtocol <NSObject>
+@protocol ApplicationExternalEventProtocol <NSObject>
+
+- (void)whenSignificantTimeChange; // 当系统时间发生改变时
 
 @end
 
