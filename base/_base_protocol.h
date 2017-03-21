@@ -34,6 +34,11 @@
  */
 - (NSString *)hostname;
 
+/**
+ *  识别业务错误
+ */
++ (NSError *)checkResponseIfHaveError:(NSDictionary *)response;
+
 @end
 
 @protocol _BaseDaoHuddingProtocol <NSObject>

@@ -17,11 +17,11 @@
 
 @interface _BaseRestfulDao : NSObject <_BaseDaoRequestConstructProtocol, _BaseDaoHuddingProtocol>
 
-@prop_instance(_NetworkHost, host)
-
 #pragma mark - Data access object
 
 #ifdef USE_NETWORK_LIGHT_KIT
+
+@prop_instance(_NetworkHost, host)
 
 - (void)GET:(NSString *)url success:(ObjectBlock)successHandler failure:(ErrorBlock)failureHandler;
 

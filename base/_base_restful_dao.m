@@ -9,8 +9,6 @@
 #import "_greats.h"
 #import "_base_restful_dao.h"
 
-#ifdef USE_NETWORK_LIGHT_KIT
-
 @implementation _BaseRestfulDao
 
 #ifdef USE_NETWORK_LIGHT_KIT
@@ -56,7 +54,7 @@
     
     _NetworkHostRequest *request = [self.host requestWithPath:path params:param httpMethod:@"GET"];
     NSDictionary *addingHeader = [self constructHeaderWith:request api:path];
-    [request addHeaders:addingHeader];
+    if (addingHeader) [request addHeaders:addingHeader];
     [request addCompletionHandler:^(_NetworkHostRequest *completedRequest) {
         // 隐藏指示器
         [self dismissHud];
@@ -87,7 +85,7 @@
     }
     
     NSDictionary *addingHeader = [self constructHeaderWith:request api:url];
-    [request addHeaders:addingHeader];
+    if (addingHeader) [request addHeaders:addingHeader];
     
     [request addCompletionHandler:^(_NetworkHostRequest *completedRequest) {
         
@@ -220,7 +218,3 @@
 //}
 
 @end
-
-#else
-
-#endif
