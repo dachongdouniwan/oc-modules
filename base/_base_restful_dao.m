@@ -13,6 +13,8 @@
 
 #ifdef USE_NETWORK_LIGHT_KIT
 
+@def_prop_instance(_NetworkHost, host)
+
 - (instancetype)init {
     if (self = [super init]) {
         self.host.defaultHeaders = [self defaultHeader];
@@ -36,11 +38,11 @@
             failureHandler(completedRequest.error);
         } else {
             NSDictionary *response = completedRequest.responseAsJSON;
-            NSError *error = [self.class checkResponseIfHaveError:response];
+            NSError *error = [self checkResponseIfHaveError:response];
             if (error) { // service error
                 failureHandler(error);
             } else {
-                successHandler(response);
+                successHandler([self filteredResponse:response]);
             }
         }
     }];
@@ -63,11 +65,11 @@
             failureHandler(completedRequest.error);
         } else {
             NSDictionary *response = completedRequest.responseAsJSON;
-            NSError *error = [self.class checkResponseIfHaveError:response];
+            NSError *error = [self checkResponseIfHaveError:response];
             if (error) { // service error
                 failureHandler(error);
             } else {
-                successHandler(response);
+                successHandler([self filteredResponse:response]);
             }
         }
     }];
@@ -96,11 +98,11 @@
             failureHandler(completedRequest.error);
         } else {
             NSDictionary *response = completedRequest.responseAsJSON;
-            NSError *error = [self.class checkResponseIfHaveError:response];
+            NSError *error = [self checkResponseIfHaveError:response];
             if (error) { // service error
                 failureHandler(error);
             } else {
-                successHandler(response);
+                successHandler([self filteredResponse:response]);
             }
         }
     }];
@@ -143,18 +145,6 @@
     //    return op;
 }
 
-+ (NSError *)checkResponseIfHaveError:(NSDictionary *)response {
-    NSDictionary *baseResponse = response[@"baseResponse"];
-    NSNumber *errorCode = baseResponse[@"error_code"];
-    NSString *errorMessage = baseResponse[@"error_message"];
-    
-    if (errorCode.integerValue == 0) {
-        return nil;
-    } else {
-        return [NSError errorWithDomain:classnameof_Class(self) code:errorCode.integerValue userInfo:@{@"error_message":errorMessage}];
-    }
-}
-
 #else
 
 #endif
@@ -186,6 +176,22 @@
 
 - (NSString *)hostname {
     return @"";
+}
+
+- (NSError *)checkResponseIfHaveError:(NSDictionary *)response {
+    NSDictionary *baseResponse = response[@"baseResponse"];
+    NSNumber *errorCode = baseResponse[@"error_code"];
+    NSString *errorMessage = baseResponse[@"error_message"];
+    
+    if (errorCode.integerValue == 0) {
+        return nil;
+    } else {
+        return [NSError errorWithDomain:classnameof_Class(self.class) code:errorCode.integerValue userInfo:@{@"error_message":errorMessage}];
+    }
+}
+
+- (NSDictionary *)filteredResponse:(NSDictionary *)originResponse {
+    return originResponse;
 }
 
 #pragma mark - _BaseDaoHuddingProtocol

@@ -37,7 +37,12 @@
 /**
  *  识别业务错误
  */
-+ (NSError *)checkResponseIfHaveError:(NSDictionary *)response;
+- (NSError *)checkResponseIfHaveError:(NSDictionary *)response;
+
+/**
+ *  过滤reponse
+ */
+- (NSDictionary *)filteredResponse:(NSDictionary *)originResponse;
 
 @end
 
