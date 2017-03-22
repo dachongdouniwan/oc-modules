@@ -25,14 +25,19 @@
 - (NSDictionary *)defaultHeader;
 
 /**
+ *  like : @"139.196.189.53:8080/web"
+ */
+- (NSString *)hostname;
+
+/**
  *  统一处理的headers
  */
 - (NSDictionary *)constructHeaderWith:(id)request api:(NSString *)api;
 
 /**
- *  like : @"139.196.189.53:8080/web"
+ *  统一追加 参数body
  */
-- (NSString *)hostname;
+- (NSDictionary *)appendParametersOnApi:(NSString *)api;
 
 /**
  *  识别业务错误

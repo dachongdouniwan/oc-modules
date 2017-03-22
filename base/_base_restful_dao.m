@@ -54,7 +54,15 @@
     // 显示指示器
     [self showHud];
     
-    _NetworkHostRequest *request = [self.host requestWithPath:path params:param httpMethod:@"GET"];
+    // 是否有统一添加的参数
+    NSMutableDictionary *mutableParameters = [param mutableCopy];
+    NSDictionary *appendingParameters = [self appendParametersOnApi:path];
+    
+    if (appendingParameters) {
+        [mutableParameters addEntriesFromDictionary:appendingParameters];
+    }
+    
+    _NetworkHostRequest *request = [self.host requestWithPath:path params:mutableParameters httpMethod:@"GET"];
     NSDictionary *addingHeader = [self constructHeaderWith:request api:path];
     if (addingHeader) [request addHeaders:addingHeader];
     [request addCompletionHandler:^(_NetworkHostRequest *completedRequest) {
@@ -81,7 +89,15 @@
     // 显示指示器
     [self showHud];
     
-    _NetworkHostRequest *request = [self.host requestWithPath:url params:parameters httpMethod:@"POST"];
+    // 是否有统一添加的参数
+    NSMutableDictionary *mutableParameters = [parameters mutableCopy];
+    NSDictionary *appendingParameters = [self appendParametersOnApi:url];
+    
+    if (appendingParameters) {
+        [mutableParameters addEntriesFromDictionary:appendingParameters];
+    }
+    
+    _NetworkHostRequest *request = [self.host requestWithPath:url params:mutableParameters httpMethod:@"POST"];
     if (headers.allKeys.count) {
         [request addHeaders:headers];
     }
@@ -171,6 +187,10 @@
 }
 
 - (NSDictionary *)constructHeaderWith:(id)request api:(NSString *)api {
+    return nil;
+}
+
+- (NSDictionary *)appendParametersOnApi:(NSString *)api {
     return nil;
 }
 
