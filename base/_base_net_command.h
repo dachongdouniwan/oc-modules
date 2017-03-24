@@ -7,6 +7,7 @@
 //
 
 #import "_network.h"
+#import "_base_model.h"
 
 // ----------------------------------
 // Request class code
