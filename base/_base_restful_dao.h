@@ -24,6 +24,7 @@
 @prop_instance(_NetworkHost, host)
 
 - (void)GET:(NSString *)url success:(ObjectBlock)successHandler failure:(ErrorBlock)failureHandler;
+- (void)GETFORXML:(NSString *)url success:(ObjectBlock)successHandler failure:(ErrorBlock)failureHandler;
 
 - (void)GET:(NSString *)path param:(NSDictionary *)param success:(ObjectBlock)successHandler failure:(ErrorBlock)failureHandler;
 

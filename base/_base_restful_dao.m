@@ -8,6 +8,7 @@
 
 #import "_greats.h"
 #import "_base_restful_dao.h"
+#import "_xml.h"
 
 @implementation _BaseRestfulDao
 
@@ -44,6 +45,26 @@
             } else {
                 successHandler([self filteredResponse:response]);
             }
+        }
+    }];
+    
+    [self.host startRequest:request];
+}
+
+- (void)GETFORXML:(NSString *)url success:(ObjectBlock)successHandler failure:(ErrorBlock)failureHandler {
+    // 显示指示器
+    [self showHud];
+    
+    _NetworkHostRequest *request = [self.host requestWithURLString:url];
+    [request addCompletionHandler:^(_NetworkHostRequest *completedRequest) {
+        // 隐藏指示器
+        [self dismissHud];
+        
+        if (completedRequest.error) { // http error
+            failureHandler(completedRequest.error);
+        } else {
+            NSString *response = completedRequest.responseAsString;
+            successHandler([response XMLDictionary]);
         }
     }];
     
