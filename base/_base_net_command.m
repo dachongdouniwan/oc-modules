@@ -8,6 +8,7 @@
 
 #import "_base_net_command.h"
 #import "_pragma_push.h"
+#import "_ui_core.h"
 
 // ----------------------------------
 // Request source code
@@ -108,18 +109,15 @@
         // Use default failure handling, alert with error message.
         
         @weakify(self)
+                request.failureHandler = ^(NSError *error){
+                    @strongify(self)
         
-        exceptioning(@"换一个方法")
-        //        TODO("暂时注释")
-        //        request.failureHandler = ^(NSError *error){
-        //            @strongify(self)
-        //
-        //            [self dismissHUD];
-        //
-        //            [self dismissLoadingHUD];
-        //
-        //            [self showError:error.message];
-        //        };
+                    [self dismissHUD];
+        
+                    [self dismissLoadingHUD];
+        
+                    [self showError:error.message];
+                };
     }
     
     // Enqueue request
