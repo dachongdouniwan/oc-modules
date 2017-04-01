@@ -8,6 +8,7 @@
 #import <MAMapKit/MAMapKit.h>
 #import <AMapSearchKit/AMapSearchKit.h>
 #import "_ui_core.h"
+#import "_validator.h"
 #import "LocationViewController.h"
 #import "AddressInputHintViewController.h"
 #import "LocationService.h"
