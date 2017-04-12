@@ -6,7 +6,7 @@
 //  Copyright © 2017 alliance. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "_building_precompile.h"
 
 @interface _AppRule : NSObject
 

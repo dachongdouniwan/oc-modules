@@ -37,7 +37,7 @@
 
 @end
 
-@protocol ApplicationExternalEventProtocol <NSObject>
+@protocol ApplicationExternalEventProtocol <NSObject> // 应用外部事件回调
 
 - (void)whenSignificantTimeChange; // 当系统时间发生改变时
 
