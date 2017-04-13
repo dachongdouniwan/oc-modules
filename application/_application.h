@@ -10,10 +10,21 @@
 #import "_greats.h"
 
 // ----------------------------------
+// Cluster code
+// ----------------------------------
+
+#import "_app_context.h"
+#import "_app_init.h"
+#import "_app_module.h"
+#import "_app_uninit.h"
+#import "_app_rule.h"
+#import "_app_appearance.h"
+
+// ----------------------------------
 // Protocol code
 // ----------------------------------
 
-@protocol ApplicationLifeStyleProtocol <NSObject> // 应用生命周期
+@protocol ApplicationLifeStyleProtocol <NSObject> // 应用生命周期，不要这里做UI的事情，业务UI请关注ApplicationRuntimePeriodProtocol
 
 - (void)willLaunch; // 程序即将加载
 
@@ -41,11 +52,13 @@
 
 - (void)whenSignificantTimeChange; // 当系统时间发生改变时
 
+- (void)whenMemoryOverflow; // 内存要溢出了
+
 @end
 
 @protocol ApplicationRuntimePeriodProtocol <NSObject> // 非必要的业务流程回调
 
-- (void)onLaunch;
+- (void)onLaunch; //
 
 - (void)onAdvertise;
 
@@ -57,7 +70,12 @@
 // 参考的SamuraiApp
 // ----------------------------------
 
-@interface _Application : UIResponder <UIApplicationDelegate, ApplicationLifeStyleProtocol, ApplicationRuntimePeriodProtocol>
+@interface _Application : UIResponder <
+    UIApplicationDelegate,
+    ApplicationLifeStyleProtocol,
+    ApplicationRuntimePeriodProtocol,
+    ApplicationExternalEventProtocol
+>
 
 @notification( PushEnabled )
 @notification( PushError )

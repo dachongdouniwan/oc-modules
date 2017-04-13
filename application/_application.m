@@ -35,32 +35,40 @@
 
 // 说明：当应用程序将要入非活动状态执行，在此期间，应用程序不接收消息或事件，比如来电话了
 - (void)applicationWillResignActive:(UIApplication *)application {
-    
+    [self willResignActive];
 }
 
 // 说明：当应用程序入活动状态执行，这个刚好跟上面那个方法相反
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    
+    [self didBecomeActive];
 }
 
 // 说明：当程序被推送到后台的时候调用。所以要设置后台继续运行，则在这个函数里面设置即可
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    
+    [self willEnterBackground];
 }
 
 // 说明：当程序从后台将要重新回到前台时候调用，这个刚好跟上面的那个方法相反。
 - (void)applicationWillEnterForeground:(UIApplication *)application {
-    
+    [self willEnterForeground];
 }
 
 // 说明：当程序将要退出是被调用，通常是用来保存数据和一些退出前的清理工作。这个需要要设置UIApplicationExitsOnSuspend的键值。
 - (void)applicationWillTerminate:(UIApplication *)application {
-    
+    [self willTerminate];
 }
 
 // 说明：当程序载入后执行
-- (void)applicationDidFinishLaunching:(UIApplication *)application {
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
+    [self didLaunch];
+    
+    /**
+     * 业务UI的开始
+     */
+    [self onLaunch];
+    
+    return YES;
 }
 
 #pragma mark - 推送
@@ -125,5 +133,25 @@
 - (void)application:(UIApplication *)application didDecodeRestorableStateWithCoder:(NSCoder *)coder {
     
 }
+
+#pragma mark - 空壳
+#pragma mark - ApplicationLifeStyleProtocol
+- (void)willLaunch {}
+- (void)didLaunch {}
+- (void)willTerminate {}
+- (void)didBecomeActive {}
+- (void)willEnterForeground {}
+- (void)willEnterBackground {}
+- (void)willResignActive {}
+
+#pragma mark - ApplicationNofiticationProtocol
+
+#pragma mark - ApplicationExternalEventProtocol
+- (void)whenSignificantTimeChange {}
+- (void)whenMemoryOverflow {}
+
+#pragma mark - ApplicationRuntimePeriodProtocol
+- (void)onLaunch {}
+- (void)onAdvertise {}
 
 @end
