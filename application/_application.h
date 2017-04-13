@@ -19,6 +19,7 @@
 #import "_app_uninit.h"
 #import "_app_rule.h"
 #import "_app_appearance.h"
+#import "_app_config.h"
 
 // ----------------------------------
 // Protocol code
@@ -58,9 +59,16 @@
 
 @protocol ApplicationRuntimePeriodProtocol <NSObject> // 非必要的业务流程回调
 
-- (void)onLaunch; //
+- (void)onConfig:(_AppConfig *)appConfig;
 
-- (void)onAdvertise;
+- (void)onLaunch;
+
+/**
+ * @param adSettingHandler 需要通过网络请求等，设置新的广告数据，当前只需要提供image信息，跳转信息自行处理
+ *
+ * @return Block 需要返回点击事件处理句柄，注意：该句柄会在onLaunch后面调用
+ */
+- (Block)onAdvertise:(StringBlock)adSettingHandler;
 
 @end
 
@@ -96,5 +104,7 @@
 @prop_readonly( BOOL,				active );
 @prop_readonly( BOOL,				inactive );
 @prop_readonly( BOOL,				background );
+
+@prop_singleton( _AppConfig,        config );
 
 @end

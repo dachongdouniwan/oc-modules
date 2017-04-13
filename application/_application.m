@@ -7,6 +7,7 @@
 //
 
 #import "_application.h"
+#import "XHLaunchAd.h"
 
 @implementation _Application
 
@@ -30,6 +31,8 @@
 @def_prop_dynamic( BOOL,				active );
 @def_prop_dynamic( BOOL,				inactive );
 @def_prop_dynamic( BOOL,				background );
+
+@def_prop_singleton( _AppConfig,        config );
 
 #pragma mark - 生命周期
 
@@ -60,13 +63,51 @@
 
 // 说明：当程序载入后执行
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [self onConfig:self.config];
     
     [self didLaunch];
     
     /**
-     * 业务UI的开始
+     * 广告页面
      */
-    [self onLaunch];
+    if (self.config.enabledLaunchAdvertise) {
+        /**
+         *  1.显示启动页广告
+         */
+        @weakify(self)
+        __block BOOL  advertiseClicked = NO;
+        __block Block onAdvertiseClickHandler = nil;
+        [XHLaunchAd showWithAdFrame:CGRectMake(0, 0,self.window.bounds.size.width, self.window.bounds.size.height) setAdImage:^(XHLaunchAd *launchAd) {
+            
+            onAdvertiseClickHandler = [self onAdvertise:^(NSString *imgUrl) { // 等应用层回调，传入新的广告信息
+                [launchAd setImageUrl:imgUrl
+                             duration:self.config.launchAdvertiseDuration
+                             skipType:LaunchAdSkipTypeTimeText
+                              options:XHWebImageDefault
+                            completed:^(UIImage *image, NSURL *url) { // 广告加载完成事件
+                    
+                              } click:^{ // 点击事件
+                                  advertiseClicked = YES;
+                                  
+                                  TODO("这里应该是立即触发的")
+                              }];
+            }];
+        } showFinish:^{ //
+            @strongify(self)
+            
+            [self onLaunch];
+            
+            //广告点击事件
+            if (advertiseClicked) {
+                if (onAdvertiseClickHandler) onAdvertiseClickHandler();
+            }
+        }];
+    } else {
+        /**
+         * 业务UI的开始
+         */
+        [self onLaunch];
+    }
     
     return YES;
 }
@@ -151,7 +192,8 @@
 - (void)whenMemoryOverflow {}
 
 #pragma mark - ApplicationRuntimePeriodProtocol
+- (void)onConfig:(_AppConfig *)appConfig {}
 - (void)onLaunch {}
-- (void)onAdvertise {}
+- (Block)onAdvertise:(StringBlock)adSettingHandler {return nil;}
 
 @end
