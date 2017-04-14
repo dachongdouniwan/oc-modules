@@ -10,4 +10,7 @@
 
 @implementation _AppContext
 
+@def_prop_singleton( _AppInit, initialize )
+@def_prop_singleton( _AppUninit, uninitialize )
+
 @end

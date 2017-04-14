@@ -7,8 +7,6 @@
 //
 
 #import "_vendor_lumberjack.h"
-#import "_router.h"
-#import "_Router+hybrid.h"
 #import "LocationService.h"
 #import "LocationIndicatorVC.h"
 #import "AMapSearchKit/AMapSearchKit.h"
@@ -181,7 +179,7 @@
         DDLogDebug(@"高德H5应用URL:%@",url);
         
         NSString *encodedUrl = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        [self router_openHtml:encodedUrl extraParams:@{@"title":@"高德地图"}];
+        [self pushHtml:encodedUrl extraParams:@{@"title":@"高德地图"}];
     }
 }
 

@@ -6,8 +6,10 @@
 //  Copyright © 2017年 fallenink. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "_building_precompile.h"
 
 @interface _AppUninit : NSObject
+
+@singleton( _AppUninit )
 
 @end

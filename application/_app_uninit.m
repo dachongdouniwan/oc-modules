@@ -10,4 +10,6 @@
 
 @implementation _AppUninit
 
+@def_singleton( _AppUninit )
+
 @end
