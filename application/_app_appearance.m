@@ -7,6 +7,7 @@
 //
 
 #import "_app_appearance.h"
+#import "_ui_core.h"
 
 @implementation _AppAppearance
 
@@ -15,6 +16,8 @@
 @def_prop_strong( UIColor *, themeColor )
 @def_prop_strong( UIColor *, viewBackgroundColor )
 @def_prop_strong( UIColor *, navigationBarBackgroundColor )
+
+@def_prop_strong( NSString *, navigationBarBackButtonImage )
 
 #pragma mark - set default
 
@@ -43,6 +46,15 @@
      *  UITextView
      */
     [self textViewAppearance];
+    
+    /**
+     * 公共资源
+     */
+    [self buildResource];
+}
+
+- (void)buildResource {
+    [BaseViewController setBackButtonImageName:self.navigationBarBackButtonImage];
 }
 
 #pragma mark - Initialization

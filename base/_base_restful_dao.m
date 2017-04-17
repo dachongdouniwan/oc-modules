@@ -39,6 +39,9 @@
             failureHandler(completedRequest.error);
         } else {
             NSDictionary *response = completedRequest.responseAsJSON;
+            
+            LOG(@"response = %@", response);
+            
             NSError *error = [self checkResponseIfHaveError:response];
             if (error) { // service error
                 failureHandler(error);
@@ -64,6 +67,9 @@
             failureHandler(completedRequest.error);
         } else {
             NSString *response = completedRequest.responseAsString;
+            
+            LOG(@"response = %@", response);
+            
             successHandler([response XMLDictionary]);
         }
     }];
@@ -72,6 +78,8 @@
 }
 
 - (void)GET:(NSString *)path param:(NSDictionary *)param success:(ObjectBlock)successHandler failure:(ErrorBlock)failureHandler {
+    LOG(@"parameter = %@", param);
+    
     // 显示指示器
     [self showHud];
     
@@ -94,6 +102,9 @@
             failureHandler(completedRequest.error);
         } else {
             NSDictionary *response = completedRequest.responseAsJSON;
+            
+            LOG(@"response = %@", response);
+            
             NSError *error = [self checkResponseIfHaveError:response];
             if (error) { // service error
                 failureHandler(error);
@@ -107,6 +118,8 @@
 }
 
 - (void)POST:(NSString *)url parameters:(NSDictionary *)parameters headers:(NSDictionary *)headers successHandler:(ObjectBlock)successHandler failure:(ErrorBlock)failureHandler {
+    LOG(@"parameter = %@", parameters);
+    
     // 显示指示器
     [self showHud];
     
@@ -127,7 +140,6 @@
     if (addingHeader) [request addHeaders:addingHeader];
     
     [request addCompletionHandler:^(_NetworkHostRequest *completedRequest) {
-        
         // 隐藏指示器
         [self dismissHud];
         
@@ -135,6 +147,9 @@
             failureHandler(completedRequest.error);
         } else {
             NSDictionary *response = completedRequest.responseAsJSON;
+            
+            LOG(@"response = %@", response);
+            
             NSError *error = [self checkResponseIfHaveError:response];
             if (error) { // service error
                 failureHandler(error);

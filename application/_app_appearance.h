@@ -17,6 +17,9 @@
 @prop_strong( UIColor *, navigationBarBackgroundColor )
 @prop_strong( UIColor *, navigationBarForegroundColor )
 
+
+@prop_strong( NSString *, navigationBarBackButtonImage )
+
 - (void)build;
 
 @end
