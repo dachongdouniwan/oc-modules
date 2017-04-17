@@ -104,20 +104,20 @@
 
 - (void)tabBarItemAppearance {
     [[UITabBarItem appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                       [UIColor fontDeepBlackColor],
+                                                       color_with_rgb(134, 135, 136),
                                                        NSForegroundColorAttributeName,
-                                                       [UIFont systemFontOfSize:16.0], NSFontAttributeName,
+                                                       [UIFont systemFontOfSize:12.0], NSFontAttributeName,
                                                        nil]
                                              forState:UIControlStateNormal];
     [[UITabBarItem appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                       [UIColor fontDeepBlackColor], NSForegroundColorAttributeName,
-                                                       [UIFont systemFontOfSize:16.0], NSFontAttributeName,
+                                                       self.themeColor, NSForegroundColorAttributeName,
+                                                       [UIFont systemFontOfSize:12.0], NSFontAttributeName,
                                                        nil]
                                              forState:UIControlStateSelected];
     
     // UITabBar,移除顶部的阴影
-    [[UITabBar appearance] setShadowImage:[UIImage new]];
-    [[UITabBar appearance] setBackgroundImage:[[UIImage alloc]init]];
+//    [[UITabBar appearance] setShadowImage:[UIImage new]];
+//    [[UITabBar appearance] setBackgroundImage:[[UIImage alloc]init]];
 }
 
 - (void)textFieldAppearance {
