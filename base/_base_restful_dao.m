@@ -84,11 +84,15 @@
     [self showHud];
     
     // 是否有统一添加的参数
-    NSMutableDictionary *mutableParameters = [param mutableCopy];
+    NSMutableDictionary *mutableParameters = [@{} mutableCopy];
     NSDictionary *appendingParameters = [self appendParametersOnApi:path];
     
     if (appendingParameters) {
         [mutableParameters addEntriesFromDictionary:appendingParameters];
+    }
+    
+    if (param) {
+        [mutableParameters addEntriesFromDictionary:param];
     }
     
     _NetworkHostRequest *request = [self.host requestWithPath:path params:mutableParameters httpMethod:@"GET"];
@@ -117,18 +121,23 @@
     [self.host startRequest:request];
 }
 
-- (void)POST:(NSString *)url parameters:(NSDictionary *)parameters headers:(NSDictionary *)headers successHandler:(ObjectBlock)successHandler failure:(ErrorBlock)failureHandler {
-    LOG(@"parameter = %@", parameters);
+- (void)POST:(NSString *)url parameters:(NSDictionary *)param headers:(NSDictionary *)headers successHandler:(ObjectBlock)successHandler failure:(ErrorBlock)failureHandler {
+    LOG(@"parameter = %@", param);
     
     // 显示指示器
     [self showHud];
     
     // 是否有统一添加的参数
-    NSMutableDictionary *mutableParameters = [parameters mutableCopy];
+    
+    NSMutableDictionary *mutableParameters = [@{} mutableCopy];
     NSDictionary *appendingParameters = [self appendParametersOnApi:url];
     
-    if (appendingParameters) {
+    if (appendingParameters) { // 统一追加
         [mutableParameters addEntriesFromDictionary:appendingParameters];
+    }
+    
+    if (param) { // 当前接口参数
+        [mutableParameters addEntriesFromDictionary:param];
     }
     
     _NetworkHostRequest *request = [self.host requestWithPath:url params:mutableParameters httpMethod:@"POST"];
