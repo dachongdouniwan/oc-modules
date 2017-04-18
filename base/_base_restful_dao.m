@@ -36,7 +36,7 @@
         [self dismissHud];
         
         if (completedRequest.error) { // http error
-            failureHandler(completedRequest.error);
+            if (failureHandler) failureHandler(completedRequest.error);
         } else {
             NSDictionary *response = completedRequest.responseAsJSON;
             
@@ -44,9 +44,9 @@
             
             NSError *error = [self checkResponseIfHaveError:response];
             if (error) { // service error
-                failureHandler(error);
+                if (failureHandler) failureHandler(error);
             } else {
-                successHandler([self filteredResponse:response]);
+                if (successHandler) successHandler([self filteredResponse:response]);
             }
         }
     }];
@@ -64,13 +64,13 @@
         [self dismissHud];
         
         if (completedRequest.error) { // http error
-            failureHandler(completedRequest.error);
+            if (failureHandler) failureHandler(completedRequest.error);
         } else {
             NSString *response = completedRequest.responseAsString;
             
             LOG(@"response = %@", response);
             
-            successHandler([response XMLDictionary]);
+            if (successHandler) successHandler([response XMLDictionary]);
         }
     }];
     
@@ -103,7 +103,7 @@
         [self dismissHud];
         
         if (completedRequest.error) { // http error
-            failureHandler(completedRequest.error);
+            if (failureHandler) failureHandler(completedRequest.error);
         } else {
             NSDictionary *response = completedRequest.responseAsJSON;
             
@@ -111,9 +111,9 @@
             
             NSError *error = [self checkResponseIfHaveError:response];
             if (error) { // service error
-                failureHandler(error);
+                if (failureHandler) failureHandler(error);
             } else {
-                successHandler([self filteredResponse:response]);
+                if (successHandler) successHandler([self filteredResponse:response]);
             }
         }
     }];
@@ -153,7 +153,7 @@
         [self dismissHud];
         
         if (completedRequest.error) { // http error
-            failureHandler(completedRequest.error);
+            if (failureHandler) failureHandler(completedRequest.error);
         } else {
             NSDictionary *response = completedRequest.responseAsJSON;
             
@@ -161,9 +161,9 @@
             
             NSError *error = [self checkResponseIfHaveError:response];
             if (error) { // service error
-                failureHandler(error);
+                if (failureHandler) failureHandler(error);
             } else {
-                successHandler([self filteredResponse:response]);
+                if (successHandler) successHandler([self filteredResponse:response]);
             }
         }
     }];
