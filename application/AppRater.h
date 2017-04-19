@@ -6,7 +6,8 @@
 //
 //
 
-#import <Foundation/Foundation.h>
+#import "_precompile.h"
+#import "_foundation.h"
 
 extern NSString *const kAppiraterFirstUseDate;
 extern NSString *const kAppiraterUseCount;

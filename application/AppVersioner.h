@@ -6,7 +6,7 @@
 //
 //
 
-#import <Foundation/Foundation.h>
+#import "_building_precompile.h"
 
 @interface AppVersioner : NSObject
 

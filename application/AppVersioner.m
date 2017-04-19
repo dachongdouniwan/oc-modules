@@ -7,7 +7,11 @@
 //
 
 #import "AppVersioner.h"
-#import "BaseRequest.h"
+#import "AppConfig.h"
+#import "_base_net_command.h"
+#import "_tools.h"
+#import "_ui_component.h"
+#import "_app_appearance.h"
 
 /**
  
@@ -58,7 +62,7 @@ static NSString *IgnoredVersionKey = @"IgnoredVersionKey";
 
 @end
 
-@interface VersionRequest : BaseRequest
+@interface VersionRequest : _BaseRequest
 
 @property (nonatomic, strong) NSString *appName; // 哪几个？？
 
@@ -72,7 +76,7 @@ impl_net_request_sim(@"/extra/version/load-new-version", @"VersionResponse")
 
 @end
 
-@interface VersionResponse : BaseResponse
+@interface VersionResponse : _BaseResponse
 
 @property (nonatomic, strong) VersionDetail *appVersion;
 
@@ -117,18 +121,18 @@ impl_embed_class_JSONTransformer(appVersion, VersionDetail)
         
         // 2. 当前是旧版本，但不强制更新
         if (app_version_serial >= response.appVersion.minVersionSerial) {
-            XIAlertView *alertView = [[XIAlertView alloc] initWithTitle:titleString
+            AlertView *alertView = [[AlertView alloc] initWithTitle:titleString
                                                              titleColor:font_gray_2
                                                       attributedMessage:messageString
                                                       cancelButtonTitle:nil
                                                  cancelButtonTitleColor:nil];
             
-            [alertView addButtonWithTitle:@"以后再说" titleColor:font_gray_2 style:XIAlertActionStyleCancel handler:^(XIAlertView *alertView, XIAlertButtonItem *buttonItem) {
+            [alertView addButtonWithTitle:@"以后再说" titleColor:font_gray_2 style:AlertActionStyleCancel handler:^(AlertView *alertView, AlertButtonItem *buttonItem) {
                 _cache_[IgnoredVersionKey] = @(response.appVersion.versionSerial);
                 
                 [alertView dismiss];
             }];
-            [alertView addButtonWithTitle:@"立即更新" titleColor:theme_color style:XIAlertActionStyleDefault handler:^(XIAlertView *alertView, XIAlertButtonItem *buttonItem) {
+            [alertView addButtonWithTitle:@"立即更新" titleColor:[UIColor blueColor] style:AlertActionStyleDefault handler:^(AlertView *alertView, AlertButtonItem *buttonItem) {
                 [[UIApplication sharedApplication] openURL:downloadUrl];
                 
                 [alertView dismiss];
@@ -142,15 +146,15 @@ impl_embed_class_JSONTransformer(appVersion, VersionDetail)
         // 3. 当前是旧版本，要强制更新
         if (app_version_serial < response.appVersion.minVersionSerial) {
             if (app_version_serial >= response.appVersion.minVersionSerial) {
-                XIAlertView *alertView = [[XIAlertView alloc] initWithTitle:titleString
+                AlertView *alertView = [[AlertView alloc] initWithTitle:titleString
                                                                  titleColor:font_gray_2
                                                           attributedMessage:messageString
                                                           cancelButtonTitle:nil
                                                      cancelButtonTitleColor:nil];
-                [alertView addButtonWithTitle:@"取消" titleColor:font_gray_2 style:XIAlertActionStyleCancel handler:^(XIAlertView *alertView, XIAlertButtonItem *buttonItem) {
+                [alertView addButtonWithTitle:@"取消" titleColor:font_gray_2 style:AlertActionStyleCancel handler:^(AlertView *alertView, AlertButtonItem *buttonItem) {
                     [self exitApplication];
                 }];
-                [alertView addButtonWithTitle:@"立即更新" titleColor:theme_color style:XIAlertActionStyleDefault handler:^(XIAlertView *alertView, XIAlertButtonItem *buttonItem) {
+                [alertView addButtonWithTitle:@"立即更新" titleColor:[UIColor blueColor] style:AlertActionStyleDefault handler:^(AlertView *alertView, AlertButtonItem *buttonItem) {
                     [[UIApplication sharedApplication] openURL:downloadUrl];
                     
                     [alertView dismiss];

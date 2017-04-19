@@ -6,7 +6,9 @@
 //  Copyright © 2016 OpenTeam. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "_precompile.h"
+#import "_foundation.h"
+#import "_system.h"
 
 /**
  *  多端bundleid的枚举
@@ -50,4 +52,4 @@
 #define app_name            [AppConfig sharedInstance].appName
 #define app_identifier      [AppConfig sharedInstance].appIdentifier
 #define app_version_serial  [AppConfig sharedInstance].appVersionSerial
-#define app_udid            [[_System sharedInstance] deviceUDID]
+#define app_udid            [[_SystemInfo sharedInstance] deviceUDID]

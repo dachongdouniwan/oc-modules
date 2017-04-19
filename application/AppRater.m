@@ -7,7 +7,7 @@
 //
 
 #import "AppRater.h"
-
+#import <UIKit/UIKit.h>
 #import <SystemConfiguration/SCNetworkReachability.h>
 #include <netinet/in.h>
 
