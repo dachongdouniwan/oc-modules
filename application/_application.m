@@ -67,6 +67,12 @@
     
     [self didLaunch];
     
+    if (is_method_overrided(self.class, _Application.class, @selector(onSynchronize))) {
+        [self onSynchronize];
+        
+        XCT_BLOCK; // TODO:这是只做测试，不是最终方案
+    }
+    
     /**
      * 广告页面
      */
@@ -193,6 +199,8 @@
 
 #pragma mark - ApplicationRuntimePeriodProtocol
 - (void)onConfig:(_AppConfig *)appConfig {}
+- (UIViewController *)forLaunchViewController { return nil; };
+- (void)onSynchronize { if (is_method_overrided(self.class, _Application.class, @selector(onSynchronize))) XCT_GOON };
 - (void)onLaunch {}
 - (Block)onAdvertise:(StringBlock)adSettingHandler {return nil;}
 

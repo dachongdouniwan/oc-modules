@@ -60,6 +60,10 @@
 
 - (void)onConfig:(_AppConfig *)appConfig;
 
+- (UIViewController *)forLaunchViewController; // 返回等效的启动画面
+
+- (void)onSynchronize; // 同步基本数据信息，信息获取OK后，需要调用父类方法
+
 - (void)onLaunch;
 
 /**
