@@ -17,6 +17,9 @@
 - (CGFloat)cellHeight;
 + (CGFloat)cellHeightWithModel:(id)model;
 
+// 一般在setup中初始化，在setModel / setdown中填充数据
+- (void)setup;
+- (void)setdown:(id)model;
 - (void)setModel:(id)obj;
 
 #pragma mark - On UITableView
