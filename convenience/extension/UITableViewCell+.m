@@ -34,6 +34,14 @@
     return 0.f;
 }
 
+- (void)setup {
+    
+}
+
+- (void)setdown:(id)model {
+    
+}
+
 - (void)setModel:(id)obj {
     // do nothing.
 }

@@ -12,6 +12,7 @@
 #import "AMapSearchKit/AMapSearchKit.h"
 #import "MAMapKit/MAMapKit.h"
 #import "BaseWebViewController.h"
+#import "ReactiveCocoa.h"
 
 #define kGapXOfBottomView 12
 #define kGapYOfBottomView 20
