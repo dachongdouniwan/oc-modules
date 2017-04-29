@@ -8,7 +8,7 @@
 
 #import "_base_net_command.h"
 #import "_pragma_push.h"
-#import "_ui_core.h"
+#import "_easycoding.h"
 
 // ----------------------------------
 // Request source code
