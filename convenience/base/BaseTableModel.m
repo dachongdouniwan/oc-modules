@@ -113,6 +113,18 @@
 
 @implementation ItemModel
 
++ (instancetype)modelWithId:(int64_t)id code:(NSString *)code name:(NSString *)name {
+    ItemModel *model = [ItemModel new];
+    
+    model.id = id;
+    model.code = code;
+    model.name = name;
+    
+    return model;
+}
 
++ (instancetype)modelWithId:(int64_t)id name:(NSString *)name {
+    return [self modelWithId:id code:@"null" name:name];
+}
 
 @end

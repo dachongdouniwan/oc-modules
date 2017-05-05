@@ -88,4 +88,7 @@
 
 @property (nonatomic, strong) NSString *name;
 
++ (instancetype)modelWithId:(int64_t)id name:(NSString *)name;
++ (instancetype)modelWithId:(int64_t)id code:(NSString *)code name:(NSString *)name;
+
 @end
