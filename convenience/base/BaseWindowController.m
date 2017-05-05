@@ -6,12 +6,12 @@
 //  Copyright © 2015年 QQingiOSTeam. All rights reserved.
 //
 
-#import "QQingWindowRootViewController.h"
+#import "BaseWindowController.h"
 
-@implementation QQingWindowRootViewController
+@implementation BaseWindowController
 
-+ (QQingWindowRootViewController *)createRootViewControllerWithStatusBarStyle:(UIStatusBarStyle)statusBarStyle {
-    QQingWindowRootViewController *rootVC = [[QQingWindowRootViewController alloc] init];
++ (BaseWindowController *)createWindowControllerWithStatusBarStyle:(UIStatusBarStyle)statusBarStyle {
+    BaseWindowController *rootVC = [[BaseWindowController alloc] init];
     rootVC.statusBarStyleToSet = statusBarStyle;
     return rootVC;
 }

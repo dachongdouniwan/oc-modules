@@ -7,16 +7,18 @@
 //
 
 #import "_vendor_lumberjack.h"
+#import "_cache.h"
 #import "UserCityService.h"
 #import "CityGeoCoder.h"
 #import "RLMCity.h"
 
 const int kNoCityID = -1;
 
-static NSString*  kUDUserCityName = @"UserCityName";
-static NSString*  kUDUserCityId = @"UserCityId";
-static NSString*  kUDUserCityLatitude = @"UserCityLatitude";
-static NSString*  kUDUserCityLongitude = @"UserCityLongitude";
+static NSString *kUDUserCityName = @"UserCityName";
+static NSString *kUDUserCityId = @"UserCityId";
+static NSString *UserCityCode = @"UserCityCode";
+static NSString *kUDUserCityLatitude = @"UserCityLatitude";
+static NSString *kUDUserCityLongitude = @"UserCityLongitude";
 
 NSString * const kDefaultUserCityName = @"上海";
 const int kDefaultUserCityId = 4;//上海
@@ -35,22 +37,22 @@ const double kDefaultUserCityLongitude = 121.48;
 
 #pragma mark - 城市名
 
-- (NSString *)getUserCityName{
+- (NSString *)getUserCityName {
     return [[NSUserDefaults standardUserDefaults] objectForKey:kUDUserCityName];
 }
 
-- (NSNumber *)getUserCityId{
+- (NSNumber *)getUserCityId {
     return [[NSUserDefaults standardUserDefaults] objectForKey:kUDUserCityId];
 }
 
-- (NSString *)getUserCityNameWithDefault{
+- (NSString *)getUserCityNameWithDefault {
     NSString* cityName = [self getUserCityName];
     if (!cityName) {
         cityName = kDefaultUserCityName;
     }
     return cityName;
 }
-- (NSNumber *)getUserCityIdWithDefault{
+- (NSNumber *)getUserCityIdWithDefault {
     NSNumber* cityId = [self getUserCityId];
     if (!cityId) {
         cityId = @(kDefaultUserCityId);
@@ -58,7 +60,7 @@ const double kDefaultUserCityLongitude = 121.48;
     return cityId;
 }
 
-- (void)updateUserCityName:(NSString*)cityName{
+- (void)updateUserCityName:(NSString *)cityName {
     if(cityName.length <= 0){
         return;
     }
@@ -77,21 +79,12 @@ const double kDefaultUserCityLongitude = 121.48;
     [self updateUserCityLocation:nil];
 }
 
-- (void)updateUserCityId:(NSNumber *)cityId{
-    if(!cityId || cityId.intValue <= 0){
+- (void)updateUserCityId:(NSNumber *)cityId {
+    if(!cityId || cityId.intValue <= 0) {
         return;
     }
     
     [[NSUserDefaults standardUserDefaults] setObject:cityId forKey:kUDUserCityId];
-    
-//    NSString *cityName = [self citynameForID:cityId.intValue defaultName:@"未找到"];
-//    if (cityName.length > 0) {
-//        [[NSUserDefaults standardUserDefaults] setObject:cityName forKey:kUDUserCityName];
-//        
-//        [[NSUserDefaults standardUserDefaults] synchronize];
-//        
-//        [self updateUserCityLocation:nil];
-//    }
 }
 
 #pragma mark - 城市位置
@@ -113,17 +106,18 @@ const double kDefaultUserCityLongitude = 121.48;
             cityLocation.latitude = cityLatitude.doubleValue;
             cityLocation.longitude = cityLongitude.doubleValue;
             _userCityLocation = cityLocation;
+            
             [main_queue queueBlock:^{
                 handlerBlock(cityLocation);
             }];
-        }else{
+        } else {
             [self updateUserCityLocation:^(LocationModel *location) {
                 if (location && [location containValidCity]) {
                     _userCityLocation = location;
                     [main_queue queueBlock:^{
                         handlerBlock(location);
                     }];
-                }else{
+                } else {
                     DDLogWarn(@"定位服务.获取注册城市定位失败");
                     _userCityLocation = nil;
                     [main_queue queueBlock:^{
@@ -132,21 +126,21 @@ const double kDefaultUserCityLongitude = 121.48;
                 }
             }];
         }
-    }else{
+    } else {
         [main_queue queueBlock:^{
             handlerBlock(_userCityLocation);
         }];
     }
 }
 
-- (void)updateUserCityLocation:(void(^)(LocationModel* location))handlerBlock{
+- (void)updateUserCityLocation:(void(^)(LocationModel* location))handlerBlock {
     NSString *cityName = [self getUserCityName];
     
-    if(cityName == nil){
+    if(cityName == nil) {
         if (handlerBlock) {
             handlerBlock(nil);
         }
-    }else{
+    } else {
         __weak typeof(self) weakSelf = self;
         [CityGeoCoder geocodeAddressString:cityName completionHandler:^(LocationModel *location) {
             if (location) {
@@ -171,12 +165,27 @@ const double kDefaultUserCityLongitude = 121.48;
 
 - (LocationModel*)defaultUserCityLocation {
     LocationModel* cityLocation = [LocationModel new];
+    
     cityLocation.cityID = kDefaultUserCityId;
     cityLocation.cityNameString = kDefaultUserCityName;
     cityLocation.latitude = kDefaultUserCityLatitude;
     cityLocation.longitude = kDefaultUserCityLongitude;
     cityLocation.address = kDefaultUserCityName;
+    
     return cityLocation;
 }
+
+#pragma mark - Property
+
+- (NSString *)userCityCode {
+    return _cache_[UserCityCode];
+}
+
+- (void)setUserCityCode:(NSString *)userCityCode {
+    if (is_string_present(userCityCode)) {
+        _cache_[UserCityCode] = userCityCode;
+    }
+}
+
 
 @end

@@ -9,20 +9,17 @@
 #import "_vendor_lumberjack.h"
 #import "LocationService.h"
 #import "CityGeoCoder.h"
-//#import "Reachability.h"
 #import "_vendor_reactivecocoa.h"
 #import "AMapLocationKit/AMapLocationKit.h"
 
 const int kUpdateLocationInterval = 1*60;//每1分钟刷新定位
 
-
 @interface LocationService () <CLLocationManagerDelegate>
 
 @property (strong, nonatomic) AMapLocationManager *gdLocationManager;
 
-@property (strong, atomic) LocationModel* curLocation;
-@property (strong, atomic) CLLocation* curSimpleLocation;
-
+@property (strong, atomic) LocationModel    *curLocation;
+@property (strong, atomic) CLLocation   *curSimpleLocation;
 
 @end
 
@@ -30,11 +27,12 @@ const int kUpdateLocationInterval = 1*60;//每1分钟刷新定位
 
 @def_singleton( LocationService )
 
+@def_prop_instance( UserCityService, userCityService )
+
 - (instancetype)init {
     if (self = [super init]) {
         self.locationStatus = LocationStatus_NotStart;
         
-//        [AppConfig adapterAppHairDresser:^{
 #if !TARGET_OS_SIMULATOR
             //高德定位服务
             self.gdLocationManager = [AMapLocationManager new];
@@ -50,25 +48,6 @@ const int kUpdateLocationInterval = 1*60;//每1分钟刷新定位
                 
             }];
 #endif
-//        } appCustomer:^{
-//#if !TARGET_OS_SIMULATOR
-//            //高德定位服务
-//            self.gdLocationManager = [AMapLocationManager new];
-//            
-//            //定时自动更新定位
-//            [[[RACSignal interval:kUpdateLocationInterval onScheduler:[RACScheduler mainThreadScheduler]] delay:kUpdateLocationInterval]subscribeNext:^(id x) {
-//                [self updateLocationWithBlock:^(LocationModel *location) {
-//                    
-//                }];
-//            }];
-//            //首次获取定位
-//            [self currentLocationWithBlock:^(LocationModel *location) {
-//                
-//            }];
-//#endif
-//        } appMaster:^{
-            //
-//        }];
     }
     
     return self;

@@ -16,17 +16,27 @@ extern NSString * const kDefaultUserCityName;
 
 @singleton( UserCityService )
 
+@prop_dynamic(NSString *, userCityCode)
+
 - (NSString *)getUserCityName;
 - (NSNumber *)getUserCityId;
 - (NSString *)getUserCityNameWithDefault;
 - (NSNumber *)getUserCityIdWithDefault;
 
-//存储用户城市
-- (void)updateUserCityName:(NSString*)cityName;
-- (void)updateUserCityId:(NSNumber*)cityId;
-//获取城市中心经纬度
+/**
+ *  存储用户城市
+ */
+- (void)updateUserCityName:(NSString *)cityName;
+- (void)updateUserCityId:(NSNumber *)cityId;
+
+/**
+ *  获取城市中心经纬度
+ */
 - (void)getUserCityLocation:(void(^)(LocationModel *location))handlerBlock;
-//默认城市为上海
+
+/**
+ *  默认城市为上海
+ */
 - (LocationModel *)defaultUserCityLocation;
 
 @end

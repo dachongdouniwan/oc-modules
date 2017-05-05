@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface QQingWindowRootViewController : UIViewController
+@interface BaseWindowController : UIViewController
 
 @property (nonatomic, assign) UIStatusBarStyle statusBarStyleToSet;
 
-+ (QQingWindowRootViewController *)createRootViewControllerWithStatusBarStyle:(UIStatusBarStyle)statusBarStyle;
++ (BaseWindowController *)createWindowControllerWithStatusBarStyle:(UIStatusBarStyle)statusBarStyle;
 
 @end

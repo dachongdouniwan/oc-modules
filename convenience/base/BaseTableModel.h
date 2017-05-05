@@ -9,6 +9,10 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 
+// ----------------------------------
+// 面向view的数据model
+// ----------------------------------
+
 #pragma mark - 上面可以合一，可以作为通用，如下
 
 @interface TableModel : NSObject
@@ -70,5 +74,18 @@
 @property (nonatomic, assign) int64_t id;
 
 @property (nonatomic, assign) BOOL isDefault;
+
+@end
+
+// ----------------------------------
+// 面向数据处理的通用model
+// ----------------------------------
+@interface ItemModel : NSObject
+
+@property (nonatomic, assign) int64_t id;
+
+@property (nonatomic, strong) NSString *code;
+
+@property (nonatomic, strong) NSString *name;
 
 @end

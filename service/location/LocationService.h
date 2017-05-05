@@ -9,6 +9,7 @@
 #import "_service.h"
 #import <CoreLocation/CoreLocation.h>
 #import "LocationModel.h"
+#import "UserCityService.h"
 
 typedef enum : NSUInteger {
     LocationStatus_NotStart,    //定位未开始
@@ -20,6 +21,8 @@ typedef enum : NSUInteger {
 @interface LocationService : _Service
 
 @singleton( LocationService )
+
+@prop_instance(UserCityService, userCityService)
 
 @property (assign,nonatomic) LocationStatus locationStatus;
 

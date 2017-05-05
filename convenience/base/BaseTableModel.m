@@ -108,3 +108,11 @@
 }
 
 @end
+
+#pragma mark -
+
+@implementation ItemModel
+
+
+
+@end
