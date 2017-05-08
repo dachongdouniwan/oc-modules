@@ -111,11 +111,7 @@
         @weakify(self)
                 request.failureHandler = ^(NSError *error){
                     @strongify(self)
-        
-                    [self dismissHUD];
-        
-                    [self dismissLoadingHUD];
-        
+
                     [self showError:error.message];
                 };
     }

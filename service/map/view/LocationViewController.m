@@ -13,7 +13,6 @@
 #import "LocationViewController.h"
 #import "AddressInputHintViewController.h"
 #import "LocationService.h"
-#import "MBProgressHUD.h"
 
 #pragma mark -
 

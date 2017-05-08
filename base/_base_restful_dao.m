@@ -199,11 +199,24 @@
             
             LOG(@"response = %@", response);
             
-            NSError *error = [self checkResponseIfHaveError:response];
-            if (error) { // service error
-                if (failureHandler) failureHandler(error);
+//            NSError *error = [self checkResponseIfHaveError:response];
+//            if (error) { // service error
+//                if (failureHandler) failureHandler(error);
+//            } else {
+//                if (successHandler) successHandler(response);
+//            }
+            
+            NSNumber *errorCode = response[@"errorCode"];
+            NSString *errorMessage = response[@"errorMessage"];
+            
+            
+            UNUSED(errorMessage)
+            
+            if (errorCode.integerValue == 0) {
+                if (successHandler) successHandler(response);
+                
             } else {
-                if (successHandler) successHandler([self filteredResponse:response]);
+                if (failureHandler) failureHandler(nil);
             }
         }
     }];

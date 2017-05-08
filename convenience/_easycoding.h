@@ -26,18 +26,12 @@
 
 #pragma mark - Hud - heads up display
 
-- (void)dismissHUD;
+- (void)hideActivityHUD;
 - (void)showActivityHUD;
-
-// C 端使用
-- (void)showLoadingHUD;
-- (void)showLoadingHUDWithMaskColor:(UIColor *)color topSpacesRatio:(CGFloat)ratio;
-- (void)dismissLoadingHUD;
 
 #pragma mark - Toast
 
 - (void)showToastWithText:(NSString *)text;
-- (void)showToastWithText:(NSString *)text withImageName:(NSString *)imageName blockUI:(BOOL)needBlockUI;
 
 #pragma mark - AlertView
 
@@ -51,12 +45,8 @@
 - (void)initObserver;
 - (void)uinitObserver;
 
-#pragma mark - No data view
-
-- (void)showBlankView; // 空页面的填充视图
-- (void)dismissBlankView;
-
 #pragma mark - TableView setup fresh
+
 - (void)setupRefreshWithTarget:(id)target head:(SEL)headerRefreshingHandler foot:(SEL)footerRefreshingHandler;
 
 @end
