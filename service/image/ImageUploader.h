@@ -13,6 +13,10 @@
 
 @singleton( ImageUploader )
 
+// ----------------------------------
+// Net command based
+// ----------------------------------
+
 - (void)uploadPicture:(UIImage *)picture
             channelId:(int32_t)channel
                  type:(int)type

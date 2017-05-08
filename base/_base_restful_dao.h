@@ -9,34 +9,50 @@
 #import "_tool_network_light.h"
 #import "_base_protocol.h"
 
-#define USE_NETWORK_LIGHT_KIT
-
 // ----------------------------------
 // Class code
 // ----------------------------------
 
 @interface _BaseRestfulDao : NSObject <_BaseDaoRequestConstructProtocol, _BaseDaoHuddingProtocol>
 
-#pragma mark - Data access object
-
-#ifdef USE_NETWORK_LIGHT_KIT
-
 @prop_instance(_NetworkHost, host)
 
+/**
+ *
+ */
 - (void)GET:(NSString *)url success:(ObjectBlock)successHandler failure:(ErrorBlock)failureHandler;
+
+/**
+ *
+ */
 - (void)GETFORXML:(NSString *)url success:(ObjectBlock)successHandler failure:(ErrorBlock)failureHandler;
 
+/**
+ *
+ */
 - (void)GET:(NSString *)path param:(NSDictionary *)param success:(ObjectBlock)successHandler failure:(ErrorBlock)failureHandler;
 
+/**
+ *
+ */
 - (void)POST:(NSString *)url parameters:(NSDictionary *)parameters headers:(NSDictionary *)headers successHandler:(ObjectBlock)successHandler failure:(ErrorBlock)failureHandler;
 
-- (void)UPLOAD:(NSString *)url; // 还没完成
+/**
+ *
+ */
+typedef void (^ NetLightConstructingBodyBlock)(_NetworkHostRequest *request); // //    [request attachData:nil forKey:nil mimeType:nil suggestedFileName:nil]
 
+- (void)UPLOAD:(NSString *)url
+       headers:(NSDictionary *)headers
+  constructing:(NetLightConstructingBodyBlock)constructingHandler
+       success:(ObjectBlock)successHandler
+      progress:(PercentBlock)progressHandler
+       failure:(ErrorBlock)failureHandler;
+
+/**
+ *
+ */
 - (void)DOWNLOAD:(NSString *)url; //还没完成
-
-#else
-
-#endif
 
 @end
 

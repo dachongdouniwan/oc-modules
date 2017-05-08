@@ -12,8 +12,6 @@
 
 @implementation _BaseRestfulDao
 
-#ifdef USE_NETWORK_LIGHT_KIT
-
 @def_prop_instance(_NetworkHost, host)
 
 - (instancetype)init {
@@ -121,7 +119,7 @@
     [self.host startRequest:request];
 }
 
-- (void)POST:(NSString *)url parameters:(NSDictionary *)param headers:(NSDictionary *)headers successHandler:(ObjectBlock)successHandler failure:(ErrorBlock)failureHandler {
+- (void)POST:(NSString *)path parameters:(NSDictionary *)param headers:(NSDictionary *)headers successHandler:(ObjectBlock)successHandler failure:(ErrorBlock)failureHandler {
     LOG(@"parameter = %@", param);
     
     // 显示指示器
@@ -130,7 +128,7 @@
     // 是否有统一添加的参数
     
     NSMutableDictionary *mutableParameters = [@{} mutableCopy];
-    NSDictionary *appendingParameters = [self appendParametersOnApi:url];
+    NSDictionary *appendingParameters = [self appendParametersOnApi:path];
     
     if (appendingParameters) { // 统一追加
         [mutableParameters addEntriesFromDictionary:appendingParameters];
@@ -140,12 +138,12 @@
         [mutableParameters addEntriesFromDictionary:param];
     }
     
-    _NetworkHostRequest *request = [self.host requestWithPath:url params:mutableParameters httpMethod:@"POST"];
+    _NetworkHostRequest *request = [self.host requestWithPath:path params:mutableParameters httpMethod:@"POST"];
     if (headers.allKeys.count) {
         [request addHeaders:headers];
     }
     
-    NSDictionary *addingHeader = [self constructHeaderWith:request api:url];
+    NSDictionary *addingHeader = [self constructHeaderWith:request api:path];
     if (addingHeader) [request addHeaders:addingHeader];
     
     [request addCompletionHandler:^(_NetworkHostRequest *completedRequest) {
@@ -171,29 +169,46 @@
     [self.host startRequest:request];
 }
 
-- (void)UPLOAD:(NSString *)url {
-    //    MKNetworkOperation *op = [self operationWithPath:urlString
-    //                                              params:body
-    //                                          httpMethod:@"POST"];
-    //
-    //    [op addFile:file forKey:@"media"];
-    //
-    //    // setFreezable uploads your images after connection is restored!
-    //    [op setFreezable:YES];
-    //
-    //    [op addCompletionHandler:^(MKNetworkOperation* completedOperation) {
-    //
-    //        NSString *value = [completedOperation responseString];
-    //
-    //        completionBlock(value);
-    //    }errorHandler:^(MKNetworkOperation *errorOp, NSError* error){
-    //
-    //        errorBlock(error);
-    //    }];
-    //
-    //    [self enqueueOperation:op];
-    //
-    //    return op;
+- (void)UPLOAD:(NSString *)url
+       headers:(NSDictionary *)headers
+  constructing:(NetLightConstructingBodyBlock)constructingHandler
+       success:(ObjectBlock)successHandler
+      progress:(PercentBlock)progressHandler
+       failure:(ErrorBlock)failureHandler {
+    _NetworkHostRequest *request = [self.host requestWithURLString:url params:nil httpMethod:@"POST"];
+    [request addHeaders:headers];
+    
+    // Construct uploading data
+    NSAssert(constructingHandler, @"Please implement constructingHandler");
+    
+    constructingHandler(request);
+    
+    [request addCompletionHandler:^(_NetworkHostRequest *completedRequest) {
+        // 隐藏指示器
+        [self dismissHud];
+        
+        if (completedRequest.error) { // http error
+            if (failureHandler) failureHandler(completedRequest.error);
+        } else {
+            NSDictionary *response = completedRequest.responseAsJSON;
+            
+            LOG(@"response = %@", response);
+            
+            NSError *error = [self checkResponseIfHaveError:response];
+            if (error) { // service error
+                if (failureHandler) failureHandler(error);
+            } else {
+                if (successHandler) successHandler([self filteredResponse:response]);
+            }
+        }
+    }];
+    [request addUploadProgressChangedHandler:^(_NetworkHostRequest *completedRequest) {
+        if (progressHandler) {
+            progressHandler(completedRequest.progress);
+        }
+    }];
+    
+    [self.host startUploadRequest:request];
 }
 
 - (void)DOWNLOAD:(NSString *)url {
@@ -205,10 +220,6 @@
     //    [self enqueueOperation:op];
     //    return op;
 }
-
-#else
-
-#endif
 
 #pragma mark - _BaseDaoRequestConstructProtocol
 

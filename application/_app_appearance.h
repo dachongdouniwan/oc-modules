@@ -26,11 +26,11 @@
 
 #define appAppearance [_AppAppearance sharedInstance]
 
-//#undef  color_theme
-//#define color_theme appAppearance.themeColor
-//
-//#undef  color_background_view
-//#define color_background_view appAppearance.viewBackgroundColor
-//
-//#undef  color_background_nav
-//#define color_background_nav appAppearance.viewBackgroundColor
+#undef  color_theme
+#define color_theme appAppearance.themeColor
+
+#undef  color_background_view
+#define color_background_view appAppearance.viewBackgroundColor
+
+#undef  color_background_nav
+#define color_background_nav appAppearance.viewBackgroundColor
