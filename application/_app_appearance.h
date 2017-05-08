@@ -8,6 +8,9 @@
 
 #import "_building_precompile.h"
 
+#import "UIButton+Theme.h"
+#import "UIColor+theme.h"
+
 @interface _AppAppearance : NSObject
 
 @singleton( _AppAppearance )
@@ -34,3 +37,7 @@
 
 #undef  color_background_nav
 #define color_background_nav appAppearance.viewBackgroundColor
+
+#define line_gray       font_gray_1
+
+#define background_gray color_background_view

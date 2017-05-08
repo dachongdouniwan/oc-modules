@@ -147,18 +147,14 @@ static CGFloat AutoLocationViewWidthConstant = 0;
     return self;
 }
 
-- (void)initBackgroundView {
-    self.view.backgroundColor = [UIColor viewBackgroundColor];
-}
-
 - (void)initAddressView{
     UITapGestureRecognizer* gesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didClickOnAutoLocationView:)];
     [self.autoLocationView addGestureRecognizer:gesture];
     
-    self.curZone.textColor = [UIColor fontGray_one_Color_deprecated];
+    self.curZone.textColor = font_gray_1;
     
     self.detailAddress.delegate = self;
-    self.detailAddress.textColor = [UIColor fontGray_one_Color_deprecated];
+    self.detailAddress.textColor = font_gray_1;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textViewEditChanged:) name:UITextFieldTextDidChangeNotification object:self.detailAddress];
 }
 
@@ -192,8 +188,6 @@ static CGFloat AutoLocationViewWidthConstant = 0;
     [super viewDidLoad];
     
     self.title = @"街道地址";
-    
-    [self initBackgroundView];
     
     self.scrollContentHeight = kHeightOfSectionHeader;
     

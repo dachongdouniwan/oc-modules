@@ -10,6 +10,7 @@
 #import "UIViewController+Extension.h"
 #import "_greats.h"
 #import "_ui_core.h"
+#import "_app_appearance.h"
 
 // ----------------------------------
 // class implementation
@@ -77,7 +78,7 @@ static NSString *backButtonImageName = @"buckbutton";
     [self aspect_hookSelector:@selector(viewDidLoad) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> aspectInfo) {
         UIViewController *viewController = aspectInfo.instance;
         
-        viewController.view.backgroundColor = background_gray;
+        viewController.view.backgroundColor = color_background_view;
     } error:nil];
     
     self.alreadyInitialized = YES;

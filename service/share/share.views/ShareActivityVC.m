@@ -16,6 +16,7 @@
 #import "SNShareSina.h"
 #import "SNShareWechat.h"
 #import "_building_precompile.h"
+#import "_app_appearance.h"
 
 static const float kTitleIconSpace = 8.0;
 
@@ -85,7 +86,7 @@ static const float kTitleIconSpace = 8.0;
 
 - (void)initUI {
     self.viewTitleLabel.text = self.viewTitle;
-    self.viewTitleLabel.textColor = [UIColor themeColor];
+    self.viewTitleLabel.textColor = color_theme;
     
     [self.weixinView setValueWithImage:image_named(@"icon_weixin")
                               AndTitle:@"微信好友"

@@ -27,23 +27,4 @@
                    shareViewTitle:(NSString *)title;
 - (void)dismissSharePopup;
 
-/**
- *  1. 动画显示，没有 mask 颜色
- *  2. 无title
- */
-- (void)shareAnimatedWithWithParamBuilder:(ShareParamBuilder *)paramBuilder;
-
-/**
- *  ...
- *
- *  @param paramBuilder ...
- *  @param validRect    默认屏幕大小
- */
-//- (void)shareAnimatedWithWithParamBuilder:(ShareParamBuilder *)paramBuilder validRect:(CGRect)validRect;
-
-/**
- *  消失
- */
-- (void)dismissSharePopupAnimated;
-
 @end

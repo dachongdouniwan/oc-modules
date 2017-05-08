@@ -65,14 +65,12 @@
 }
 
 - (void)initSearchBar {
-    // Get navigation bar.
-    self.view.backgroundColor = [UIColor viewBackgroundColor];
     _topView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, screen_width, 50)];
     [self.view addSubview:_topView];
     _topView.backgroundColor = [UIColor whiteColor];
     
     self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(8, 3, screen_width-16, 44)];
-    self.searchBar.tintColor = [UIColor fontGray_one_Color_deprecated];
+    self.searchBar.tintColor = font_gray_1;
     self.searchBar.barStyle = UIBarStyleDefault;
     self.searchBar.backgroundColor = [UIColor whiteColor];
     
@@ -178,7 +176,7 @@
     } else {
         cell.textLabel.text = tip.name;
     }
-    cell.textLabel.textColor = [UIColor fontGray_one_Color_deprecated];
+    cell.textLabel.textColor = font_gray_1;
     return cell;
 }
 

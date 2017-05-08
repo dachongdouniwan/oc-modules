@@ -115,8 +115,8 @@
         make.trailing.equalTo(self.view.mas_trailing).with.offset(-kGapXOfBottomView);
     }];
     
-    self.destNameLabel.textColor = [UIColor fontGray_one_Color_deprecated];
-    self.distanceLabel.textColor = [UIColor fontGray_three_Color_deprecated];
+    self.destNameLabel.textColor = color_gray;
+    self.distanceLabel.textColor = color_lightGray;
     [self.goHereButton setTitleColor:[UIColor colorWithRGBHex:0x10bdb1]];
     self.bottomView.hidden = YES;
 }
