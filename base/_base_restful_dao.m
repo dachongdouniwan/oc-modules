@@ -185,10 +185,15 @@
     
     [request addCompletionHandler:^(_NetworkHostRequest *completedRequest) {
         // 隐藏指示器
-        [self dismissHud];
         
         if (completedRequest.error) { // http error
             if (failureHandler) failureHandler(completedRequest.error);
+        } else if (completedRequest.response.statusCode != 200) {
+            
+            LOG(@"Error response = %@", completedRequest.response);
+            
+            if (failureHandler) failureHandler(nil);
+            
         } else {
             NSDictionary *response = completedRequest.responseAsJSON;
             
