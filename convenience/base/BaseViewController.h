@@ -173,6 +173,17 @@
 
 - (void)popToRoot;
 
+/**
+ *  转场动画
+ 
+ *  vc.modalTransitionStyle configuration
+ *  typedef NS_ENUM(NSInteger, UIModalTransitionStyle) {
+        UIModalTransitionStyleCoverVertical = 0,
+        UIModalTransitionStyleFlipHorizontal __TVOS_PROHIBITED, 水平翻转
+        UIModalTransitionStyleCrossDissolve,
+        UIModalTransitionStylePartialCurl NS_ENUM_AVAILABLE_IOS(3_2) __TVOS_PROHIBITED, 向上翻页效果
+    };
+ */
 - (void)presentVC:(UIViewController *)vc;
 - (void)dismissVC;
 
