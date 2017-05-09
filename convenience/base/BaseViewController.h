@@ -173,5 +173,8 @@
 
 - (void)popToRoot;
 
+- (void)presentVC:(UIViewController *)vc;
+- (void)dismissVC;
+
 @end
 

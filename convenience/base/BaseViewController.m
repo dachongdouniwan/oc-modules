@@ -470,5 +470,12 @@ static NSString *backButtonImageName = @"buckbutton";
     [self popToRootAnimate:YES];
 }
 
+- (void)presentVC:(UIViewController *)vc {
+    [self presentViewController:vc animated:YES completion:nil];
+}
+
+- (void)dismissVC {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 
 @end
