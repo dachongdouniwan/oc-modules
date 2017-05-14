@@ -9,6 +9,11 @@
 #import "_precompile.h"
 #import "_greats.h"
 
+/**
+ *  @knowledge
+ *  [AppDelegate中常用的代理方法回调的时机](http://www.jianshu.com/p/a8c2f6b8a4ad)
+ */
+
 // ----------------------------------
 // Cluster code
 // ----------------------------------
@@ -65,6 +70,16 @@
 - (void)onSynchronize; // 同步基本数据信息，信息获取OK后，需要调用父类方法
 
 - (void)onLaunch;
+
+- (void)onCleanup; // 应用终止的时候，做必要的清理
+
+/**
+ *  @desc
+ *
+ *  @param url  略
+ *  @param options 略
+ */
+- (BOOL)onOpenUrl:(NSURL *)url options:(NSDictionary<NSString*, id> *)options;
 
 /**
  * @param adSettingHandler 需要通过网络请求等，设置新的广告数据，当前只需要提供image信息，跳转信息自行处理

@@ -8,6 +8,7 @@
 
 #import "_application.h"
 #import "XHLaunchAd.h"
+#import "_pragma_push.h"
 
 @implementation _Application
 
@@ -59,6 +60,8 @@
 // 说明：当程序将要退出是被调用，通常是用来保存数据和一些退出前的清理工作。这个需要要设置UIApplicationExitsOnSuspend的键值。
 - (void)applicationWillTerminate:(UIApplication *)application {
     [self willTerminate];
+    
+    [self onCleanup];
 }
 
 // 说明：当程序载入后执行
@@ -168,8 +171,20 @@
 }
 
 // 说明：当通过url执行
-- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
-    return YES;
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_9_0
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url { // iOS 2-9
+    return [self application:application openURL:url sourceApplication:nil annotation:nonullify(nil)];
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation { // iOS 2-9
+    return [self onOpenUrl:url options:@{@"source":nonullify(sourceApplication),@"annotation":nonullify(annotation)}];
+}
+#endif
+
+// NOTE: 9.0以后使用新API接口
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options { // iOS 9-
+    
+    return [self onOpenUrl:url options:options];
 }
 
 // 说明：iPhone设备只有有限的内存，如果为应用程序分配了太多内存操作系统会终止应用程序的运行，在终止前会执行这个方法，通常可以在这里进行内存清理工作防止程序被终止
@@ -203,5 +218,9 @@
 - (void)onSynchronize { if (is_method_overrided(self.class, _Application.class, @selector(onSynchronize))) XCT_GOON };
 - (void)onLaunch {}
 - (Block)onAdvertise:(StringBlock)adSettingHandler {return nil;}
+- (void)onCleanup {}
+- (BOOL)onOpenUrl:(NSURL *)url options:(NSDictionary<NSString *,id> *)options {return YES;}
 
 @end
+
+#import "_pragma_pop.h"

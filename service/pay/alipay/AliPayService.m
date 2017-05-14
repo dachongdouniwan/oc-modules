@@ -125,7 +125,7 @@
 
 #pragma mark - Parse
 
-- (void)parse:(NSURL *)url application:(UIApplication *)application {
+- (void)parse:(NSURL *)url {
     if (url != nil && [[url host] compare:@"safepay"] == 0) { // AlixPayment result
         
         // 授权跳转支付宝钱包进行支付，处理支付结果

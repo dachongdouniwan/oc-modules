@@ -43,7 +43,7 @@ typedef NS_ENUM(NSInteger, AliPayServiceErrorCode) {
 - (BOOL)pay;
 - (void)process:(id)data;
 
-- (void)parse:(NSURL *)url application:(UIApplication *)application;
+- (void)parse:(NSURL *)url;
 
 @end
 
