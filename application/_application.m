@@ -33,6 +33,9 @@
 @def_prop_dynamic( BOOL,				inactive );
 @def_prop_dynamic( BOOL,				background );
 
+@def_prop_strong( Block,			whenEnterBackground );
+@def_prop_strong( Block,			whenEnterForeground );
+
 @def_prop_singleton( _AppConfig,        config );
 
 #pragma mark - 生命周期
@@ -49,7 +52,7 @@
 
 // 说明：当程序被推送到后台的时候调用。所以要设置后台继续运行，则在这个函数里面设置即可
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    [self willEnterBackground];
+    [self didEnterBackground];
 }
 
 // 说明：当程序从后台将要重新回到前台时候调用，这个刚好跟上面的那个方法相反。
@@ -202,8 +205,12 @@
 - (void)didLaunch {}
 - (void)willTerminate {}
 - (void)didBecomeActive {}
-- (void)willEnterForeground {}
-- (void)willEnterBackground {}
+- (void)willEnterForeground {
+    if (self.whenEnterForeground) self.whenEnterForeground();
+}
+- (void)didEnterBackground {
+    if (self.whenEnterBackground) self.whenEnterBackground();
+}
 - (void)willResignActive {}
 
 #pragma mark - ApplicationNofiticationProtocol

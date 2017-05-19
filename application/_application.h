@@ -41,7 +41,7 @@
 
 - (void)willEnterForeground; // 程序即将从后台，回到前台
 
-- (void)willEnterBackground; // 程序即将从前台，退到后台
+- (void)didEnterBackground; // 程序即将从前台，退到后台
 
 - (void)willResignActive; // 程序即将失去焦点
 
@@ -122,6 +122,10 @@
 @prop_readonly( BOOL,				active );
 @prop_readonly( BOOL,				inactive );
 @prop_readonly( BOOL,				background );
+
+// If u wanna using block replaced notification
+@prop_strong( Block,			whenEnterBackground );
+@prop_strong( Block,			whenEnterForeground );
 
 @prop_singleton( _AppConfig,        config );
 
