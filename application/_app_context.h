@@ -16,6 +16,13 @@
 @prop_singleton( _AppInit, initialize )
 @prop_singleton( _AppUninit, uninitialize )
 
+/**
+    服务功能
+ 
+    1. 地址、城市信息
+ **/
+
+
 @end
 
 /**
