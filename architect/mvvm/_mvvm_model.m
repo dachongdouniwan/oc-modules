@@ -8,6 +8,28 @@
 
 #import "_mvvm_model.h"
 
-@implementation _mvvm_model
+@implementation _MvvmModel
+
+- (instancetype)init {
+    if (self = [super init]) {
+        [self setup];
+    }
+    
+    return self;
+}
+
+- (void)dealloc {
+    [self clear];
+}
+
+#pragma mark - Override
+
+- (void)setup {
+    
+}
+
+- (void)clear {
+    
+}
 
 @end

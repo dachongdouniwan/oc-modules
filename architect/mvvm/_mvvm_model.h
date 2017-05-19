@@ -8,6 +8,20 @@
 
 #import <Foundation/Foundation.h>
 
-@interface _mvvm_model : NSObject
+/**
+ Responsible
+ 
+ 1. model对controller层的接口，进行拆分；有点类似于mvp，将controller的action和mvp的handler一一对应.
+ */
+
+@interface _MvvmModel : NSObject
+
+/** TODO：这里还需要注意，不能简单的这么构建生命周期函数 */
+
+/** Call on 'init' */
+- (void)setup;
+
+/** Call on 'dealloc' */
+- (void)clear;
 
 @end

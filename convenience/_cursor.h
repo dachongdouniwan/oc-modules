@@ -64,6 +64,6 @@ typedef enum CursorType {
 
 - (void)next; // pageCursor
 
-- (void)evaluateEndWith:(int32_t)actualCount; // pageCursor
+- (void)evaluateEndWith:(int32_t)actualCount; // pageCursor: touch end, or , goto next page
 
 @end

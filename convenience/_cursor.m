@@ -83,6 +83,8 @@
 - (void)evaluateEndWith:(int32_t)actualCount {
     if (actualCount < self.length) {
         self.end = YES;
+    } else {
+        [self next];
     }
 }
 
