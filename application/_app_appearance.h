@@ -38,6 +38,9 @@
 #undef  color_background_nav
 #define color_background_nav appAppearance.viewBackgroundColor
 
+#undef  color_separator_view
+#define color_separator_view gray_3
+
 #define line_gray       font_gray_1
 
 #define background_gray color_background_view
