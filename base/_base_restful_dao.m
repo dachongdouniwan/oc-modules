@@ -120,7 +120,6 @@
 }
 
 - (void)POST:(NSString *)path parameters:(NSDictionary *)param headers:(NSDictionary *)headers successHandler:(ObjectBlock)successHandler failure:(ErrorBlock)failureHandler {
-    LOG(@"parameter = %@", param);
     
     // 显示指示器
     [self showHud];
@@ -137,6 +136,8 @@
     if (param) { // 当前接口参数
         [mutableParameters addEntriesFromDictionary:param];
     }
+    
+    LOG(@"parameter = %@", mutableParameters);
     
     _NetworkHostRequest *request = [self.host requestWithPath:path params:mutableParameters httpMethod:@"POST"];
     if (headers.allKeys.count) {

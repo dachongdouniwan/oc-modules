@@ -7,9 +7,14 @@
 //
 
 #import "_app_uninit.h"
+#import "_app_context.h"
 
 @implementation _AppUninit
 
 @def_singleton( _AppUninit )
+
+- (void)logout {
+    [context_inst.user clear];
+}
 
 @end

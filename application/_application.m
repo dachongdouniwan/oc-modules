@@ -37,6 +37,7 @@
 @def_prop_strong( Block,			whenEnterForeground );
 
 @def_prop_singleton( _AppConfig,        config );
+@def_prop_singleton( _AppContext,       context )
 
 #pragma mark - 生命周期
 
@@ -176,11 +177,11 @@
 // 说明：当通过url执行
 #if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_9_0
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url { // iOS 2-9
-    return [self application:application openURL:url sourceApplication:nil annotation:nonullify(nil)];
+    return [self application:application openURL:url sourceApplication:nil annotation:nonullify(nil, NSObject)];
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation { // iOS 2-9
-    return [self onOpenUrl:url options:@{@"source":nonullify(sourceApplication),@"annotation":nonullify(annotation)}];
+    return [self onOpenUrl:url options:@{@"source":nonullify(sourceApplication, NSString),@"annotation":annotation}];
 }
 #endif
 

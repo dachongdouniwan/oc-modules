@@ -19,7 +19,6 @@
 // ----------------------------------
 
 #import "_app_context.h"
-
 #import "_app_module.h"
 #import "_app_rule.h"
 #import "_app_appearance.h"
@@ -109,24 +108,28 @@
 @notification( LocalNotification )
 @notification( RemoteNotification )
 
-@notification( EnterBackground );
-@notification( EnterForeground );
+@notification( EnterBackground )
+@notification( EnterForeground )
 @notification( Ready )
 
-@prop_strong( UIWindow *,			window );
-@prop_strong( NSString *,			pushToken );
-@prop_strong( NSError *,			pushError );
-@prop_strong( NSString *,			sourceUrl );
-@prop_strong( NSString *,			sourceBundleId );
+@prop_strong( UIWindow *,			window )
+@prop_strong( NSString *,			pushToken )
+@prop_strong( NSError *,			pushError )
+@prop_strong( NSString *,			sourceUrl )
+@prop_strong( NSString *,			sourceBundleId )
 
-@prop_readonly( BOOL,				active );
-@prop_readonly( BOOL,				inactive );
-@prop_readonly( BOOL,				background );
+@prop_readonly( BOOL,				active )
+@prop_readonly( BOOL,				inactive )
+@prop_readonly( BOOL,				background )
 
 // If u wanna using block replaced notification
-@prop_strong( Block,			whenEnterBackground );
-@prop_strong( Block,			whenEnterForeground );
+@prop_strong( Block,			whenEnterBackground )
+@prop_strong( Block,			whenEnterForeground )
 
-@prop_singleton( _AppConfig,        config );
+@prop_singleton( _AppConfig,        config )
+@prop_singleton( _AppContext,       context )
 
 @end
+
+#undef  app_inst
+#define app_inst ((_Application *)[UIApplication sharedApplication].delegate)

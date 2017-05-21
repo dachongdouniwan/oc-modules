@@ -8,8 +8,18 @@
 
 #import "_building_precompile.h"
 
+@protocol AppUninitDelegate;
+
 @interface _AppUninit : NSObject
 
 @singleton( _AppUninit )
+
+- (void)logout;
+
+@end
+
+@protocol AppUninitDelegate <NSObject>
+
+
 
 @end
