@@ -25,3 +25,31 @@
 ### convenience
 
 便利性代码案例
+
+### dao
+
+TODO：数据层往下，尝试函数式，流式处理
+```
+    client.POST(^(){ // 提交请求
+        return [Reqeust requestWith:...];
+    }).networkChanged(^(NetworkStatus status){ // 网络状态更新
+        // 如果是图片，在非WIFI网络，则让用户产生选择，并在UserConfigModel层，缓存起来
+        // 如果是视频，同上
+    }).reconnectCount(^(BOOL networkBroken){ // 重连设置
+        if (networkBroken) return 0;
+        else return 3;
+    }).response(^(NSDictionary *data, NSError *error){ // 应答处理
+
+    }).enableCache();
+```
+
+1. dao层
+    - 用宏或者注解完成api可配置
+    ```
+    @api(root_test, @"root/test")
+    // 1. 可以统计api数目
+    // 2. 可以全览api请求频次, 失败频次，平均时间，数据包大小等
+    ```
+    - 
+2. 网络层
+    
