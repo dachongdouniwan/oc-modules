@@ -154,7 +154,14 @@
         if (completedRequest.error) { // http error
             if (failureHandler) failureHandler(completedRequest.error);
         } else {
-            NSDictionary *response = completedRequest.responseAsJSON;
+            NSString *responseString = [completedRequest responseAsString];
+            
+            responseString = [responseString replaceAll:@"null" with:@"\"\""];
+            NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
+            NSDictionary *response = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+            
+            //NSDictionary *response = [responseString];//completedRequest.responseAsJSON;
+
             
             LOG(@"response = %@", response);
             
