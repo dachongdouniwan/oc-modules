@@ -80,6 +80,15 @@
         XCT_BLOCK; // TODO:这是只做测试，不是最终方案
     }
     
+    
+    if (launchOptions[UIApplicationLaunchOptionsURLKey]) {
+        // Opening from URL
+        // [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"app://..."]];
+    }
+    
+    if (launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]) {
+        [self application:application didReceiveRemoteNotification:launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]];
+    }
     /**
      * 广告页面
      */
@@ -217,8 +226,8 @@
 #pragma mark - ApplicationNofiticationProtocol
 
 #pragma mark - ApplicationExternalEventProtocol
-- (void)whenSignificantTimeChange {}
-- (void)whenMemoryOverflow {}
+- (void)onSignificantTimeChanged {}
+- (void)onMemoryOverflow {}
 
 #pragma mark - ApplicationRuntimePeriodProtocol
 - (void)onConfig:(_AppConfig *)appConfig {}

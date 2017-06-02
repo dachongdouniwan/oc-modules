@@ -48,15 +48,17 @@
 
 @protocol ApplicationNofiticationProtocol <NSObject> // 应用推送回调（外部不关心api版本问题）
 
-
+- (void)onLaunchByNotification:(id)notification;
 
 @end
 
 @protocol ApplicationExternalEventProtocol <NSObject> // 应用外部事件回调
 
-- (void)whenSignificantTimeChange; // 当系统时间发生改变时
+- (void)onLaunchByOpeningUrl:(NSURL *)url;
 
-- (void)whenMemoryOverflow; // 内存要溢出了
+- (void)onSignificantTimeChanged; // 当系统时间发生改变时
+
+- (void)onMemoryOverflow; // 内存要溢出了
 
 @end
 
