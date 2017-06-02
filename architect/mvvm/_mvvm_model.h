@@ -6,7 +6,7 @@
 //  Copyright © 2017年 fallenink. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "_building_precompile.h"
 
 /**
  Responsible
@@ -23,5 +23,19 @@
 
 /** Call on 'dealloc' */
 - (void)clear;
+
+@end
+
+@interface _MvvmModel ( Template )
+
+/**
+ * @brief load from 0
+ */
+- (void)loadListWithSuccess:(ObjectBlock)successHandler failure:(ErrorBlock)failureHandler;
+
+/**
+ *  @brief append
+ */
+- (void)appendListWithSuccess:(ObjectBlock)successHandler failure:(ErrorBlock)failureHandler;
 
 @end

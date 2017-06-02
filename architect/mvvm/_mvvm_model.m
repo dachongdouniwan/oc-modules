@@ -33,3 +33,15 @@
 }
 
 @end
+
+@implementation _MvvmModel ( Template )
+
+- (void)loadListWithSuccess:(ObjectBlock)successHandler failure:(ErrorBlock)failureHandler {
+    
+}
+
+- (void)appendListWithSuccess:(ObjectBlock)successHandler failure:(ErrorBlock)failureHandler {
+    
+}
+
+@end
