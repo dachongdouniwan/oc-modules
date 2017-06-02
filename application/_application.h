@@ -68,6 +68,14 @@
 
 - (UIViewController *)forLaunchViewController; // 返回等效的启动画面
 
+/**
+ *  Usage
+ *
+ *  @brief 
+ *      1. 该方法在启动时执行，会block在启动页面
+ *      2. 用于启动时候同步数据
+ *      3. 如果网络数据回来了，则调用[super onSynchronize]，通知回来，继续当前线程
+ */
 - (void)onSynchronize; // 同步基本数据信息，信息获取OK后，需要调用父类方法
 
 - (void)onLaunch;

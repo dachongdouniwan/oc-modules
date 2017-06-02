@@ -196,7 +196,7 @@ EXTERN NSString *PushSereviceAdvertisingId;
  
     应用程序可以把此 RegistrationID 保存以自己的应用服务器上，然后就可以根据 RegistrationID 来向设备推送消息或者通知。
  *
- *  @param registrationId
+ *  @param registrationId ...
  */
 - (void)onReceiveRegistrationId:(NSString *)registrationId;
 
@@ -206,7 +206,7 @@ EXTERN NSString *PushSereviceAdvertisingId;
  从jpush服务器获取用户推送的自定义消息内容和标题以及附加字段等。
  
  *
- *  @param message
+ *  @param notification ...
  */
 - (void)onRecieveMessage:(NSDictionary *)notification;
 
