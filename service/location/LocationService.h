@@ -24,17 +24,17 @@ typedef enum : NSUInteger {
 
 @prop_assign(LocationStatus, locationStatus)
 
+/**
+ *  @brief 立即返回当前的定位结果，定位不到的话为nil, 慎用！！
+ */
+@prop_strong(LocationModel *, currentLocation)
+
 - (BOOL)available;
 
 /**
  *  @brief 专注定位一百年，失败返回nil，不再返回默认城市或用户注册城市相关信息;优先使用高德逆地理编码，其次使用苹果的
  */
 - (void)currentLocationWithBlock:(void(^)(LocationModel* location))handlerBlock;
-
-/**
- *  @brief 立即返回当前的定位结果，定位不到的话为nil, 慎用！！
- */
-- (LocationModel *)currentLocation;
 
 /**
  *  @brief 只取经纬度

@@ -14,11 +14,12 @@
 
 const int kUpdateLocationInterval = 1*60;//每1分钟刷新定位
 
-@interface LocationService () <CLLocationManagerDelegate>
+@interface LocationService () <CLLocationManagerDelegate> {
+    
+}
 
 @prop_strong(AMapLocationManager *, locationManager)
 
-@prop_strong(LocationModel *, currentLocation)
 @prop_strong(CLLocation *, currrentSimLocation)
 
 @end
@@ -79,10 +80,6 @@ const int kUpdateLocationInterval = 1*60;//每1分钟刷新定位
     } else {
         [self updateLocationWithBlock:handlerBlock];
     }
-}
-
-- (nullable LocationModel*)currentLocation{
-    return self.currentLocation;
 }
 
 - (void)updateLocationWithBlock:(void(^)(LocationModel* location))handlerBlock {

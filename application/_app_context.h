@@ -37,6 +37,7 @@
 // 市信息
 @prop_assign( int64_t, cityId )
 @prop_assign( int64_t, cityCode )
+@prop_strong( NSString *, cityCodes )
 @prop_strong( NSString *, cityName )
 // 省信息
 @prop_assign( int64_t, provinceId )

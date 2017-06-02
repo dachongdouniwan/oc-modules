@@ -22,6 +22,7 @@
 
 @def_prop_assign( int64_t, cityId )
 @def_prop_assign( int64_t, cityCode )
+@def_prop_strong( NSString *, cityCodes )
 @def_prop_strong( NSString *, cityName )
 
 @def_prop_assign( int64_t, provinceId )
