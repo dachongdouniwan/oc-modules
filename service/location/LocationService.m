@@ -16,18 +16,16 @@ const int kUpdateLocationInterval = 1*60;//每1分钟刷新定位
 
 @interface LocationService () <CLLocationManagerDelegate>
 
-@property (strong, nonatomic) AMapLocationManager *gdLocationManager;
+@prop_strong(AMapLocationManager *, locationManager)
 
-@property (strong, atomic) LocationModel    *curLocation;
-@property (strong, atomic) CLLocation   *curSimpleLocation;
+@prop_strong(LocationModel *, currentLocation)
+@prop_strong(CLLocation *, currrentSimLocation)
 
 @end
 
 @implementation LocationService
 
 @def_singleton( LocationService )
-
-@def_prop_instance( UserCityService, userCityService )
 
 - (instancetype)init {
     if (self = [super init]) {
@@ -43,6 +41,7 @@ const int kUpdateLocationInterval = 1*60;//每1分钟刷新定位
                     
                 }];
             }];
+        
             //首次获取定位
             [self currentLocationWithBlock:^(LocationModel *location) {
                 
@@ -55,14 +54,14 @@ const int kUpdateLocationInterval = 1*60;//每1分钟刷新定位
 
 #pragma mark - 获取定位接口
 
-- (BOOL)isLocationComponentEnabled {
+- (BOOL)available {
 #if TARGET_IPHONE_SIMULATOR
-    DDLogWarn(@"定位服务.模拟器环境下定位不可用");
+    WARN(@"定位服务.模拟器环境下定位不可用");
     return NO;
 #else
     if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied
         || [CLLocationManager authorizationStatus] == kCLAuthorizationStatusRestricted) {
-        DDLogWarn(@"定位服务.未开启定位服务");
+        WARN(@"定位服务.未开启定位服务");
         return NO;
     }
     return YES;
@@ -72,9 +71,9 @@ const int kUpdateLocationInterval = 1*60;//每1分钟刷新定位
 - (void)currentLocationWithBlock:(void(^)(LocationModel* location))handlerBlock {
     NSAssert(handlerBlock != nil, @"定位服务.未提供回调block");
     
-    if (self.curLocation) {
-        handlerBlock(self.curLocation);
-    } else if(![self isLocationComponentEnabled]) {
+    if (self.currentLocation) {
+        handlerBlock(self.currentLocation);
+    } else if(![self available]) {
         self.locationStatus = LocationStatus_Failed;
         handlerBlock(nil);
     } else {
@@ -83,30 +82,30 @@ const int kUpdateLocationInterval = 1*60;//每1分钟刷新定位
 }
 
 - (nullable LocationModel*)currentLocation{
-    return self.curLocation;
+    return self.currentLocation;
 }
 
 - (void)updateLocationWithBlock:(void(^)(LocationModel* location))handlerBlock {
     self.locationStatus = LocationStatus_Locating;
     //偏差在100米以内，耗时在2-3s
-    [self.gdLocationManager setDesiredAccuracy:kCLLocationAccuracyHundredMeters];
+    [self.locationManager setDesiredAccuracy:kCLLocationAccuracyHundredMeters];
     
     @weakify(self);
-    [self.gdLocationManager requestLocationWithReGeocode:YES completionBlock:^(CLLocation *location, AMapLocationReGeocode *regeocode, NSError *error) {
+    [self.locationManager requestLocationWithReGeocode:YES completionBlock:^(CLLocation *location, AMapLocationReGeocode *regeocode, NSError *error) {
         @strongify(self);
         if(location == nil && regeocode == nil){
             if (error) {
-                DDLogError(@"定位服务.定位失败,error:{%ld - %@}", (long)error.code, error.localizedDescription);
+                ERROR(@"定位服务.定位失败,error:{%ld - %@}", (long)error.code, error.localizedDescription);
                 
             } else {
-                DDLogError(@"定位服务.定位失败");
+                ERROR(@"定位服务.定位失败");
                 
             }
             self.locationStatus = LocationStatus_Failed;
             handlerBlock(nil);
             return;
         } else if(location) {
-            self.curSimpleLocation = location;
+            self.currrentSimLocation = location;
             
             if (regeocode) {
                 LocationModel* locationResult = [LocationModel new];
@@ -115,13 +114,13 @@ const int kUpdateLocationInterval = 1*60;//每1分钟刷新定位
                 if (cityID) {
                     locationResult.latitude = location.coordinate.latitude;
                     locationResult.longitude = location.coordinate.longitude;
-                    locationResult.cityID = cityID;
+                    locationResult.cityId = cityID;
                     locationResult.cityCode = cityID;
                     locationResult.address = regeocode.formattedAddress;
                     locationResult.district = regeocode.district;
-                    locationResult.cityNameString = regeocode.city ? regeocode.city : regeocode.province;
+                    locationResult.cityName = regeocode.city ? regeocode.city : regeocode.province;
                     
-                    self.curLocation = locationResult;
+                    self.currentLocation = locationResult;
                     self.locationStatus = LocationStatus_Success;
                     
                     handlerBlock(locationResult);
@@ -131,7 +130,7 @@ const int kUpdateLocationInterval = 1*60;//每1分钟刷新定位
             
             [CityGeoCoder reverseGeocodeLocation:location completionHandler:^(LocationModel *locationResult) {
                 if (locationResult) {
-                    self.curLocation = locationResult;
+                    self.currentLocation = locationResult;
                     
                     self.locationStatus = LocationStatus_Success;
                 } else {
@@ -143,7 +142,7 @@ const int kUpdateLocationInterval = 1*60;//每1分钟刷新定位
                 return;
             }];
         } else {
-            DDLogError(@"定位服务.定位失败");
+            ERROR(@"定位服务.定位失败");
             self.locationStatus = LocationStatus_Failed;
             handlerBlock(nil);
             return;
@@ -156,9 +155,9 @@ const int kUpdateLocationInterval = 1*60;//每1分钟刷新定位
 - (void)currentSimpleLocationWithBlock:(void (^)(CLLocation *))handlerBlock {
     NSAssert(handlerBlock != nil, @"定位服务.未提供回调block");
     
-    if (self.curSimpleLocation) {
-        handlerBlock(self.curSimpleLocation);
-    } else if(![self isLocationComponentEnabled]) {
+    if (self.currrentSimLocation) {
+        handlerBlock(self.currrentSimLocation);
+    } else if(![self available]) {
         handlerBlock(nil);
     } else {
         [self updateSimpleLocationWithBlock:handlerBlock];
@@ -167,29 +166,33 @@ const int kUpdateLocationInterval = 1*60;//每1分钟刷新定位
 
 - (void)updateSimpleLocationWithBlock:(void(^)(CLLocation* location))handlerBlock {
     //偏差在100米以内，耗时在2-3s
-    [self.gdLocationManager setDesiredAccuracy:kCLLocationAccuracyHundredMeters];
+    [self.locationManager setDesiredAccuracy:kCLLocationAccuracyHundredMeters];
     
     @weakify(self);
-    [self.gdLocationManager requestLocationWithReGeocode:NO completionBlock:^(CLLocation *location, AMapLocationReGeocode *regeocode, NSError *error) {
+    [self.locationManager requestLocationWithReGeocode:NO completionBlock:^(CLLocation *location, AMapLocationReGeocode *regeocode, NSError *error) {
         @strongify(self);
         
         if(location == nil) {
             if (error) {
-                DDLogError(@"定位服务.简单定位失败,error:{%ld - %@}", (long)error.code, error.localizedDescription);
+                ERROR(@"定位服务.简单定位失败,error:{%ld - %@}", (long)error.code, error.localizedDescription);
                 
             } else {
-                DDLogError(@"定位服务.简单定位失败");
-                
+                ERROR(@"定位服务.简单定位失败");
             }
+            
             handlerBlock(nil);
+            
             return;
         } else if(location) {
-            self.curSimpleLocation = location;
+            self.currrentSimLocation = location;
             handlerBlock(location);
             return;
         } else {
-            DDLogError(@"定位服务.简单定位失败");
+            
+            ERROR(@"定位服务.简单定位失败");
+            
             handlerBlock(nil);
+            
             return;
         }
     }];

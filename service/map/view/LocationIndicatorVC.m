@@ -13,6 +13,7 @@
 #import "MAMapKit/MAMapKit.h"
 #import "BaseWebViewController.h"
 #import "ReactiveCocoa.h"
+#import "_pragma_push.h"
 
 #define kGapXOfBottomView 12
 #define kGapYOfBottomView 20
@@ -124,7 +125,7 @@
 - (void)bindViewModel {
     @weakify(self);
     RACSignal* sig_currentLocationSuccess = nil;
-    if (suite.service.location.isLocationComponentEnabled) {
+    if (suite.service.location.available) {
        sig_currentLocationSuccess = [[RACObserve(self.mapView.userLocation, location) filter:^BOOL(id value) {
             return value != nil;
         }]take:1];
@@ -180,7 +181,7 @@
         DDLogDebug(@"高德H5应用URL:%@",url);
         
         NSString *encodedUrl = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        [self pushHtml:encodedUrl extraParams:@{@"title":@"高德地图"}];
+        [self pushHtml:[NSURL URLWithString:encodedUrl] extraParams:@{@"title":@"高德地图"}];
     }
 }
 
@@ -286,8 +287,9 @@
     }
     
     NSMutableString* distanceStr = [NSMutableString new];
+    
     //未开启定位时不显示距离
-    if (suite.service.location.isLocationComponentEnabled && self.mapView.userLocation.location) {
+    if (suite.service.location.available && self.mapView.userLocation.location) {
         MAUserLocation* userLocation = self.mapView.userLocation;
         LocationModel* currentLocation = [LocationModel modelWithLongitude:userLocation.coordinate.longitude latitude:userLocation.coordinate.latitude];
         LocationModel* destLocationModel = [LocationModel modelWithLongitude:self.destinationGeoInfo.location.longitude latitude:self.destinationGeoInfo.location.latitude];
@@ -324,3 +326,5 @@
 }
 
 @end
+
+#import "_pragma_pop.h"

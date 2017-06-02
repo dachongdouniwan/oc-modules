@@ -173,7 +173,7 @@ static CGFloat AutoLocationViewWidthConstant = 0;
     self.mapView.customizeUserLocationAccuracyCircleRepresentation = YES;
     
     //定位关闭，就提示用户自己手动搜索
-    if (![LocationService sharedInstance].isLocationComponentEnabled) {
+    if (![LocationService sharedInstance].available) {
         self.curZone.placeholder = @"小区、街道或路名等等，必填";
         [self showAlertView:nil message:@"定位服务未开启,请在“设置-隐私-定位服务”选项中,允许发咖获得您的地理位置" cancelButtonName:@"确定" cancelHandler:nil];
     } else {
@@ -218,7 +218,7 @@ static CGFloat AutoLocationViewWidthConstant = 0;
 
 - (void)setCurrentZoneAddress:(NSString *)address {
     AutoLocationViewWidthConstant = screen_width - /* leading space */ 20 - /* trailing space */30;
-    NSUInteger lineCount = [address textLineNumWithFont:font_normal_16 constrainedToSize:CGSizeMake(AutoLocationViewWidthConstant, screen_height)];
+    NSUInteger lineCount = [address linesWithFont:font_normal_16 constrainedToWidth:AutoLocationViewWidthConstant];
     
     lineCount = lineCount <= 1 ? 1 : lineCount;
     

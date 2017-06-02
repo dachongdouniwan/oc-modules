@@ -40,9 +40,9 @@
     
     copy.latitude = self.latitude;
     copy.longitude = self.longitude;
-    copy.cityID = self.cityID;
+    copy.cityId = self.cityId;
     copy.cityCode = self.cityCode;
-    copy.cityNameString = self.cityNameString;
+    copy.cityName = self.cityName;
     
     return copy;
 }
@@ -56,7 +56,7 @@
 }
 
 - (BOOL)containValidCity {
-    return (self.cityID >= 0 && [self.cityNameString length] > 0);
+    return (self.cityId >= 0 && [self.cityName length] > 0);
 }
 
 - (BOOL)containValidLocation {
@@ -64,7 +64,7 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"地址:%@ 城市ID:%d 经纬度:(%f,%f)",self.address,self.cityID,self.longitude,self.latitude];
+    return [NSString stringWithFormat:@"地址:%@ 城市ID:%lld 经纬度:(%f,%f)",self.address,self.cityId,self.longitude,self.latitude];
 }
 
 @end

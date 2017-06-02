@@ -6,21 +6,22 @@
 //  Copyright © 2015年 OpenTeam. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "_foundation.h"
 #import "_archiver.h"
 
 @interface LocationModel : NSObject <NSCoding>
 
-@property (nonatomic, copy) NSString *address;
+@prop_assign(double, longitude) // 经度
+@prop_assign(double, latitude) // 纬度
 
-@property (nonatomic, assign) double longitude; // 经度
-@property (nonatomic, assign) double latitude; // 纬度
+@prop_assign(int64_t, cityId)
+@prop_assign(int32_t, cityCode)
+@prop_strong(NSString *, cityCodes)
 
-@property (nonatomic, assign) int cityID;
-@property (nonatomic, assign) int cityCode;
+@prop_strong(NSString *, address)
 
-@property (nonatomic, strong) NSString  *cityNameString;
-@property (nonatomic, strong) NSString  *district;   //区，比如浦东新区
+@prop_strong(NSString *, cityName)
+@prop_strong(NSString *, district) //区，比如浦东新区
 
 //
 + (id)modelWithLongitude:(double)lo latitude:(double)la;

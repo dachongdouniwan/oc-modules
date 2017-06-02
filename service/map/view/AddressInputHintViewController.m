@@ -7,9 +7,9 @@
 //
 #import <AMapSearchKit/AMapSearchKit.h>
 #import "AddressInputHintViewController.h"
-#import "UserCityService.h"
 #import "_ui_core.h"
 #import "_vendor_lumberjack.h"
+#import "_pragma_push.h"
 
 @interface AddressInputHintViewController () <UISearchBarDelegate,
                                               UITableViewDataSource,
@@ -51,7 +51,6 @@
 }
 
 #pragma mark - Initialization
-
 
 - (id)initWithSearchAPI:(AMapSearchAPI *)searchAPI completion:(ObjectBlock)completion {
     if (self = [super init]) {
@@ -106,14 +105,17 @@
     {
         return;
     }
-    NSString *address = [[UserCityService  sharedInstance] getUserCityName];
+    
+    ASSERT(NO) // 这里为什么需要详细地址？
+    
+//    NSString *address = [[UserCityService  sharedInstance] getUserCityName];
     
     
     AMapInputTipsSearchRequest *tips = [[AMapInputTipsSearchRequest alloc] init];
     tips.keywords = key;
-    if (address.length > 0) {
-        tips.city = address;
-    }
+//    if (address.length > 0) {
+//        tips.city = address;
+//    }
     
     [self.search AMapInputTipsSearch:tips];
 }
@@ -196,3 +198,5 @@
 }
 
 @end
+
+#import "_pragma_pop.h"

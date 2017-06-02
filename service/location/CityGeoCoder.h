@@ -13,13 +13,16 @@
 
 typedef void(^CityGeoCodeCompletionBlock)(LocationModel *location);
 
-
 @interface CityGeoCoder : NSObject
 
-//具体地址-->相关城市
+/**
+ *  @brief 具体地址-->相关城市, 城市id可能无效
+ */
 + (void)geocodeAddressString:(NSString *)addressString completionHandler:(CityGeoCodeCompletionBlock)completionHandler;
 
-//经纬度-->相关城市
+/**
+ *  @brief 经纬度-->相关城市, 城市id可能无效
+ */
 + (void)reverseGeocodeLocation:(CLLocation *)location completionHandler:(CityGeoCodeCompletionBlock)completionHandler;
 
 @end
