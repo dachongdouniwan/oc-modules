@@ -7,13 +7,17 @@
 //
 
 #import "_building_precompile.h"
+#import "_app_rater.h"
 
 @interface _AppConfig : NSObject
 
 @singleton( _AppConfig )
 
-@property (nonatomic, assign) BOOL enabledLaunchAdvertise; // 启动广告，默认：NO
+// 广告配置
+@prop_assign(BOOL, enabledLaunchAdvertise) // 启动广告，默认：NO
+@prop_assign(CGFloat, launchAdvertiseDuration)
 
-@property (nonatomic, assign) CGFloat launchAdvertiseDuration;
+// 评分配置
+@prop_singleton(_AppRater, rater)
 
 @end

@@ -12,6 +12,8 @@
 
 @def_singleton( _AppConfig )
 
+@def_prop_singleton( _AppRater, rater )
+
 - (instancetype)init {
     if (self = [super init]) {
         self.enabledLaunchAdvertise = NO;
