@@ -11,10 +11,7 @@
 
 #import "_precompile.h"
 #import "_foundation.h"
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wobjc-missing-property-synthesis"
-
+#import "_pragma_push.h"
 
 #import <Availability.h>
 #undef weak_delegate
@@ -197,4 +194,4 @@ typedef NS_ENUM(NSUInteger, _AppRaterErrorCode) {
     }
  */
 
-#pragma clang diagnostic pop
+#import "_pragma_pop.h"
