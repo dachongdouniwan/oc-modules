@@ -4,7 +4,10 @@
 //
 //  Created by fallen on 16/8/23.
 //
-//
+//  @feature
+//  1. 时区管理
+//  2. 时间同步
+//  3. 时间展现
 
 #import "_service.h"
 #import "TimePresenter.h"

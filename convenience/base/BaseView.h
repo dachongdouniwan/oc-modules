@@ -10,4 +10,6 @@
 
 @interface BaseView : UIView
 
+- (void)setup; // create subs and config
+
 @end

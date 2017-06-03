@@ -12,30 +12,6 @@
 
 @implementation UIColor (theme)
 
-+ (void)initialize { // todo: 不应该对源方法产生影响
-//    [AppConfig adapterAppHairDresser:^{
-        [self copyClassMethod:@selector(mfsYellowColor)
-                toClassMethod:@selector(themeYellowColor)
-                        error:nil];
-        
-        [self copyClassMethod:@selector(mfsYellowColor)
-                toClassMethod:@selector(themeColor)
-                        error:nil];
-//    } appCustomer:^{
-//        [self copyClassMethod:@selector(mfsYellowColor)
-//                toClassMethod:@selector(themeYellowColor)
-//                        error:nil];
-//        
-//        [self copyClassMethod:@selector(themePinkColor)
-//                toClassMethod:@selector(themeColor)
-//                        error:nil];
-//    } appMaster:^{
-//        [self copyClassMethod:@selector(dsRedColor)
-//                toClassMethod:@selector(themeRedColor)
-//                        error:nil];
-//    }];
-}
-
 #pragma mark - 颜色规范
 #pragma mark - 基准色
 
@@ -197,57 +173,6 @@
 }
 + (UIColor *)fontGray_four_Color_deprecated {
     return [UIColor gray004Color];
-}
-
-#pragma mark - 命名色
-
-+ (UIColor *)themeColor {
-    return nil;
-}
-
-// Theme
-+ (UIColor *)themePinkColor {
-    return [UIColor colorWithRGBHex:0xff80c7];
-}
-
-+ (UIColor *)themePurpleColor {
-    return [UIColor colorWithRed:182.0/255 green:152.0/255 blue:223.0/255 alpha:1.0];
-}
-
-+ (UIColor *)themeBlackColor {
-    return [UIColor colorWithHexString:@"000000"];
-}
-
-+ (UIColor *)themeGreenColor {
-    return nil;
-}
-
-+ (UIColor *)themeOrangeColor {
-    return nil;
-}
-
-+ (UIColor *)themeBlueColor {
-    return nil;
-}
-
-+ (UIColor *)themeYellowColor {
-    return nil;
-}
-
-+ (UIColor *)themeRedColor {
-    return nil;
-}
-
-+ (UIColor *)themeGreenTwoColor {
-    return [UIColor colorWithRed:(140.0f / 255.0f) green:(200.0f / 255.0f) blue:(68.0f / 255.0f) alpha:1.0f];
-}
-
-+ (UIColor *)themeGreenColorWithAlpha:(CGFloat)alpha {
-    return [UIColor colorWithRed:(140.0f / 255.0f) green:(185.0f / 255.0f) blue:(82.0f / 255.0f) alpha:alpha];
-}
-
-+ (UIColor *)themeBlueColorWithAlpha:(CGFloat)alpha {
-    return [UIColor colorWithRed:(57.0f / 255.0f) green:(106.0f / 255.0f) blue:(180.0f / 255.0f) alpha:alpha];
 }
 
 #pragma mark - 具体定义

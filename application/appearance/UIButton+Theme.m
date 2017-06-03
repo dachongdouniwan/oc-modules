@@ -9,13 +9,14 @@
 #import "UIButton+Theme.h"
 #import "UIColor+theme.h"
 #import "UIView+Extension.h"
+#import "_app_appearance.h"
 
 #pragma mark -
 
 @implementation UIButton (Theme)
 
 - (void)thematized {
-    [self colorlumpStyled:[UIColor themeColor]];
+    [self colorlumpStyled:color_theme];
     
     [self circularCorner];
 }

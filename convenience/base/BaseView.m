@@ -10,6 +10,31 @@
 
 @implementation BaseView
 
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    if (self = [super initWithCoder:aDecoder]) {
+        
+    }
+    
+    return self;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        
+    }
+    
+    return self;
+}
+
+- (instancetype)init {
+    if ([super init]) {
+        [self setup];
+    }
+    
+    return self;
+}
+
+
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
@@ -17,5 +42,9 @@
     // Drawing code
 }
 */
+
+- (void)setup {
+    
+}
 
 @end

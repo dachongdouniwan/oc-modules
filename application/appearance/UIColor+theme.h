@@ -84,28 +84,6 @@
 + (UIColor *)fontGray_three_Color_deprecated; // gray005
 + (UIColor *)fontGray_four_Color_deprecated; // gray004
 
-#pragma mark - 命名色
-
-+ (UIColor *)themeColor;
-
-/**
- *  主题色
- */
-+ (UIColor *)themePinkColor;    // 系统、主题 粉红
-+ (UIColor *)themePurpleColor;  // 系统、主题 紫色
-
-+ (UIColor *)themeBlackColor;   // 主题 黑色
-
-+ (UIColor *)themeGreenColor;   // 系统、主题 绿色
-+ (UIColor *)themeOrangeColor;  // 系统、主题 橙色
-+ (UIColor *)themeBlueColor;    // 系统、主题 蓝色
-+ (UIColor *)themeBlueColorWithAlpha:(CGFloat)alpha;
-+ (UIColor *)themeYellowColor;  // 系统、主题 黄色
-+ (UIColor *)themeRedColor;     // 系统、主题 红色
-
-+ (UIColor *)themeGreenTwoColor;
-+ (UIColor *)themeGreenColorWithAlpha:(CGFloat)alpha;
-
 #pragma mark - 具体定义
 
 + (UIColor *)viewBackgroundColor;
