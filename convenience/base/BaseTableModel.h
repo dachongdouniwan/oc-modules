@@ -18,7 +18,7 @@
 @interface TableModel : NSObject
 
 @property (nonatomic, assign) BOOL          hasRightArrow;// 是否有右侧箭头
-
+@property (nonatomic, assign) BOOL          isImageView;
 
 @property (nonatomic, strong) NSString *    imageName;      // 默认：nil
 @property (nonatomic, strong) NSString *    _2ImageName;    // 二态
