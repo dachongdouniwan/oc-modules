@@ -175,12 +175,5 @@
     return [UIColor gray004Color];
 }
 
-#pragma mark - 具体定义
-
-+ (UIColor *)viewBackgroundColor {
-    return [UIColor colorWithRGBHex:0xf0f0f0];
-}
-
-
 @end
 

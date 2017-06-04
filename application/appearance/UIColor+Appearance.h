@@ -84,8 +84,4 @@
 + (UIColor *)fontGray_three_Color_deprecated; // gray005
 + (UIColor *)fontGray_four_Color_deprecated; // gray004
 
-#pragma mark - 具体定义
-
-+ (UIColor *)viewBackgroundColor;
-
 @end
