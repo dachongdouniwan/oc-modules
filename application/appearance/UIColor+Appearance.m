@@ -6,11 +6,11 @@
 //
 //
 
-#import "UIColor+theme.h"
 #import "_foundation.h"
+#import "UIColor+Appearance.h"
 #import "UIColor+Extension.h"
 
-@implementation UIColor (theme)
+@implementation UIColor (Appearance)
 
 #pragma mark - 颜色规范
 #pragma mark - 基准色

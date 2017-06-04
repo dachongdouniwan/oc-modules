@@ -9,7 +9,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UIColor (theme)
+@interface UIColor (Appearance)
 
 #pragma mark - 颜色规范
 #pragma mark - 基准色

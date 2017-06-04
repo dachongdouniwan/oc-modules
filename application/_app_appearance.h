@@ -8,8 +8,8 @@
 
 #import "_building_precompile.h"
 
-#import "UIButton+Theme.h"
-#import "UIColor+theme.h"
+#import "UIButton+Appearance.h"
+#import "UIColor+Appearance.h"
 
 @interface _AppAppearance : NSObject
 

@@ -6,14 +6,33 @@
 //
 //
 
-#import "UIButton+Theme.h"
-#import "UIColor+theme.h"
+#import "UIButton+Appearance.h"
+#import "UIColor+Appearance.h"
 #import "UIView+Extension.h"
 #import "_app_appearance.h"
 
 #pragma mark -
 
-@implementation UIButton (Theme)
+@implementation UIButton (Appearance)
+
+- (void)liningStyled:(UIColor *)color {
+    [self setBorderWidth:1.f withColor:color];
+    [self setBackgroundColor:[UIColor whiteColor]];
+    [self setTitleColor:color];
+}
+
+- (void)liningStyledWithTitleColor:(UIColor *)color borderColor:(UIColor *)bordercolor {
+    [self setBorderWidth:1.f withColor:bordercolor];
+    [self setBackgroundColor:[UIColor whiteColor]];
+    [self setTitleColor:color];
+}
+
+- (void)colorlumpStyled:(UIColor *)color {
+    [self setNormalBackgroundColor:color
+            disableBackgroundColor:[UIColor colorWithRGBHex:0xcccccc]];
+    
+    [self setTitleColor:[UIColor whiteColor]];
+}
 
 - (void)thematized {
     [self colorlumpStyled:color_theme];
