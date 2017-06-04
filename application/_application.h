@@ -137,6 +137,7 @@
 @prop_strong( Block,			whenEnterForeground )
 
 @prop_singleton( _AppConfig,        config )
+@prop_singleton( _AppModule,        module )
 @prop_singleton( _AppContext,       context )
 
 @end

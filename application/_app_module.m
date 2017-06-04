@@ -7,7 +7,21 @@
 //
 
 #import "_app_module.h"
+#import "ComponentMap.h"
 
 @implementation _AppModule
+
+@def_singleton(_AppModule)
+
+- (void)initMap {
+    
+    // Gao de
+    {
+        [[ComponentMap sharedInstance] initGDAPIKey];
+    }
+    
+    // Init pay module
+    
+}
 
 @end

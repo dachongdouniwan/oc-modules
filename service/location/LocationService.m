@@ -34,7 +34,7 @@ const int kUpdateLocationInterval = 1*60;//每1分钟刷新定位
         
 #if !TARGET_OS_SIMULATOR
             //高德定位服务
-            self.locationManager = [AMapLocationManager new];
+        self.locationManager = nil;//[AMapLocationManager new];
             
             //定时自动更新定位
             [[[RACSignal interval:kUpdateLocationInterval onScheduler:[RACScheduler mainThreadScheduler]] delay:kUpdateLocationInterval]subscribeNext:^(id x) {

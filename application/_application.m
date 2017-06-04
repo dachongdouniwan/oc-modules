@@ -36,7 +36,8 @@
 @def_prop_strong( Block,			whenEnterBackground );
 @def_prop_strong( Block,			whenEnterForeground );
 
-@def_prop_singleton( _AppConfig,        config );
+@def_prop_singleton( _AppConfig,        config )
+@def_prop_singleton( _AppModule,        module )
 @def_prop_singleton( _AppContext,       context )
 
 #pragma mark - 生命周期
@@ -230,7 +231,9 @@
 - (void)onMemoryOverflow {}
 
 #pragma mark - ApplicationRuntimePeriodProtocol
-- (void)onConfig:(_AppConfig *)appConfig {}
+- (void)onConfig:(_AppConfig *)appConfig {
+    [self.module initMap];
+}
 - (UIViewController *)forLaunchViewController { return nil; };
 - (void)onSynchronize { if (is_method_overrided(self.class, _Application.class, @selector(onSynchronize))) XCT_GOON };
 - (void)onLaunch {}
