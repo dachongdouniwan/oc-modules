@@ -6,7 +6,8 @@
 //  Copyright © 2016 OpenTeam. All rights reserved.
 //
 
-#import "_greats.h"
+#import "_building_precompile.h"
+#import "ComponentMapConfig.h"
 
 @class ComponentMapConfig;
 

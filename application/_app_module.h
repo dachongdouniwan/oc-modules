@@ -12,6 +12,8 @@
 
 @singleton(_AppModule)
 
-- (void)initMap;
+- (void)initComponents;
+
+- (void)initServices;
 
 @end

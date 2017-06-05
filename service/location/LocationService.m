@@ -28,29 +28,31 @@ const int kUpdateLocationInterval = 1*60;//每1分钟刷新定位
 
 @def_singleton( LocationService )
 
-- (instancetype)init {
-    if (self = [super init]) {
-        self.locationStatus = LocationStatus_NotStart;
-        
-#if !TARGET_OS_SIMULATOR
-            //高德定位服务
-        self.locationManager = nil;//[AMapLocationManager new];
-            
-            //定时自动更新定位
-            [[[RACSignal interval:kUpdateLocationInterval onScheduler:[RACScheduler mainThreadScheduler]] delay:kUpdateLocationInterval]subscribeNext:^(id x) {
-                [self updateLocationWithBlock:^(LocationModel *location) {
-                    
-                }];
-            }];
-        
-            //首次获取定位
-            [self currentLocationWithBlock:^(LocationModel *location) {
-                
-            }];
-#endif
-    }
+- (void)powerOn {
+    self.locationStatus = LocationStatus_NotStart;
     
-    return self;
+#if !TARGET_OS_SIMULATOR
+    //高德定位服务
+    self.locationManager = [AMapLocationManager new];
+    
+    //定时自动更新定位
+    [[[RACSignal interval:kUpdateLocationInterval onScheduler:[RACScheduler mainThreadScheduler]] delay:kUpdateLocationInterval]subscribeNext:^(id x) {
+        [self updateLocationWithBlock:^(LocationModel *location) {
+            TODO("这个定时任务怎么结束？")
+        }];
+    }];
+    
+    //首次获取定位
+    [self currentLocationWithBlock:^(LocationModel *location) {
+        
+    }];
+#endif
+}
+
+- (void)powerOff {
+    self.locationStatus = LocationStatus_Failed;
+    
+    self.locationManager = nil;
 }
 
 #pragma mark - 获取定位接口

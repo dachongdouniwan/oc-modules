@@ -12,19 +12,6 @@
 #import <AMapSearchKit/AMapSearchKit.h>
 #import <AMapLocationKit/AMapLocationKit.h>
 
-#define SdkKey_GaoDe_Customer          @"604cd55b5aa21c47b2907b65ca555d57"
-
-#define SdkKey_GaoDe_Html5         @"6ac773a2a022262da557dcd4d4793c2c" // js api
-#define SdkKey_Gaode_Web           @"c86d5a251d4eb5af15244cc06946234e" // web api
-
-/* 使用高德API，请注册Key，注册地址：http://lbs.amap.com/console/key
- */
-
-const static NSString *GDMapAPIKey = SdkKey_GaoDe_Customer;
-
-const static NSString *GDMapH5APIKey = SdkKey_GaoDe_Html5; //高德JavascriptAPI
-const static NSString *GDMapWebAPIKey = SdkKey_Gaode_Web; //高德WebAPI
-
 @implementation ComponentMap
 
 @def_singleton( ComponentMap )
@@ -44,8 +31,7 @@ const static NSString *GDMapWebAPIKey = SdkKey_Gaode_Web; //高德WebAPI
 }
 
 - (void)initGDAPIKey { // 高德 MapKit configure.
-    if ([GDMapAPIKey length] == 0)
-    {
+    if ([self.config.apiKey length] == 0) {
 #define kMALogTitle @"提示"
 #define kMALogContent @"apiKey为空，请检查key是否正确设置"
         
@@ -56,8 +42,6 @@ const static NSString *GDMapWebAPIKey = SdkKey_Gaode_Web; //高德WebAPI
             
             [alert show];
         });
-    } else {
-        self.config.apiKey = GDMapAPIKey;
     }
     
     [MAMapServices sharedServices].apiKey = self.config.apiKey;

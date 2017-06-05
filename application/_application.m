@@ -232,7 +232,9 @@
 
 #pragma mark - ApplicationRuntimePeriodProtocol
 - (void)onConfig:(_AppConfig *)appConfig {
-    [self.module initMap];
+    [self.module initServices];
+    
+    [self.module initComponents];
 }
 - (UIViewController *)forLaunchViewController { return nil; };
 - (void)onSynchronize { if (is_method_overrided(self.class, _Application.class, @selector(onSynchronize))) XCT_GOON };

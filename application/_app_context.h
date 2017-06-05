@@ -48,6 +48,14 @@
 @prop_assign( int64_t, areaCode )
 @prop_strong( NSString *, areaName )
 
+/**
+ *  @brief 异步检查地区是否改变，如果改变，changed为YES；用户如果选择切换地区，则返回YES，修改用户位置信息。
+ *         因为，需要搜集用户反馈信息，所以这里不能用通知，需要控制链转移.
+ 
+ *  当前界定为城市
+ */
+- (void)checkUserLocationIfChanged:(BOOL (^)(BOOL changed))locationChangedHandler;
+
 @end
 
 #undef  context_inst

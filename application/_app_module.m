@@ -7,20 +7,32 @@
 //
 
 #import "_app_module.h"
-#import "ComponentMap.h"
+#import "_building_component.h"
 
 @implementation _AppModule
 
 @def_singleton(_AppModule)
 
-- (void)initMap {
+- (void)initServices {
+    
+}
+
+- (void)initComponents {
     
     // Gao de
     {
+        [ComponentMap sharedInstance].config.apiKey = @"604cd55b5aa21c47b2907b65ca555d57";
+        
         [[ComponentMap sharedInstance] initGDAPIKey];
+        
+//        [suite.service.location powerOn];
+        TODO("这里会崩溃，还不知道为啥，后续解决。")
     }
     
     // Init pay module
+    {
+        
+    }
     
 }
 

@@ -7,6 +7,8 @@
 //
 
 #import "_app_context.h"
+#import "_building_precompile.h"
+#import "_building_component.h"
 
 @implementation _AppContext
 
@@ -32,5 +34,24 @@
 @def_prop_assign( int64_t, areaId )
 @def_prop_assign( int64_t, areaCode )
 @def_prop_strong( NSString *, areaName )
+
+- (void)checkUserLocationIfChanged:(BOOL (^)(BOOL))locationChangedHandler {
+    TODO("我想让一个 item，可以cache，可以database，可以json序列化")
+    
+    [suite.service.location currentLocationWithBlock:^(LocationModel *location) {
+        // 判断城市是否改变
+        BOOL cityChanged = NO;
+        
+        
+        BOOL userDecideChanged = locationChangedHandler(cityChanged);
+        
+        if (userDecideChanged) {
+            
+        } else {
+            
+        }
+        
+    }];
+}
 
 @end
