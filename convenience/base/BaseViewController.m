@@ -76,9 +76,9 @@ static NSString *backButtonImageName = @"buckbutton";
     self.hideKeyboardWhenEndEditing = YES;
     
     [self aspect_hookSelector:@selector(viewDidLoad) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> aspectInfo) {
-        UIViewController *viewController = aspectInfo.instance;
+//        UIViewController *viewController = aspectInfo.instance;
         
-        viewController.view.backgroundColor = color_background_view;
+        
     } error:nil];
     
     self.alreadyInitialized = YES;
@@ -128,6 +128,8 @@ static NSString *backButtonImageName = @"buckbutton";
     if ([self navigationBarLeftButtonHiddenWhenAppear]) {
         [self clearNavLeftItem];
     }
+    
+    self.view.backgroundColor = color_background_view;
     
 #if 0 // 切换tab的时候动画
     [self injectSwipeToTabGesture];
