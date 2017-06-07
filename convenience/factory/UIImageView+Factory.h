@@ -14,8 +14,12 @@
 
 @interface UIImageView ( Config )
 
++ (UIImageView *)instanceWithImage:(NSString *)name tintColor:(UIColor *)color;
++ (UIImageView *)instanceWithImage:(NSString *)name;
+
 + (UIImageView *)imageViewWithImageNamed:(NSString *)name tintColor:(UIColor *)color;
 + (UIImageView *)imageViewWithImageNamed:(NSString *)name;
+
 - (void)setMaskImage:(UIImage *)mask;
 
 - (void)setImage:(UIImage *)image animated:(BOOL)animated;

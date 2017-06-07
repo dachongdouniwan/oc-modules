@@ -16,17 +16,25 @@
 
 @implementation UIImageView ( Config )
 
-+ (UIImageView *)imageViewWithImageNamed:(NSString *)name tintColor:(UIColor *)color {
++ (UIImageView *)instanceWithImage:(NSString *)name tintColor:(UIColor *)color {
     UIImage *image         = [[UIImage imageNamed:name] tintedImageWithColor:color];
     UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
     imageView.contentMode  = UIViewContentModeCenter;
     return imageView;
 }
 
-+ (UIImageView *)imageViewWithImageNamed:(NSString *)name {
++ (UIImageView *)instanceWithImage:(NSString *)name {
     UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:name]];
     imageView.contentMode  = UIViewContentModeCenter;
     return imageView;
+}
+
++ (UIImageView *)imageViewWithImageNamed:(NSString *)name tintColor:(UIColor *)color {
+    return [self instanceWithImage:name tintColor:color];
+}
+
++ (UIImageView *)imageViewWithImageNamed:(NSString *)name {
+    return [self instanceWithImage:name];
 }
 
 - (void)setMaskImage:(UIImage *)mask {
