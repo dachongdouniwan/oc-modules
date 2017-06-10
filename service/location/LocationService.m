@@ -10,6 +10,8 @@
 #import "LocationService.h"
 #import "CityGeoCoder.h"
 #import "_vendor_reactivecocoa.h"
+#import "LocationServiceImpl.h"
+#import "GaoDeLocationServiceImpl.h"
 #import "AMapLocationKit/AMapLocationKit.h"
 
 const int kUpdateLocationInterval = 1*60;//每1分钟刷新定位

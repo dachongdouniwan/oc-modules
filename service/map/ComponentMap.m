@@ -6,6 +6,8 @@
 //  Copyright © 2016 OpenTeam. All rights reserved.
 //
 
+//  高德地图SDK：http://lbs.amap.com/api/ios-sdk/summary
+
 #import "ComponentMap.h"
 #import "ComponentMapConfig.h"
 #import <MAMapKit/MAMapKit.h>
@@ -32,6 +34,7 @@
         });
     }
     
+//    [AMapLocationServices]
     [MAMapServices sharedServices].apiKey = self.config.apiKey;
     [AMapSearchServices sharedServices].apiKey = self.config.apiKey;
     [AMapLocationServices sharedServices].apiKey = self.config.apiKey;
