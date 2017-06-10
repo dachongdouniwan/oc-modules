@@ -11,6 +11,7 @@
 #import "_greats.h"
 #import "_ui_core.h"
 #import "_app_appearance.h"
+#import "_easyrouter.h"
 
 // ----------------------------------
 // class implementation

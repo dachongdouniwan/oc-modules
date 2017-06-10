@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <MAMapKit/MAMapKit.h>
-#import <AMapSearchKit/AMapSearchAPI.h>
+#import <AMapSearchKit/AMapSearchKit.h>
 #import "BaseViewController.h"
 
 typedef enum : NSUInteger {

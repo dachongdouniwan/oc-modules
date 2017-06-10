@@ -7,6 +7,7 @@
 //
 
 #import "_easyrouter.h"
+#import "_ui_core.h"
 
 @implementation NSObject (_easyrouter)
 
