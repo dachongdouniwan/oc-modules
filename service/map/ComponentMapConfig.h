@@ -11,6 +11,8 @@
 /**
  *  @knowledge
  
+    0. add -ObjC to Other linker flags!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ 
     1. 高德使用：http://www.cnblogs.com/XYQ-208910/p/6128915.html
     1.1 权限定位：info.plist
         - NSLocationWhenInUseUsageDescription   YES
