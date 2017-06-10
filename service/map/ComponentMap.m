@@ -18,18 +18,6 @@
 
 @def_prop_instance(ComponentMapConfig, config)
 
-+ (void)load {
-
-//    exceptioning(@"请配置api key")
-//    [AppConfig adapterAppHairDresser:^{
-//        [self sharedInstance].config.apiKey = SdkKey_GaoDe_HairDresser;
-//    } appCustomer:^{
-//        [self sharedInstance].config.apiKey = SdkKey_GaoDe_Customer;
-//    } appMaster:^{
-//        [self sharedInstance].config.apiKey = SdkKey_GaoDe_Customer;
-//    }];
-}
-
 - (void)initGDAPIKey { // 高德 MapKit configure.
     if ([self.config.apiKey length] == 0) {
 #define kMALogTitle @"提示"

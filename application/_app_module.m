@@ -21,11 +21,12 @@
     
     // Gao de
     {
+        TODO("这个key初始化，应该放在service")
         [ComponentMap sharedInstance].config.apiKey = @"604cd55b5aa21c47b2907b65ca555d57";
         
         [[ComponentMap sharedInstance] initGDAPIKey];
         
-//        [suite.service.location powerOn];
+        [suite.service.location powerOn];
         TODO("这里会崩溃，还不知道为啥，后续解决。")
     }
     
