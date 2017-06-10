@@ -9,10 +9,11 @@
 #import "_vendor_lumberjack.h"
 #import "LocationService.h"
 #import "LocationIndicatorVC.h"
-#import "AMapSearchKit/AMapSearchKit.h"
-#import "MAMapKit/MAMapKit.h"
+#import <AMapSearchKit/AMapSearchKit.h>
+#import <MAMapKit/MAMapKit.h>
 #import "BaseWebViewController.h"
 #import "ReactiveCocoa.h"
+#import "_easycoding.h"
 #import "_pragma_push.h"
 
 #define kGapXOfBottomView 12

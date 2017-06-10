@@ -11,6 +11,7 @@
 #import "UITableViewCell+.h"
 #import "UICollectionViewCell+.h"
 #import "UIViewController+.h"
+#import "_easyrouter.h"
 
 @interface NSObject (Easy)
 

@@ -8,6 +8,7 @@
 
 #import "_app_appearance.h"
 #import "_ui_core.h"
+#import "BaseViewController.h"
 
 @implementation _AppAppearance
 
