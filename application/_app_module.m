@@ -26,8 +26,7 @@
         
         [[ComponentMap sharedInstance] initGDAPIKey];
         
-//        [suite.service.location powerOn];
-        TODO("这里会崩溃，还不知道为啥，后续解决。")
+        [suite.service.location powerOn];
     }
     
     // Init pay module
