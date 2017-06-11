@@ -41,6 +41,9 @@
 // 选择状态
 @property (nonatomic, assign) BOOL          selected;
 
+// 有效状态
+@property (nonatomic, assign) BOOL          validated;
+
 // 用于尾部图片
 // 1. 前后一样，则只需要使用第三个
 // 2. 前后不一样，则用前两个

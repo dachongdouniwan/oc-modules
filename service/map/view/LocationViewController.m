@@ -10,56 +10,12 @@
 #import "_ui_core.h"
 #import "_easycoding.h"
 #import "_validator.h"
+#import "_app_appearance.h"
 #import "LocationViewController.h"
 #import "AddressInputHintViewController.h"
 #import "LocationService.h"
 
-#pragma mark -
-
-@implementation NSString (QQ)
-
-#define Mark @"&"
-
-/**
- *  拼接
- */
-- (NSString *)joinDetailAddress:(NSString *)detailAddress {
-    return [NSString stringWithFormat:@"%@%@%@",
-            self,
-            Mark,
-            detailAddress];
-}
-
-/**
- *  分离
- */
-- (NSArray *)separateDetailAddress {
-    NSRange range = [self rangeOfString:Mark];
-    if (range.location!=NSNotFound) {
-        return [self componentsSeparatedByString:Mark];
-    }else{
-        return [NSArray arrayWithObjects:self, @"", nil];
-    }
-}
-
-/**
- *  去除特殊符号
- */
-- (NSString *)resignDetalAddress {
-    NSRange range = [self rangeOfString:Mark];
-    NSMutableString *str = [NSMutableString stringWithString:self];
-    
-    if (range.location != NSNotFound) { //有特殊的
-        [str deleteCharactersInRange:range];
-        return str;
-    } else {
-        return str;
-    }
-}
-
-@end
-
-#pragma mark -
+#define SeperatorMark @","
 
 #define kViewSpace 12
 #define kItemHeight 40
@@ -77,6 +33,8 @@ static CGFloat AutoLocationViewWidthConstant = 0;
     MAMapViewDelegate,
     AMapSearchDelegate
 >
+
+@property (weak, nonatomic) IBOutlet UIButton *commitButton;
 
 @property (assign, nonatomic) CGFloat scrollContentHeight;
 
@@ -134,6 +92,8 @@ static CGFloat AutoLocationViewWidthConstant = 0;
 
 @implementation LocationViewController
 
+@def_prop_class(NSString *, currentCityName, setCurrentCityName)
+
 #pragma mark - Initilizate
 
 - (instancetype)initWithSelectAddressType:(SelectAddressType)type completionBlock:(ObjectBlock)block {
@@ -188,7 +148,7 @@ static CGFloat AutoLocationViewWidthConstant = 0;
     [super viewDidLoad];
     
     self.title = @"街道地址";
-    
+    TODO("ugly")
     self.scrollContentHeight = kHeightOfSectionHeader;
     
     [self initAddressView];
@@ -196,6 +156,8 @@ static CGFloat AutoLocationViewWidthConstant = 0;
     self.scrollContentHeight += kHeightOfSectionHeader;
     
     [self initMapView];
+    
+    self.commitButton.backgroundColor = color_theme;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -267,8 +229,7 @@ static CGFloat AutoLocationViewWidthConstant = 0;
 
 #pragma mark - Handle Action
 
-- (void)didClickOnAutoLocationView:(UIGestureRecognizer*)gesture{
-    //跳转到搜索页
+- (void)didClickOnAutoLocationView:(UIGestureRecognizer*)gesture {
     AddressInputHintViewController * vc = [[AddressInputHintViewController alloc] init];
     vc.delegate = self;
     vc.initialSearchString = self.curZone.text;
@@ -276,14 +237,13 @@ static CGFloat AutoLocationViewWidthConstant = 0;
 }
 
 - (IBAction)didClickOnAddAddressButton:(id)sender {
-    NSString *completeAddress = [self.curZone.text joinDetailAddress:self.detailAddress.text];
+    NSString *completeAddress = [self.curZone.text stringByAppendingString:[NSString stringWithFormat:@"%@%@", SeperatorMark, self.detailAddress.text]];
 
-    LocationModel *location = [LocationModel modelWithAddress:[completeAddress resignDetalAddress] longitude:self.curAnnotation.coordinate.longitude latitude:self.curAnnotation.coordinate.latitude];
+    LocationModel *location = [LocationModel modelWithAddress:completeAddress longitude:self.curAnnotation.coordinate.longitude latitude:self.curAnnotation.coordinate.latitude];
 //    location.cityID = [[CityCache sharedInstance] cityIdForCityCode:self.citycode.intValue];
 //    location.cityNameString = [[CityCache sharedInstance] citynameForID:self.citycode.intValue withDefault:@"未识别"];
     location.district = self.areaName;
     
-    // 回调
     if (self.completionBlock) {
         self.completionBlock(location);
     }
@@ -567,12 +527,13 @@ static CGFloat AutoLocationViewWidthConstant = 0;
     }
 }
 
-#pragma mark - 搜索界面触发函数
+#pragma mark - AddressInputHintViewControllerDelegate
 
-- (void)addressItemClick:(id)obj {
+- (void)onAddressMapTipSelect:(id)obj {
     AMapTip *tip = obj;
-//    self.search.delegate = self;
+    
     self.AMapPlaceSearchFromSearchVC = YES;
+    
     //这个地方显示的地址就用用户输入的string
     if (tip.district.length > 0) {
         self.address = [tip.district stringByAppendingString:tip.name];
@@ -581,7 +542,7 @@ static CGFloat AutoLocationViewWidthConstant = 0;
     }
     
     //发起POI搜索
-    AMapPOIKeywordsSearchRequest* poiRequest = [AMapPOIKeywordsSearchRequest new];
+    AMapPOIKeywordsSearchRequest *poiRequest = [AMapPOIKeywordsSearchRequest new];
     poiRequest.keywords = tip.name;
     poiRequest.city = tip.adcode;
     [self.search AMapPOIKeywordsSearch:poiRequest];

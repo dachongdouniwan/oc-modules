@@ -7,7 +7,11 @@
 //
 
 #import "_building_precompile.h"
+
 #import "ComponentMapConfig.h"
+#import "LocationViewController.h"
+#import "LocationIndicatorVC.h"
+#import "AddressInputHintViewController.h"
 
 @class ComponentMapConfig;
 

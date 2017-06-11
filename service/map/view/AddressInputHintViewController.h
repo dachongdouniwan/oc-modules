@@ -10,7 +10,11 @@
 
 @protocol AddressInputHintViewControllerDelegate <NSObject>
 
-- (void)addressItemClick:(id)obj;
+@optional
+
+- (void)onAddressHintSend:(NSString *)addressHint;
+
+- (void)onAddressMapTipSelect:(id)obj;
 
 @end
 

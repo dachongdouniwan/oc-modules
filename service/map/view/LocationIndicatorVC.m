@@ -19,7 +19,7 @@
 #define kGapXOfBottomView 12
 #define kGapYOfBottomView 20
 
-@interface LocationIndicatorVC () <AMapSearchDelegate,MAMapViewDelegate>
+@interface LocationIndicatorVC () <AMapSearchDelegate, MAMapViewDelegate>
 
 @property (nonatomic, strong) AMapSearchAPI     *searchAPI;
 @property (nonatomic, strong) MAMapView         *mapView;
