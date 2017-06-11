@@ -156,7 +156,20 @@
         } else {
             NSString *responseString = [completedRequest responseAsString];
             
-            responseString = [responseString replaceAll:@"null" with:@"\"\""];
+            TODO("ugly")
+            // map nullable to blank
+            {
+                if ([responseString contains:@"\"(null)\""]) {
+                    responseString = [responseString replaceAll:@"\"(null)\"" with:@"\"\""];
+                }
+                if ([responseString contains:@"\"null\""]) {
+                    responseString = [responseString replaceAll:@"\"null\"" with:@"\"\""];
+                }
+                if ([responseString contains:@"null"]) {
+                    responseString = [responseString replaceAll:@"null" with:@"\"\""];
+                }
+            }
+            
             NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
             NSDictionary *response = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
             
