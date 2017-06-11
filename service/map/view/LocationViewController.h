@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <MAMapKit/MAMapKit.h>
-#import <AMapSearchKit/AMapSearchAPI.h>
+#import <AMapSearchKit/AMapSearchKit.h>
 #import "BaseViewController.h"
 
 typedef enum : NSUInteger {
@@ -20,31 +20,15 @@ typedef enum : NSUInteger {
 @interface LocationViewController : BaseViewController
 
 /**
+ *  如果设置，则后面筛选会默认加上该城市
+ */
+@prop_class(NSString *, currentCityName)
+
+/**
  *  选择地址
  *  @param type  使用情景类型
- *  @param block 回调LocationModel
+ *  @param block 回调LocationModel, 地区信息 与 详细信息地址中，使用逗号分隔
  */
 - (instancetype)initWithSelectAddressType:(SelectAddressType)type completionBlock:(ObjectBlock)block;
-
-@end
-
-#pragma mark -
-
-@interface NSString (QQ)
-
-/**
- *  拼接-大概地址+特殊符号+详细地址  夹杂特殊符号&
- */
-- (NSString *)joinDetailAddress:(NSString *)detailAddress;
-
-/**
- *  将地址分离，供不同地址框显示
- */
-- (NSArray *)separateDetailAddress;
-
-/**
- *  去除特殊符号在常用地址列表显示
- */
-- (NSString *)resignDetalAddress;
 
 @end

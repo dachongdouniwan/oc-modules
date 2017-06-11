@@ -11,10 +11,16 @@
 /**
  *  @knowledge
  
+    0. add -ObjC to Other linker flags!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ 
     1. 高德使用：http://www.cnblogs.com/XYQ-208910/p/6128915.html
     1.1 权限定位：info.plist
         - NSLocationWhenInUseUsageDescription   YES
         - NSLocationAlwaysUsageDescription      YES
+ 
+        Privacy - Location Usage Description 我需要了解您所在的城市。
+        Privacy - Location When In Use Usage Description 我需要了解您所在的城市请允许我获得您的地理位置。
+
     1.2 ATS设置：HTTPS
         - App Transport Security Settings , Allow Arbitary Loads YES
     1.3 Inlucde header files

@@ -18,10 +18,11 @@
 @implementation GrowthIntercepter
 
 - (void)initViewIntercepter {
-    GrowthIntercepterDic = [NSMutableDictionary dictionaryWithDictionary:
-                                        @{@"302" : @"AllCommentVC",
-                                          @"801" : @"VoucherWorksListVC"}
-                                        ];
+    GrowthIntercepterDic = [@{} mutableCopy];
+//    [NSMutableDictionary dictionaryWithDictionary:
+//                                        @{@"302" : @"AllCommentVC",
+//                                          @"801" : @"VoucherWorksListVC"}
+//                                        ];
     [GrowthIntercepterDic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
         Class VC = NSClassFromString(obj);
         [VC aspect_hookSelector:@selector(viewDidAppear:) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> aspectInfo) {

@@ -6,6 +6,8 @@
 //  Copyright © 2016 OpenTeam. All rights reserved.
 //
 
+//  高德地图SDK：http://lbs.amap.com/api/ios-sdk/summary
+
 #import "ComponentMap.h"
 #import "ComponentMapConfig.h"
 #import <MAMapKit/MAMapKit.h>
@@ -17,18 +19,6 @@
 @def_singleton( ComponentMap )
 
 @def_prop_instance(ComponentMapConfig, config)
-
-+ (void)load {
-
-//    exceptioning(@"请配置api key")
-//    [AppConfig adapterAppHairDresser:^{
-//        [self sharedInstance].config.apiKey = SdkKey_GaoDe_HairDresser;
-//    } appCustomer:^{
-//        [self sharedInstance].config.apiKey = SdkKey_GaoDe_Customer;
-//    } appMaster:^{
-//        [self sharedInstance].config.apiKey = SdkKey_GaoDe_Customer;
-//    }];
-}
 
 - (void)initGDAPIKey { // 高德 MapKit configure.
     if ([self.config.apiKey length] == 0) {
@@ -44,6 +34,7 @@
         });
     }
     
+//    [AMapLocationServices]
     [MAMapServices sharedServices].apiKey = self.config.apiKey;
     [AMapSearchServices sharedServices].apiKey = self.config.apiKey;
     [AMapLocationServices sharedServices].apiKey = self.config.apiKey;

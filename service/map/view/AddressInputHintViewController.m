@@ -9,6 +9,7 @@
 #import "AddressInputHintViewController.h"
 #import "_ui_core.h"
 #import "_vendor_lumberjack.h"
+#import "LocationViewController.h"
 #import "_pragma_push.h"
 
 @interface AddressInputHintViewController () <UISearchBarDelegate,
@@ -101,33 +102,15 @@
 
 /* 输入提示 搜索.*/
 - (void)searchTipsWithKey:(NSString *)key {
-    if (key.length == 0)
-    {
-        return;
-    }
-    
-    ASSERT(NO) // 这里为什么需要详细地址？
-    
-//    NSString *address = [[UserCityService  sharedInstance] getUserCityName];
-    
+    returnif(!key.length)
     
     AMapInputTipsSearchRequest *tips = [[AMapInputTipsSearchRequest alloc] init];
     tips.keywords = key;
-//    if (address.length > 0) {
-//        tips.city = address;
-//    }
-    
-    [self.search AMapInputTipsSearch:tips];
-}
-
-#pragma mark - Action handle
-
-- (void)didClickOnAddressItem:(id)obj {
-    if ([self.delegate respondsToSelector:@selector(addressItemClick:)]) {
-        [self.delegate performSelector:@selector(addressItemClick:) withObject:obj];
+    if (is_string_present(LocationViewController.currentCityName)) {
+        tips.city = LocationViewController.currentCityName;
     }
     
-    [self.navigationController popViewControllerAnimated:YES];
+    [self.search AMapInputTipsSearch:tips];
 }
 
 #pragma mark - UISearchBarDelegate
@@ -188,7 +171,23 @@
     AMapTip *tip = self.tips[indexPath.row];
 
     self.searchBar.placeholder = tip.name;
-    [self performSelector:@selector(didClickOnAddressItem:) withObject:tip];
+    
+    if ([self.delegate respondsToSelector:@selector(onAddressMapTipSelect:)]) {
+        [self.delegate performSelector:@selector(onAddressMapTipSelect:) withObject:tip];
+    }
+    
+    if (is_method_implemented(self.delegate, onAddressHintSend:)) {
+        NSString *address = nil;
+        if (tip.district.length > 0) {
+            address = [tip.district stringByAppendingString:tip.name];
+        } else {
+            address = tip.name;
+        }
+        [self.delegate performSelector:@selector(onAddressHintSend:) withObject:address];
+    }
+    
+    
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
