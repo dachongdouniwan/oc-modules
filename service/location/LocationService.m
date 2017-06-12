@@ -24,6 +24,8 @@ const int kUpdateLocationInterval = 1*60;//每1分钟刷新定位
 
 @prop_strong(CLLocation *, currrentSimLocation)
 
+@prop_strong(RACDisposable *, dispose)
+
 @end
 
 @implementation LocationService
@@ -34,26 +36,28 @@ const int kUpdateLocationInterval = 1*60;//每1分钟刷新定位
     self.locationStatus = LocationStatus_NotStart;
     
 #if !TARGET_OS_SIMULATOR
-    //高德定位服务
-//    self.locationManager = [AMapLocationManager new];
+    // 高德定位服务
+    self.locationManager = [AMapLocationManager new];
     
-    //定时自动更新定位
-    [[[RACSignal interval:kUpdateLocationInterval onScheduler:[RACScheduler mainThreadScheduler]] delay:kUpdateLocationInterval]subscribeNext:^(id x) {
-        [self updateLocationWithBlock:^(LocationModel *location) {
-            TODO("这个定时任务怎么结束？")
-        }];
-    }];
-    
-    //首次获取定位
+    // 首次获取定位
     [self currentLocationWithBlock:^(LocationModel *location) {
-        
+        // 开启定时自动更新定位
+        self.dispose = [[[RACSignal interval:kUpdateLocationInterval onScheduler:[RACScheduler mainThreadScheduler]] delay:kUpdateLocationInterval]subscribeNext:^(id x) {
+            [self updateLocationWithBlock:nil];
+        }];
     }];
 #endif
 }
 
 - (void)powerOff {
+    // 关闭定时自动定位
+    [self.dispose dispose];
+    self.dispose = nil;
+    
+    // 切换状态
     self.locationStatus = LocationStatus_Failed;
     
+    // 释放定位manager
     self.locationManager = nil;
 }
 
@@ -77,10 +81,11 @@ const int kUpdateLocationInterval = 1*60;//每1分钟刷新定位
     NSAssert(handlerBlock != nil, @"定位服务.未提供回调block");
     
     if (self.currentLocation) {
-        handlerBlock(self.currentLocation);
+        if (handlerBlock) handlerBlock(self.currentLocation);
     } else if(![self available]) {
         self.locationStatus = LocationStatus_Failed;
-        handlerBlock(nil);
+        
+        if (handlerBlock) handlerBlock(nil);
     } else {
         [self updateLocationWithBlock:handlerBlock];
     }
@@ -103,7 +108,7 @@ const int kUpdateLocationInterval = 1*60;//每1分钟刷新定位
                 
             }
             self.locationStatus = LocationStatus_Failed;
-            handlerBlock(nil);
+            if (handlerBlock) handlerBlock(nil);
             return;
         } else if(location) {
             self.currrentSimLocation = location;
@@ -124,7 +129,7 @@ const int kUpdateLocationInterval = 1*60;//每1分钟刷新定位
                     self.currentLocation = locationResult;
                     self.locationStatus = LocationStatus_Success;
                     
-                    handlerBlock(locationResult);
+                    if (handlerBlock) handlerBlock(locationResult);
                     return ;
                 }
             }
@@ -139,13 +144,13 @@ const int kUpdateLocationInterval = 1*60;//每1分钟刷新定位
                     self.locationStatus = LocationStatus_Failed;
                 }
                 
-                handlerBlock(locationResult);
+                if (handlerBlock) handlerBlock(locationResult);
                 return;
             }];
         } else {
             ERROR(@"定位服务.定位失败");
             self.locationStatus = LocationStatus_Failed;
-            handlerBlock(nil);
+            if (handlerBlock) handlerBlock(nil);
             return;
         }
     }];
