@@ -29,6 +29,28 @@
         [suite.service.location powerOn];
     }
     
+    //share
+    {
+        [[SNShareService sharedInstance] wechatConfig:^BOOL(SNShareService_Config *config) {
+            config.appId = @"wx8a167c0d7f84fdd9";
+            config.scheme = @"wx8a167c0d7f84fdd9";
+            
+            config.supported = YES;
+            
+            return YES;
+        } qqConfig:^BOOL(SNShareService_Config *config) {            
+            return NO;
+        } sinaConfig:^BOOL(SNShareService_Config *config) {
+            return NO;
+        } smsConfig:^BOOL(SNShareService_Config *config) {
+            return NO;
+        } emailConfig:^BOOL(SNShareService_Config *config) {
+            return NO;
+        } linkConfig:^BOOL(SNShareService_Config *config) {
+            return NO;
+        }];
+    }
+    
     // Init pay module
     {
         
