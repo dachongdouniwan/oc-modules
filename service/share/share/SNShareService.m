@@ -110,23 +110,23 @@
     }
     
     if (qqConfigHandler) {
-        self.qqConfig.supported = wechatConfigHandler(self.qqConfig);
+        self.qqConfig.supported = qqConfigHandler(self.qqConfig);
     }
     
     if (sinaConfigHandler) {
-        self.sinaConfig.supported = wechatConfigHandler(self.sinaConfig);
+        self.sinaConfig.supported = sinaConfigHandler(self.sinaConfig);
     }
     
     if (smsConfigHandler) {
-        self.smsConfig.supported = wechatConfigHandler(self.smsConfig);
+        self.smsConfig.supported = smsConfigHandler(self.smsConfig);
     }
     
     if (emailConfigHandler) {
-        self.emailConfig.supported = wechatConfigHandler(self.emailConfig);
+        self.emailConfig.supported = emailConfigHandler(self.emailConfig);
     }
     
     if (linkConfigHandler) {
-        self.linkConfig.supported = wechatConfigHandler(self.linkConfig);
+        self.linkConfig.supported = linkConfigHandler(self.linkConfig);
     }
     
     [self configure];
@@ -135,23 +135,35 @@
 #pragma mark -
 
 - (void)configure {
-    self.link.config = self.linkConfig;
-    [self.link configure];
+    if (self.linkConfig.supported) {
+        self.link.config = self.linkConfig;
+        [self.link configure];
+    }
     
-    self.qq.config = self.qqConfig;
-    [self.qq configure];
+    if (self.qqConfig.supported) {
+        self.qq.config = self.qqConfig;
+        [self.qq configure];
+    }
     
-    self.email.config = self.emailConfig;
-    [self.email configure];
+    if (self.emailConfig.supported) {
+        self.email.config = self.emailConfig;
+        [self.email configure];
+    }
     
-    self.sina.config = self.sinaConfig;
-    [self.sina configure];
+    if (self.sinaConfig.supported) {
+        self.sina.config = self.sinaConfig;
+        [self.sina configure];
+    }
     
-    self.sms.config = self.smsConfig;
-    [self.sms configure];
+    if (self.smsConfig.supported) {
+        self.sms.config = self.smsConfig;
+        [self.sms configure];
+    }
     
-    self.wechat.config = self.wechatConfig;
-    [self.wechat configure];
+    if (self.wechatConfig.supported) {
+        self.wechat.config = self.wechatConfig;
+        [self.wechat configure];
+    }
 }
 
 - (BOOL)supported {

@@ -7,6 +7,7 @@
 //
 
 #import "_app_module.h"
+#import "_app_config.h"
 #import "_building_component.h"
 
 @implementation _AppModule
@@ -21,8 +22,7 @@
     
     // Gao de
     {
-        TODO("这个key初始化，应该放在service")
-        [ComponentMap sharedInstance].config.apiKey = @"604cd55b5aa21c47b2907b65ca555d57";
+        [ComponentMap sharedInstance].config.apiKey = config_inst.mapApiKey;
         
         [[ComponentMap sharedInstance] initGDAPIKey];
         
@@ -32,8 +32,8 @@
     //share
     {
         [[SNShareService sharedInstance] wechatConfig:^BOOL(SNShareService_Config *config) {
-            config.appId = @"wx8a167c0d7f84fdd9";
-            config.scheme = @"wx8a167c0d7f84fdd9";
+            config.appId = config_inst.wechatAppId;
+            config.scheme = config_inst.wechatScheme;
             
             config.supported = YES;
             
