@@ -162,6 +162,9 @@
                 if ([responseString contains:@"\"(null)\""]) {
                     responseString = [responseString replaceAll:@"\"(null)\"" with:@"\"\""];
                 }
+                if ([responseString contains:@"(null)"]) { // 这应该是部分替换
+                    responseString = [responseString replaceAll:@"(null)" with:@""];
+                }
                 if ([responseString contains:@"\"null\""]) {
                     responseString = [responseString replaceAll:@"\"null\"" with:@"\"\""];
                 }
