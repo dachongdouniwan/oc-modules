@@ -74,4 +74,10 @@
     
 }
 
+#pragma mark -
+
+- (void)parse:(NSURL *)url {
+    
+}
+
 @end

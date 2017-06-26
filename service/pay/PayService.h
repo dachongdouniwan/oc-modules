@@ -97,4 +97,6 @@ typedef enum : NSUInteger {
 - (BOOL)pay; // @return 不可不必处理，错误处理在failedHandler
 - (void)process:(id)data;
 
+- (void)parse:(NSURL *)url; // Call this in Share/Pay app call back by open url
+
 @end

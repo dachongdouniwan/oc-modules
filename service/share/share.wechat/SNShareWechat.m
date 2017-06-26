@@ -129,12 +129,7 @@
  * @param resp 具体的回应内容，是自动释放的
  */
 - (void)onResp:(BaseResp *)resp {
-    // 建议支付、分享的应答处理中各自去判断
-    
-    { // 支付
-        [suite.service.wechatpay process:resp];
-    }
-    
+    if ([resp isKindOfClass:SendMessageToWXResp.class])
     { // 分享
         switch (resp.errCode) {
             case WXSuccess:

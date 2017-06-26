@@ -14,12 +14,15 @@
 
 @singleton( _AppUninit )
 
+@prop_weak(id<AppUninitDelegate>, delegate)
+
 - (void)logout;
 
 @end
 
+// 用户退出应用代理，DataCenter实现该代理，可以不需要直接依赖Logout View Action
 @protocol AppUninitDelegate <NSObject>
 
-
+- (void)logout;
 
 @end

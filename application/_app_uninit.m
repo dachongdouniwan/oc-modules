@@ -15,6 +15,10 @@
 
 - (void)logout {
     [context_inst.user clear];
+    
+    if (is_method_implemented(self.delegate, logout)) {
+        [self.delegate logout];
+    }
 }
 
 @end
