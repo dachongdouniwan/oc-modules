@@ -7,7 +7,7 @@
 //
 
 #import "_building_precompile.h"
-#import "_archiver.h"
+#import "_archiver.h" // 自动NSCoding
 
 // 当前只支持单用户，可以扩展
 
