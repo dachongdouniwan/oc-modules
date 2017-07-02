@@ -137,7 +137,7 @@
         [mutableParameters addEntriesFromDictionary:param];
     }
     
-    LOG(@"parameter = %@", mutableParameters);
+    LOG(@"api = %@, parameter = %@", path, mutableParameters);
     
     _NetworkHostRequest *request = [self.host requestWithPath:path params:mutableParameters httpMethod:@"POST"];
     if (headers.allKeys.count) {
