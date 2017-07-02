@@ -43,16 +43,21 @@
 #pragma mark Success / Error / Progress
 
 - (void)showSuccess:(NSString *)message {
-    [SVProgressHUD showSuccessWithStatus:message];
+//    [SVProgressHUD showSuccessWithStatus:message];
+    [FTIndicator showSuccessWithMessage:message userInteractionEnable:NO];
 }
 
 - (void)showError:(NSString *)message {
-    [SVProgressHUD showErrorWithStatus:message];
+//    [SVProgressHUD showErrorWithStatus:message];
+    [FTIndicator showErrorWithMessage:message];
 }
 
 - (void)showInfo:(NSString *)message {
-    [SVProgressHUD showInfoWithStatus:message];
+//    [SVProgressHUD showInfoWithStatus:message];
+    [FTIndicator showInfoWithMessage:message];
 }
+
+// -----
 
 - (void)showProgress {
     self.progressTitle = nil;
