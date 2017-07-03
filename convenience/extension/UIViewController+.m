@@ -50,6 +50,10 @@
     
 }
 
+- (void)restoreNavigationBar {
+    
+}
+
 - (void)initData {
     
 }

@@ -35,6 +35,8 @@
 
 - (void)initNavigationBar;
 
+- (void)restoreNavigationBar;
+
 - (void)initData;
 
 - (void)initDataSource;
