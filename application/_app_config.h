@@ -17,7 +17,7 @@
 @prop_assign(BOOL, enabledLaunchAdvertise) // 启动广告，默认：NO
 @prop_assign(CGFloat, launchAdvertiseDuration)
 
-// 地图-高德SDK配置
+// 地图-高德SDK配置，没有配置，默认关闭
 @prop_strong(NSString *, mapApiKey)
 
 // 分享-微信配置

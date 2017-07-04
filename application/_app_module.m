@@ -21,6 +21,7 @@
 - (void)initComponents {
     
     // Gao de
+    if (! is_empty(config_inst.mapApiKey))
     {
         [ComponentMap sharedInstance].config.apiKey = config_inst.mapApiKey;
         
