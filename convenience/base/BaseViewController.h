@@ -44,6 +44,8 @@
 
 @property (nonatomic, assign) NSInteger serviceState;
 
+@property (nonatomic,strong) NSMutableArray *dataArr;
+
 /**
  @knowledge
  

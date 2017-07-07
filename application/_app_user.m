@@ -17,6 +17,9 @@
 @def_prop_strong( NSString *, token )
 @def_prop_strong( NSString *, session )
 
+@def_prop_strong( NSString *, orgUuid)
+
+
 - (void)clear {
     self.id = 0;
     self.token = nil;

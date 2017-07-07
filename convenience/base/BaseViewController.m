@@ -61,6 +61,13 @@ static NSString *backButtonImageName = @"buckbutton";
     return self;
 }
 
+- (NSMutableArray *)dataArr{
+    if (_dataArr == nil) {
+        _dataArr = [[NSMutableArray alloc]init];
+    }
+    return _dataArr;
+}
+
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
         [self initDefault];

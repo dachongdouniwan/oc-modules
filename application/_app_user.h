@@ -21,6 +21,8 @@
 @prop_strong( NSString *, token ) // 用户验证
 @prop_strong( NSString *, session ) // 用户过期验证
 
+@prop_strong( NSString *, orgUuid) // 用户标识
+
 // ---------------- 用户数据操作
 
 - (void)clear;
