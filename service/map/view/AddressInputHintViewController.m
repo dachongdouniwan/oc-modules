@@ -102,7 +102,7 @@
 
 /* 输入提示 搜索.*/
 - (void)searchTipsWithKey:(NSString *)key {
-    returnif(!key.length)
+    return_if(!key.length)
     
     AMapInputTipsSearchRequest *tips = [[AMapInputTipsSearchRequest alloc] init];
     tips.keywords = key;
