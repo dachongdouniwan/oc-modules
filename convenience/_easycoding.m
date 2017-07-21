@@ -15,13 +15,6 @@
 #import "_ui_component.h"
 #import "_pragma_push.h"
 
-/**
- *  1. HUD 透明显示层
- 
-    https://github.com/SVProgressHUD/SVProgressHUD/tree/master/SVProgressHUD
- */
-
-
 @interface NSObject ()
 
 @property (nonatomic, strong) NSString *progressTitle;
