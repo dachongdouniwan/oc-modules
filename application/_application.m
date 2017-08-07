@@ -140,25 +140,41 @@
 
 #pragma mark - 推送
 
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    [APNService handleRemoteNotification:userInfo completion:nil];
     
+    application.applicationIconBadgeNumber = 0;
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    [APNService handleRemoteNotification:userInfo completion:completionHandler];
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    
+    [APNService handleWhenApplication:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
 }
 
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
-    
+    [APNService handleWhenApplication:application didRegisterUserNotificationSettings:notificationSettings];
 }
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
-    
+    [APNService showLocalNotificationAtFront:notification];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
-    
+    [APNService handleWhenApplication:application didFailToRegisterForRemoteNotificationsWithError:error];
 }
+
+// ios 10
+#if defined( __IPHONE_10_0 ) && ( __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0 )
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
+    [APNService handleWhenUserNotificationCenter:center willPresentNotification:notification withCompletionHandler:completionHandler];
+}
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
+    [APNService handleWhenUserNotificationCenter:center didReceiveNotificationResponse:response withCompletionHandler:completionHandler];
+}
+#endif
 
 #pragma mark - 其他事件
 
