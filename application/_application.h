@@ -48,7 +48,11 @@
 
 @protocol ApplicationNofiticationProtocol <NSObject> // 应用推送回调（外部不关心api版本问题）
 
-- (void)onLaunchByNotification:(id)notification;
+- (void)onReceiveNotificationAtLaunching:(id)notification; // 从关闭到启动
+
+- (void)onReceiveNotificationAtActivating:(id)notification;// 从后台到启动
+
+- (void)onReceiveNotificationAtRunning:(id)notification; // 在前台收到通知
 
 @end
 
@@ -109,7 +113,8 @@
     UIApplicationDelegate,
     ApplicationLifeStyleProtocol,
     ApplicationRuntimePeriodProtocol,
-    ApplicationExternalEventProtocol
+    ApplicationExternalEventProtocol,
+    ApplicationNofiticationProtocol
 >
 
 @notification( PushEnabled )

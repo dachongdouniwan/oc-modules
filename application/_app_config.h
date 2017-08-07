@@ -9,6 +9,8 @@
 #import "_building_precompile.h"
 #import "_app_rater.h"
 
+@protocol APNServiceDelegate;
+
 @interface _AppConfig : NSObject
 
 @singleton( _AppConfig )
@@ -26,6 +28,11 @@
 
 // 评分配置
 @prop_singleton(_AppRater, rater)
+
+// 推送配置
+@prop_strong(NSString *, pushKey)
+@prop_strong(NSString *, pushChannel) // 需要监听的频道
+@prop_strong(id<APNServiceDelegate>, pushDelegate)
 
 @end
 

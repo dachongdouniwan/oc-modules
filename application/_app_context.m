@@ -19,6 +19,11 @@
 
 @def_prop_singleton( _AppUser, user )
 
+@def_notification_alias( LaunchedStateNofitication , UIApplicationDidFinishLaunchingNotification )
+@def_notification( LoginedStateNotification )
+@def_notification( LogoutedStateNotification )
+@def_notification( CookieExpiredNotification )
+
 @def_prop_assign( double, longitude )
 @def_prop_assign( double, latitude)
 

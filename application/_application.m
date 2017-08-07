@@ -8,6 +8,7 @@
 
 #import "_application.h"
 #import "XHLaunchAd.h"
+#import "APNService.h"
 #import "_pragma_push.h"
 
 @implementation _Application
@@ -132,6 +133,8 @@
         [self onLaunch];
     }
     
+    [APNService setupWhenApplication:application didFinishLaunchingWithOptions:launchOptions clearBadge:YES];
+    
     return YES;
 }
 
@@ -226,9 +229,15 @@
 
 #pragma mark - ApplicationNofiticationProtocol
 
+- (void)onReceiveNotificationAtRunning:(id)notification {}
+- (void)onReceiveNotificationAtLaunching:(id)notification {}
+- (void)onReceiveNotificationAtActivating:(id)notification {}
+
 #pragma mark - ApplicationExternalEventProtocol
+
 - (void)onSignificantTimeChanged {}
 - (void)onMemoryOverflow {}
+- (void)onLaunchByOpeningUrl:(NSURL *)url {}
 
 #pragma mark - ApplicationRuntimePeriodProtocol
 - (void)onConfig:(_AppConfig *)appConfig {

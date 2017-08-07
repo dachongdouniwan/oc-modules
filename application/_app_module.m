@@ -57,6 +57,13 @@
         
     }
     
+    // Init notification module
+    {
+        PushServiceKey = config_inst.pushKey;
+        PushServiceChannel = config_inst.pushChannel;
+        [[APNService sharedInstance] setDelegate:config_inst.pushDelegate];
+    }
+    
 }
 
 @end

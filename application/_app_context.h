@@ -25,6 +25,12 @@
 
 @prop_singleton( _AppUser, user )
 
+// 重要的通知
+@notification( LaunchedStateNofitication )
+@notification( LoginedStateNotification )
+@notification( LogoutedStateNotification )
+@notification( CookieExpiredNotification )
+
 /**
     服务功能
  
