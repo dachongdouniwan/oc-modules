@@ -19,6 +19,7 @@
 
 @def_prop_strong( NSString *, orgUuid)
 
+@def_prop_strong( NSString *, firstCity )
 
 - (void)clear {
     self.id = 0;

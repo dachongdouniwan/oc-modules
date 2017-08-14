@@ -29,9 +29,7 @@
 @property (nonatomic, weak) IBOutlet UILabel    *distanceLabel;
 @property (nonatomic, weak) IBOutlet UIButton   *goHereButton;
 
-@property (nonatomic, strong) NSString          *destnationName;
 @property (nonatomic, strong) AMapGeocode       *destinationGeoInfo;
-@property (nonatomic, strong) CLLocation        *destnationLocation;
 
 @end
 

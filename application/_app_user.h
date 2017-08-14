@@ -23,6 +23,10 @@
 
 @prop_strong( NSString *, orgUuid) // 用户标识
 
+// ----------------
+
+@prop_strong( NSString *, firstCity) // 第一次选择城市
+
 // ---------------- 用户数据操作
 
 - (void)clear;

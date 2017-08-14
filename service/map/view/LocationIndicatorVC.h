@@ -17,4 +17,8 @@
  */
 @interface LocationIndicatorVC : BaseViewController
 
+@property (nonatomic, strong) NSString  *destnationName;
+
+@property (nonatomic, strong) CLLocation        *destnationLocation;
+
 @end
