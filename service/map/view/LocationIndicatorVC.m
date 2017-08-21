@@ -239,7 +239,7 @@
                                                           reuseIdentifier:currentLocationIdentifier];
         }
         
-        annotationView.image = image_named(@"gps_start");
+        annotationView.image = image_named(@"start");
         return annotationView;
     } else {
         static NSString *destinationIdentifier = @"destinationLocation";
@@ -249,7 +249,7 @@
                                                           reuseIdentifier:destinationIdentifier];
         }
         
-        annotationView.image = image_named(@"gps_end");
+        annotationView.image = image_named(@"end");
         annotationView.centerOffset = CGPointMake(0,-annotationView.height/2);//向上移一半像素
         return annotationView;
     }
