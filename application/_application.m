@@ -133,7 +133,7 @@
         [self onLaunch];
     }
     
-    //[APNService setupWhenApplication:application didFinishLaunchingWithOptions:launchOptions clearBadge:YES];
+    [APNService setupWhenApplication:application didFinishLaunchingWithOptions:launchOptions clearBadge:YES];
     
     return YES;
 }
