@@ -176,14 +176,12 @@
     config.appName = app_display_name;
     config.routeType = MARouteSearchTypeDriving;
     //若未调起高德地图App,跳转到高德H5应用
-    if([MAMapURLSearch openAMapRouteSearch:config]){
-        NSString* url = [NSString stringWithFormat:@"http://m.amap.com/navi/?start=%f,%f&dest=%f,%f&destName=%@&naviBy=car&key=%@",startLocation.longitude,startLocation.latitude,destinationLocation.longitude,destinationLocation.latitude,destinationName,GDMapH5APIKey];
-        
-        DDLogDebug(@"高德H5应用URL:%@",url);
-        
-        NSString *encodedUrl = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        [self pushHtml:[NSURL URLWithString:encodedUrl] extraParams:@{@"title":@"高德地图"}];
-    }
+    NSString* url = [NSString stringWithFormat:@"http://m.amap.com/navi/?start=%f,%f&dest=%f,%f&destName=%@&naviBy=car&key=%@",startLocation.longitude,startLocation.latitude,destinationLocation.longitude,destinationLocation.latitude,destinationName,GDMapH5APIKey];
+    
+    DDLogDebug(@"高德H5应用URL:%@",url);
+    
+    NSString *encodedUrl = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    [self pushHtml:[NSURL URLWithString:encodedUrl] extraParams:@{@"title":@"高德地图"}];
 }
 
 #pragma mark - 地理编码搜索
