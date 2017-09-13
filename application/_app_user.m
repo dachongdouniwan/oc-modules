@@ -21,6 +21,8 @@
 
 @def_prop_strong( NSString *, firstCity )
 
+@def_prop_strong( NSString *, registrationId)
+
 - (void)clear {
     self.id = 0;
     self.token = nil;

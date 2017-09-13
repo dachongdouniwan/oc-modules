@@ -27,6 +27,8 @@
 
 @prop_strong( NSString *, firstCity) // 第一次选择城市
 
+@prop_strong( NSString *, registrationId ) //极光registerId
+
 // ---------------- 用户数据操作
 
 - (void)clear;

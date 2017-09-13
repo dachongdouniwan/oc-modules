@@ -9,6 +9,7 @@
 #import "_greats.h"
 #import "_base_restful_dao.h"
 #import "_xml.h"
+#import "MainViewManager.h"
 
 @implementation _BaseRestfulDao
 
@@ -178,8 +179,13 @@
             
             //NSDictionary *response = [responseString];//completedRequest.responseAsJSON;
 
-            
+            // load-teacher-homepage loadTeacherInfoSuccess
             LOG(@"response = %@", response);
+            if ([[response objectForKey:@"errorCode"] isEqualToString:@"USER_1011"]) {
+                [app_inst.context.uninitialize logout];
+                [datapayload clear];
+                [[MainViewManager sharedInstance] loadLoginView];
+            }
             
             NSError *error = [self checkResponseIfHaveError:response];
             if (error) { // service error
