@@ -47,7 +47,6 @@
     }
      */
     
-    self.title = self.destnationName;
     
     [self initSearchAPI];
     
@@ -67,7 +66,16 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    self.title = self.destnationName;
+    
     [self.navigationController setNavigationBarHidden:NO animated:animated];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    self.title = @"";
 }
 
 - (void)dealloc {

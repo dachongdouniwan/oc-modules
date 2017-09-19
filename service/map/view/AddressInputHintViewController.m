@@ -81,7 +81,12 @@
     self.searchBar.keyboardType = UIKeyboardTypeDefault;
     [self.searchBar becomeFirstResponder];
     self.searchBar.tintColor = [UIColor colorWithRed:108.0/255 green:186.0/255 blue:82.0/255 alpha:1];
-    self.searchBar.text = self.initialSearchString ? self.initialSearchString : @"";
+    NSRange range = [self.initialSearchString rangeOfString:@" "];
+    if (range.length != 0) {
+        self.searchBar.text = [self.initialSearchString substringToIndex:range.location];
+    }else{
+        self.searchBar.text = self.initialSearchString ? self.initialSearchString : @"";
+    }
     if (self.searchBar.text.length > 0) {
         [self searchTipsWithKey:self.searchBar.text];
     }
