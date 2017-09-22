@@ -11,6 +11,7 @@
 #import "_vendor_lumberjack.h"
 #import "LocationViewController.h"
 #import "_pragma_push.h"
+#import "LocationService.h"
 
 @interface AddressInputHintViewController () <UISearchBarDelegate,
                                               UITableViewDataSource,
@@ -21,6 +22,7 @@
 @property (strong, nonatomic) UISearchDisplayController *displayController;
 @property (strong,nonatomic) UIView *topView;
 @property (strong, nonatomic) NSMutableArray *tips;
+@property (strong, nonatomic) NSString *currenStr;
 
 @end
 
@@ -37,13 +39,25 @@
     [super viewDidLoad];
     
     self.title = @"所在区域";
-    
     self.tips = [NSMutableArray array];
     self.search = [[AMapSearchAPI alloc] init];
     self.search.delegate = self;
 
     [self initSearchBar];
     [self initTableView];
+    [self getCurrentAddress];
+}
+
+- (void)getCurrentAddress
+{
+    [[LocationService sharedInstance] currentLocationWithBlock:^(LocationModel *location) {
+        if (location == nil) {
+            
+        }else {
+            _currenStr = location.address;
+        }
+        [self.tableView reloadData];
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -77,7 +91,7 @@
     self.searchBar.translucent = YES;
     self.searchBar.delegate = self;
     self.searchBar.searchBarStyle = UISearchBarStyleMinimal;
-    self.searchBar.placeholder = @"搜索";
+    self.searchBar.placeholder = @"查找小区/大厦／学校等";
     self.searchBar.keyboardType = UIKeyboardTypeDefault;
     [self.searchBar becomeFirstResponder];
     self.searchBar.tintColor = [UIColor colorWithRed:108.0/255 green:186.0/255 blue:82.0/255 alpha:1];
@@ -134,6 +148,7 @@
             [tipsArray addObject:tip];
         }
     }
+    _currenStr = nil;
     [self.tips setArray:tipsArray];
     [self.tableView reloadData];
    // [self.displayController.searchResultsTableView reloadData];
@@ -146,6 +161,9 @@
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (_currenStr) {
+        return 1;
+    }
     return self.tips.count;
 }
 
@@ -158,13 +176,16 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
                                       reuseIdentifier:tipCellIdentifier];
     }
-    
-    AMapTip *tip = self.tips[indexPath.row];
-    cell.textLabel.font = [UIFont systemFontOfSize:16.f];
-    if (tip.district.length > 0) {
-        cell.textLabel.text = [tip.district stringByAppendingString:tip.name];
-    } else {
-        cell.textLabel.text = tip.name;
+    if (_currenStr) {
+        cell.textLabel.text = _currenStr;
+    }else{
+        AMapTip *tip = self.tips[indexPath.row];
+        cell.textLabel.font = [UIFont systemFontOfSize:16.f];
+        if (tip.district.length > 0) {
+            cell.textLabel.text = [tip.district stringByAppendingString:tip.name];
+        } else {
+            cell.textLabel.text = tip.name;
+        }
     }
     cell.textLabel.textColor = font_gray_1;
     return cell;
@@ -173,24 +194,31 @@
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    AMapTip *tip = self.tips[indexPath.row];
-
-    self.searchBar.placeholder = tip.name;
-    
-    if ([self.delegate respondsToSelector:@selector(onAddressMapTipSelect:)]) {
-        [self.delegate performSelector:@selector(onAddressMapTipSelect:) withObject:tip];
-    }
-    
-    if (is_method_implemented(self.delegate, onAddressHintSend:)) {
-        NSString *address = nil;
-        if (tip.district.length > 0) {
-            address = [tip.district stringByAppendingString:tip.name];
-        } else {
-            address = tip.name;
+    if (_currenStr) {
+        if (is_method_implemented(self.delegate, onAddressHintSend:)) {
+            NSString *address = nil;
+            address = _currenStr;
+            [self.delegate performSelector:@selector(onAddressHintSend:) withObject:address];
         }
-        [self.delegate performSelector:@selector(onAddressHintSend:) withObject:address];
+    }else{
+        AMapTip *tip = self.tips[indexPath.row];
+        
+        self.searchBar.placeholder = tip.name;
+        
+        if ([self.delegate respondsToSelector:@selector(onAddressMapTipSelect:)]) {
+            [self.delegate performSelector:@selector(onAddressMapTipSelect:) withObject:tip];
+        }
+        
+        if (is_method_implemented(self.delegate, onAddressHintSend:)) {
+            NSString *address = nil;
+            if (tip.district.length > 0) {
+                address = [tip.district stringByAppendingString:tip.name];
+            } else {
+                address = tip.name;
+            }
+            [self.delegate performSelector:@selector(onAddressHintSend:) withObject:address];
+        }
     }
-    
     
     [self.navigationController popViewControllerAnimated:YES];
 }
