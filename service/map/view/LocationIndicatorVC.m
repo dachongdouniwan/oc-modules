@@ -180,7 +180,7 @@
     MARouteConfig * config = [[MARouteConfig alloc] init];
     config.startCoordinate = startLocation;
     config.destinationCoordinate = destinationLocation;
-    config.appScheme = suite.system.info.urlSchema;
+    config.appScheme = suite.greats.system.urlSchema;
     config.appName = app_display_name;
     config.routeType = MARouteSearchTypeDriving;
     //若未调起高德地图App,跳转到高德H5应用

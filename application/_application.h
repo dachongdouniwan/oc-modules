@@ -145,6 +145,8 @@
 @prop_singleton( _AppModule,        module )
 @prop_singleton( _AppContext,       context )
 
+- (void)quit;
+
 @end
 
 #undef  app_inst

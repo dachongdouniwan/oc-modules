@@ -72,15 +72,15 @@
 }
 
 - (NSDictionary *)generate {
-    NSString *appVersion    = [suite.system.info appVersion];
+    NSString *appVersion    = [suite.greats.system appVersion];
 #ifdef DEBUG
     appVersion = [appVersion stringByAppendingString:@"_test"];
 #endif
     
-    [self.data setObject:[suite.system.info osVersion] forKey:self.DeviceSystemVersion];
-    [self.data setObject:[suite.system.info deviceModel] forKey:self.DeviceModel];
+    [self.data setObject:[suite.greats.system osVersion] forKey:self.DeviceSystemVersion];
+    [self.data setObject:[suite.greats.system deviceModel] forKey:self.DeviceModel];
     [self.data setObject:appVersion forKey:self.ApplicationVersion];
-    [self.data setObject:[suite.system.info bundleIdentifier] forKey:self.ApplicationClientType];
+    [self.data setObject:[suite.greats.system bundleIdentifier] forKey:self.ApplicationClientType];
     [self.data setObject:@"IOS" forKey:self.ApplicationPlatform];
     [self.data setObject:[LogRequestDataBuilder ApplicationNameAdapted] forKey:self.ApplicationName];
     
