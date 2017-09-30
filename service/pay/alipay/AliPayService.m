@@ -26,9 +26,9 @@
 - (BOOL)pay {
     //    NSError *error = nil;
     
-    NSString *appSchema = [suite.greats.system urlSchemaWithName:@"alipay"];
+    NSString *appSchema = [greats.system urlSchemaWithName:@"alipay"];
     if (! appSchema) {
-        appSchema = [suite.greats.system urlSchema];
+        appSchema = [greats.system urlSchema];
         if (! appSchema) {
             self.errorCode = PayServiceErrorCodeInvalidData;
             self.errorDesc = @"订单数据无效";

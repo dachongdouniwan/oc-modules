@@ -27,7 +27,7 @@
         
         [[ComponentMap sharedInstance] initGDAPIKey];
         
-        [suite.service.location powerOn];
+        [service.location powerOn];
     }
     
     //share

@@ -134,7 +134,7 @@
 - (void)bindViewModel {
     @weakify(self);
     RACSignal* sig_currentLocationSuccess = nil;
-    if (suite.service.location.available) {
+    if (service.location.available) {
        sig_currentLocationSuccess = [[RACObserve(self.mapView.userLocation, location) filter:^BOOL(id value) {
             return value != nil;
         }]take:1];
@@ -180,7 +180,7 @@
     MARouteConfig * config = [[MARouteConfig alloc] init];
     config.startCoordinate = startLocation;
     config.destinationCoordinate = destinationLocation;
-    config.appScheme = suite.greats.system.urlSchema;
+    config.appScheme = greats.system.urlSchema;
     config.appName = app_display_name;
     config.routeType = MARouteSearchTypeDriving;
     //若未调起高德地图App,跳转到高德H5应用
@@ -296,7 +296,7 @@
     NSMutableString* distanceStr = [NSMutableString new];
     
     //未开启定位时不显示距离
-    if (suite.service.location.available && self.mapView.userLocation.location) {
+    if (service.location.available && self.mapView.userLocation.location) {
         MAUserLocation* userLocation = self.mapView.userLocation;
         LocationModel* currentLocation = [LocationModel modelWithLongitude:userLocation.coordinate.longitude latitude:userLocation.coordinate.latitude];
         LocationModel* destLocationModel = [LocationModel modelWithLongitude:self.destinationGeoInfo.location.longitude latitude:self.destinationGeoInfo.location.latitude];

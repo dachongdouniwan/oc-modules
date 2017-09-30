@@ -43,7 +43,7 @@
 - (void)checkUserLocationIfChanged:(BOOL (^)(BOOL))locationChangedHandler {
     TODO("我想让一个 item，可以cache，可以database，可以json序列化")
     
-    [suite.service.location currentLocationWithBlock:^(LocationModel *location) {
+    [service.location currentLocationWithBlock:^(LocationModel *location) {
         // 判断城市是否改变
         BOOL cityChanged = NO;
         
