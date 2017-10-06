@@ -8,9 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "_greats.h"
-#import "_vendor_realm.h"
 
-@interface Growth : RLMObject
+@interface Growth : NSObject
 
 @property int id;
 @property NSInteger time;
@@ -20,13 +19,11 @@
 
 @end
 
-RLM_ARRAY_TYPE(Growth)
-
 @interface GrowthCache : NSObject // todo: 应该模仿RLM_ARRAY_TYPE，搞一个CacheProtocol，然后，用宏来定义
 
 @singleton( GrowthCache )
 
-- (void)addObject:(RLMObject *)obj;
+- (void)addObject:(NSObject *)obj;
 
 - (void)removeAllObject;
 

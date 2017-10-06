@@ -1,0 +1,4 @@
+REALM_CLANG_CXX_LANGUAGE_STANDARD = compiler-default
+REALM_OTHER_CPLUSPLUSFLAGS = $(inherited) -std=c++1y
+OTHER_CFLAGS = $(inherited) -DREALM_COCOA_VERSION='@"0.95.3"'
+OTHER_LDFLAGS = $(inherited) -licucore

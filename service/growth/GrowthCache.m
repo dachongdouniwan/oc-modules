@@ -23,34 +23,24 @@
 }
 
 - (NSArray *)allObjects{
-    RLMResults *results = [Growth allObjects];
-    NSMutableArray * allObjects = [[NSMutableArray alloc] init];
-    for (int i = 0; i < results.count; i ++) {
-        [allObjects addObject:[results objectAtIndex:i]];
-    }
-    return allObjects;
+    
+    return nil;
 }
 
 - (NSInteger)allObjectsCount {
-    RLMResults *results = [Growth allObjects];
-    return results.count;
+//    NSObject *results = [Growth allObjects];
+    
+    ASSERT(@"未实现")
+    
+    return 0;
 }
 
-- (void)addObject:(RLMObject *)obj {
-    RLMRealm *realm = [RLMRealm defaultRealm];
-    //开放RLMRealm事务
-    [realm beginWriteTransaction];
-    //添加到数据库 为RLMObject
-    [realm addObject:obj];
-    //提交事务
-    [realm commitWriteTransaction];
+- (void)addObject:(NSObject *)obj {
+    
 }
 
 - (void)removeAllObject {
-    RLMRealm *realm = [RLMRealm defaultRealm];
-    [realm beginWriteTransaction];
-    [realm deleteAllObjects];
-    [realm commitWriteTransaction];
+    
 }
 
 @end
