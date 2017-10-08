@@ -7,7 +7,6 @@
 //
 
 #import "_app_appearance.h"
-#import "_ui_core.h"
 #import "BaseViewController.h"
 
 @implementation _AppAppearance
@@ -100,6 +99,8 @@
         } else {
             BaseViewController.userPreferredStatusBarStyle = UIStatusBarStyleLightContent;
         }
+        
+        BaseViewController.preferredViewBackgroundColor = self.viewBackgroundColor;
     }
 }
 

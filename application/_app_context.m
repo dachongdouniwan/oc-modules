@@ -8,6 +8,7 @@
 
 #import "_app_context.h"
 #import "_building_precompile.h"
+#import "_building_service.h"
 #import "_building_component.h"
 
 @implementation _AppContext

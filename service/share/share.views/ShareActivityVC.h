@@ -7,7 +7,6 @@
 //
 
 #import "_greats.h"
-#import "BaseViewController.h"
 #import "ShareParamBuilder.h"
 
 #pragma mark -

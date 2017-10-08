@@ -5,9 +5,10 @@
 //  Created by 李杰 on 2/5/15.
 //
 //
+
+#import "_building_precompile.h"
 #import <AMapSearchKit/AMapSearchKit.h>
 #import "AddressInputHintViewController.h"
-#import "_ui_core.h"
 #import "_vendor_lumberjack.h"
 #import "LocationViewController.h"
 #import "_pragma_push.h"

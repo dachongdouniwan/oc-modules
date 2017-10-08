@@ -1,20 +1,12 @@
-//
-//  BaseWebViewController.m
-//  Html5Demo
-//
-//  Created by 李杰 on 4/7/15.
-//  Copyright (c) 2015 only.com. All rights reserved.
-//
 
+#import "_building_precompile.h"
 #import "BaseWebViewController.h"
+#import "BaseViewController+Private.h"
 #import "WebViewProgress.h"
 #import "WebViewProgressView.h"
 #import "WebViewFailedView.h"
 #import "UIWebView+JavaScript.h"
 #import "NSURLRequest+Web.h"
-#import "_greats.h"
-#import "_tools.h"
-#import "_easyrouter.h"
 
 @interface BaseWebViewController () <UIWebViewDelegate, WebViewFailedViewDelegate>
 

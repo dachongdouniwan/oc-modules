@@ -7,7 +7,7 @@
 //
 
 #import "_greats.h"
-#import "_tools.h"
+#import "_building_tools.h"
 #import "LogRequestDataBuilder.h"
 
 @interface LogRequestDataBuilder ()
@@ -72,15 +72,15 @@
 }
 
 - (NSDictionary *)generate {
-    NSString *appVersion    = [greats.system appVersion];
+    NSString *appVersion    = [greats.device appVersion];
 #ifdef DEBUG
     appVersion = [appVersion stringByAppendingString:@"_test"];
 #endif
     
-    [self.data setObject:[greats.system osVersion] forKey:self.DeviceSystemVersion];
-    [self.data setObject:[greats.system deviceModel] forKey:self.DeviceModel];
+    [self.data setObject:[greats.device osVersion] forKey:self.DeviceSystemVersion];
+    [self.data setObject:[greats.device deviceModel] forKey:self.DeviceModel];
     [self.data setObject:appVersion forKey:self.ApplicationVersion];
-    [self.data setObject:[greats.system bundleIdentifier] forKey:self.ApplicationClientType];
+    [self.data setObject:[greats.device bundleIdentifier] forKey:self.ApplicationClientType];
     [self.data setObject:@"IOS" forKey:self.ApplicationPlatform];
     [self.data setObject:[LogRequestDataBuilder ApplicationNameAdapted] forKey:self.ApplicationName];
     

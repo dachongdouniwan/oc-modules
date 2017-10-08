@@ -6,6 +6,7 @@
 //
 //
 
+#import "_precompile.h"
 #import "_base_net_command.h"
 
 typedef enum : NSUInteger {

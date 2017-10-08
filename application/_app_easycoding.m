@@ -7,14 +7,13 @@
 //
 
 #import "_app_easycoding.h"
-
+#import "_building_ui_component.h"
 #import <objc/runtime.h>
 #import "SVProgressHUD.h"
 #import "AlertView.h"
 #import "UIView+Extension.h"
 #import "_foundation.h"
-#import "_easycoding.h"
-#import "_ui_component.h"
+#import "_building_component.h"
 #import "_pragma_push.h"
 
 // ----------------------------------
@@ -172,5 +171,28 @@
 // ----------------------------------
 
 @implementation _AppEasycoding
+
+@end
+
+// ----------------------------------
+// MARK: Source - Handler
+// ----------------------------------
+
+@implementation UIViewController ( Handler )
+
+- (ErrorBlock)failureHandler {
+    @weakify(self)
+    
+    return ^(NSError *error) {
+        
+        @strongify(self)
+        
+        [self showAlertView:@"数据加载失败" message:error.message cancelButtonName:@"确定" cancelHandler:^{
+            @strongify(self)
+            
+            [self.navigationController popViewControllerAnimated:YES];
+        }];
+    };
+}
 
 @end

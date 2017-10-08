@@ -5,10 +5,11 @@
 //  Created by 李杰 on 1/27/15.
 //
 //
+
+#import "_building_precompile.h"
+#import "_building_application.h"
 #import <MAMapKit/MAMapKit.h>
 #import <AMapSearchKit/AMapSearchKit.h>
-#import "_ui_core.h"
-#import "_easycoding.h"
 #import "_validator.h"
 #import "_app_appearance.h"
 #import "LocationViewController.h"

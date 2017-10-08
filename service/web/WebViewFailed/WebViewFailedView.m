@@ -6,9 +6,8 @@
 //  Copyright © 2017 alliance. All rights reserved.
 //
 
+#import "_building_precompile.h"
 #import "WebViewFailedView.h"
-#import "_greats.h"
-#import "_ui_core.h"
 
 @interface WebViewFailedView ()
 

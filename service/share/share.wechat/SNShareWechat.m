@@ -6,13 +6,13 @@
 //  Copyright © 2016 OpenTeam. All rights reserved.
 //
 
-#import "_greats.h"
+#import "_building_precompile.h"
+#import "_building_application.h"
+#import "_vendor_lumberjack.h"
 #import "WechatPayService.h"
 #import "SNShareWechat.h"
 #import "WXApi.h"
 #import "ImageUtil.h"
-#import "_easycoding.h"
-#import "_vendor_lumberjack.h"
 
 @interface SNShareWechat () <WXApiDelegate>
 

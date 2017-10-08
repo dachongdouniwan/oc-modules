@@ -12,7 +12,7 @@
 #import <TencentOpenAPI/TencentOAuthObject.h>
 #import <TencentOpenAPI/TencentApiInterface.h>
 #import "ImageUtil.h"
-#import "_easycoding.h"
+#import "_building_application.h"
 #import "_vendor_lumberjack.h"
 
 @interface  SNShareQQ () <TencentApiInterfaceDelegate>

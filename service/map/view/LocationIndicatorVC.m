@@ -13,7 +13,7 @@
 #import <MAMapKit/MAMapKit.h>
 #import "BaseWebViewController.h"
 #import "ReactiveCocoa.h"
-#import "_easycoding.h"
+#import "_building_application.h"
 #import "_pragma_push.h"
 
 #define kGapXOfBottomView 12
@@ -180,7 +180,7 @@
     MARouteConfig * config = [[MARouteConfig alloc] init];
     config.startCoordinate = startLocation;
     config.destinationCoordinate = destinationLocation;
-    config.appScheme = greats.system.urlSchema;
+    config.appScheme = greats.device.urlSchema;
     config.appName = app_display_name;
     config.routeType = MARouteSearchTypeDriving;
     //若未调起高德地图App,跳转到高德H5应用

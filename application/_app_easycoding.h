@@ -11,10 +11,10 @@
 #import "UITableViewCell+.h"
 #import "UICollectionViewCell+.h"
 #import "UIViewController+.h"
-// ----------------------------------
-// MARK: Extension
-// ----------------------------------
 
+// ----------------------------------
+// MARK: Extension - NSObject (Easy)
+// ----------------------------------
 
 @interface NSObject (Easy)
 
@@ -63,3 +63,14 @@
 @interface _AppEasycoding : NSObject
 
 @end
+
+// ----------------------------------
+// MARK: Extension - UIViewController ( Handler )
+// ----------------------------------
+
+@interface UIViewController ( Handler )
+
+@property (nonatomic, strong, readonly) ErrorBlock failureHandler;
+
+@end
+

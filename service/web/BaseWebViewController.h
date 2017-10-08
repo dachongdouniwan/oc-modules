@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 only.com. All rights reserved.
 //
 
-#import "_ui_core.h"
+#import "_building_precompile.h"
 #import "WebViewJavascriptBridge.h"
 #import "BaseViewController.h"
 

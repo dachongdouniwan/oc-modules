@@ -6,7 +6,7 @@
 //  Copyright © 2017 fallenink. All rights reserved.
 //
 
-#import "_tool_precompile.h"
+#import "_building_precompile.h"
 #import "_cache_domain.h"
 
 @implementation _CacheDomain

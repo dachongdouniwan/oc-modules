@@ -6,8 +6,9 @@
 //
 //
 
+#import "_building_precompile.h"
+#import "_building_application.h"
 #import "PayService.h"
-#import "_easycoding.h"
 
 @implementation PayService
 

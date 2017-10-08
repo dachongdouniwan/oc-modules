@@ -6,8 +6,8 @@
 //
 //
 
+#import "_building_precompile.h"
 #import "CenterAlignView.h"
-#import "_ui_core.h"
 
 @interface CenterAlignView ()
 

@@ -9,6 +9,7 @@
 #import "_app_module.h"
 #import "_app_config.h"
 #import "_building_component.h"
+#import "_building_service.h"
 
 @implementation _AppModule
 

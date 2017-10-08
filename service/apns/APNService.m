@@ -9,8 +9,8 @@
 #import "APNService.h"
 #import "JPushService.h"
 #import "_greats.h"
+#import "_building_application.h"
 #import "_pragma_push.h"
-#import "_easycoding.h"
 
 // ios 10 : http://www.jianshu.com/p/2f3202b5e758
 // ios 10 : [玩转 iOS 10 推送 —— UserNotifications Framework（中）](http://www.jianshu.com/p/5a4b88874f3a)
