@@ -183,7 +183,9 @@
             LOG(@"response = %@", response);
             if ([[response objectForKey:@"errorCode"] isEqualToString:@"USER_1011"]) {
                 [app_inst.context.uninitialize logout];
+#ifdef datapayload
                 [datapayload clear];
+#endif
                 [[MainViewManager sharedInstance] loadLoginView];
             }
             
