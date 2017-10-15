@@ -13,7 +13,7 @@
 
 @singleton( UnionPayService )
 
-@prop_instance( UnionPayOrder, order)
+@prop_instance( UnionPayOrder *, order)
 
 #pragma mark -
 

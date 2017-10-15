@@ -13,7 +13,7 @@
 
 @singleton( WalletPayService )
 
-@prop_instance( WalletPayOrder, order )
+@prop_instance( WalletPayOrder *, order )
 
 
 @end

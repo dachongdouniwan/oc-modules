@@ -18,6 +18,6 @@
 
 // 时间、时区、时间显示格式、日历
 
-@prop_instance( TimePresenter, presenter )
+@prop_instance( TimePresenter *, presenter )
 
 @end

@@ -39,7 +39,8 @@
         }
     }
     
-    NSString *orderString = [[self order] generate];
+    NSError *error = nil;
+    NSString *orderString = [[self order] generate:&error];
     if (! orderString) {
         self.errorCode = PayServiceErrorCodeInvalidData;
         self.errorDesc = @"订单数据无效";

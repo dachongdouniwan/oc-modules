@@ -24,12 +24,12 @@ typedef BOOL (^ SNShareServiceConfigBlock)(SNShareService_Config *config);
 
 @singleton( SNShareService )
 
-@prop_instance( SNShareService_Config, wechatConfig )
-@prop_instance( SNShareService_Config, qqConfig )
-@prop_instance( SNShareService_Config, sinaConfig )
-@prop_instance( SNShareService_Config, smsConfig )
-@prop_instance( SNShareService_Config, emailConfig )
-@prop_instance( SNShareService_Config, linkConfig )
+@prop_instance( SNShareService_Config *, wechatConfig )
+@prop_instance( SNShareService_Config *, qqConfig )
+@prop_instance( SNShareService_Config *, sinaConfig )
+@prop_instance( SNShareService_Config *, smsConfig )
+@prop_instance( SNShareService_Config *, emailConfig )
+@prop_instance( SNShareService_Config *, linkConfig )
 
 @prop_singleton(SNShareLink, link)
 @prop_singleton(SNShareQQ, qq)

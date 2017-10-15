@@ -9,6 +9,8 @@
 #import "PayService.h"
 #import "AliPayOrder.h"
 #import "AliPayConfig.h"
+#import "AliPayAutoOrder.h"
+#import "AliPayManualOrder.h"
 
 typedef NS_ENUM(NSInteger, AliPayServiceErrorCode) {
     // 支付成功
@@ -27,8 +29,11 @@ typedef NS_ENUM(NSInteger, AliPayServiceErrorCode) {
 
 @singleton( AliPayService )
 
-@prop_instance(AliPayOrder, order)
-@prop_instance(AliPayConfig, config)
+/**
+ @brief 用户来生成order，使用AliPayAutoOrder或者AliPayManualOrder
+ */
+@prop_instance(AliPayOrder *, order)
+@prop_instance(AliPayConfig *, config)
 
 #pragma mark - Error
 

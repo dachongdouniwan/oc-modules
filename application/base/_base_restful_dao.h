@@ -15,7 +15,7 @@
 
 @interface _BaseRestfulDao : NSObject <_BaseDaoRequestConstructProtocol, _BaseDaoHuddingProtocol>
 
-@prop_instance(_NetworkHost, host)
+@prop_instance(_NetworkHost *, host)
 
 /**
  *
