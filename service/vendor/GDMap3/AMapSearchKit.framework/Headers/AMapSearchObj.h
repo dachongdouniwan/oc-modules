@@ -19,25 +19,25 @@
 @interface AMapPOISearchBaseRequest : AMapSearchObject
 
 @property (nonatomic, copy)   NSString  *types; //!< 类型，多个类型用“|”分割 可选值:文本分类、分类代码
-@property (nonatomic, assign) NSInteger  sortrule; //<! 排序规则, 0-距离排序；1-综合排序, 默认0
-@property (nonatomic, assign) NSInteger  offset; //<! 每页记录数, 范围1-50, [default = 20]
-@property (nonatomic, assign) NSInteger  page; //<! 当前页数, 范围1-100, [default = 1]
+@property (nonatomic, assign) NSInteger  sortrule; ///< 排序规则, 0-距离排序；1-综合排序, 默认0
+@property (nonatomic, assign) NSInteger  offset; ///< 每页记录数, 范围1-50, [default = 20]
+@property (nonatomic, assign) NSInteger  page; ///< 当前页数, 范围1-100, [default = 1]
 
-@property (nonatomic, assign) BOOL requireExtension; //<! 是否返回扩展信息，默认为 NO。
+@property (nonatomic, assign) BOOL requireExtension; ///< 是否返回扩展信息，默认为 NO。
 
 @end
 
 /// POI ID搜索请求
 @interface AMapPOIIDSearchRequest : AMapPOISearchBaseRequest
 
-@property (nonatomic, copy) NSString *uid; //<! POI全局唯一ID
+@property (nonatomic, copy) NSString *uid; ///< POI全局唯一ID
 
 @end
 
 /// POI关键字搜索
 @interface AMapPOIKeywordsSearchRequest : AMapPOISearchBaseRequest
 
-@property (nonatomic, copy) NSString *keywords; //<! 查询关键字，多个关键字用“|”分割
+@property (nonatomic, copy) NSString *keywords; ///< 查询关键字，多个关键字用“|”分割
 @property (nonatomic, copy) NSString *city; //!< 查询城市，可选值：cityname（中文或中文全拼）、citycode、adcode.
 
 @end
@@ -45,17 +45,17 @@
 /// POI周边搜索
 @interface AMapPOIAroundSearchRequest : AMapPOISearchBaseRequest
 
-@property (nonatomic, copy)   NSString     *keywords; //<! 查询关键字，多个关键字用“|”分割
-@property (nonatomic, copy)   AMapGeoPoint *location; //<! 中心点坐标
-@property (nonatomic, assign) NSInteger     radius; //<! 查询半径，范围：0-50000，单位：米 [default = 3000]
+@property (nonatomic, copy)   NSString     *keywords; ///< 查询关键字，多个关键字用“|”分割
+@property (nonatomic, copy)   AMapGeoPoint *location; ///< 中心点坐标
+@property (nonatomic, assign) NSInteger     radius; ///< 查询半径，范围：0-50000，单位：米 [default = 3000]
 
 @end
 
 /// POI多边形搜索
 @interface AMapPOIPolygonSearchRequest : AMapPOISearchBaseRequest
 
-@property (nonatomic, copy) NSString       *keywords; //<! 查询关键字，多个关键字用“|”分割
-@property (nonatomic, copy) AMapGeoPolygon *polygon; //<! 多边形
+@property (nonatomic, copy) NSString       *keywords; ///< 查询关键字，多个关键字用“|”分割
+@property (nonatomic, copy) AMapGeoPolygon *polygon; ///< 多边形
 
 @end
 
@@ -263,8 +263,8 @@
 /// 天气查询类型
 typedef NS_ENUM(NSInteger, AMapWeatherType)
 {
-    AMapWeatherTypeLive = 1, //<! 实时
-    AMapWeatherTypeForecast //<! 预报
+    AMapWeatherTypeLive = 1, ///< 实时
+    AMapWeatherTypeForecast ///< 预报
 };
 
 /// 天气查询请求
@@ -296,11 +296,11 @@ typedef NS_ENUM(NSInteger, AMapNearbySearchType)
 /// 附近搜索请求
 @interface AMapNearbySearchRequest : AMapSearchObject
 
-@property (nonatomic, copy)   AMapGeoPoint *center; //<! 中心点坐标
-@property (nonatomic, assign) NSInteger radius; //<! 查询半径，范围：[0, 10000]，单位：米 [default = 1000]
-@property (nonatomic, assign) AMapNearbySearchType searchType; //<! 搜索距离类型，默认为直线距离
-@property (nonatomic, assign) NSInteger timeRange; //<! 检索时间范围，超过24小时的数据无法返回，范围[5, 24*60*60] 单位：秒 [default = 1800]
-@property (nonatomic, assign) NSInteger limit; //<! 返回条数，范围[1, 100], 默认30
+@property (nonatomic, copy)   AMapGeoPoint *center; ///< 中心点坐标
+@property (nonatomic, assign) NSInteger radius; ///< 查询半径，范围：[0, 10000]，单位：米 [default = 1000]
+@property (nonatomic, assign) AMapNearbySearchType searchType; ///< 搜索距离类型，默认为直线距离
+@property (nonatomic, assign) NSInteger timeRange; ///< 检索时间范围，超过24小时的数据无法返回，范围[5, 24*60*60] 单位：秒 [default = 1800]
+@property (nonatomic, assign) NSInteger limit; ///< 返回条数，范围[1, 100], 默认30
 
 @end
 
@@ -317,8 +317,8 @@ typedef NS_ENUM(NSInteger, AMapNearbySearchType)
 /// 云图搜索结果排序
 typedef NS_ENUM(NSInteger, AMapCloudSortType)
 {
-    AMapCloudSortTypeDESC      = 0, //<! 降序
-    AMapCloudSortTypeASC       = 1  //<! 升序
+    AMapCloudSortTypeDESC      = 0, ///< 降序
+    AMapCloudSortTypeASC       = 1  ///< 升序
 };
 
 /// 云图搜索请求基类
@@ -367,10 +367,10 @@ typedef NS_ENUM(NSInteger, AMapCloudSortType)
 @interface AMapCloudPOIAroundSearchRequest : AMapCloudSearchBaseRequest
 
 /// 必填，中心点坐标。
-@property (nonatomic, copy)   AMapGeoPoint *center; //<! 必填, 中心点坐标
+@property (nonatomic, copy)   AMapGeoPoint *center; ///< 必填, 中心点坐标
 
 /// 可选，查询半径（默认值为3000），单位：米。
-@property (nonatomic, assign) NSInteger     radius; //<! 可选, 查询半径(单位:米;默认:3000)
+@property (nonatomic, assign) NSInteger     radius; ///< 可选, 查询半径(单位:米;默认:3000)
 
 /**
  *  可选，搜索关键词。
@@ -391,7 +391,7 @@ typedef NS_ENUM(NSInteger, AMapCloudSortType)
 @interface AMapCloudPOIPolygonSearchRequest : AMapCloudSearchBaseRequest
 
 /// 必填，多边形。
-@property (nonatomic, copy) AMapGeoPolygon *polygon; //<! 必填,多边形
+@property (nonatomic, copy) AMapGeoPolygon *polygon; ///< 必填,多边形
 
 /**
  *  可选，搜索关键词。
@@ -411,7 +411,7 @@ typedef NS_ENUM(NSInteger, AMapCloudSortType)
 /// 云图ID查询请求
 @interface AMapCloudPOIIDSearchRequest : AMapCloudSearchBaseRequest
 
-@property (nonatomic, assign) NSInteger uid; //<! 必填,POI的ID
+@property (nonatomic, assign) NSInteger uid; ///< 必填,POI的ID
 
 @end
 
@@ -432,7 +432,7 @@ typedef NS_ENUM(NSInteger, AMapCloudSortType)
 @property (nonatomic, copy) NSString *keywords;
 
 /// 必填，城市名称 说明：1. 支持全国/省/市/区县行政区划范围的检索；2. city = @"全国"，即对用户全表搜索；3. 当city值设置非法或不正确时，按照 city = @"全国"返回。
-@property (nonatomic, copy) NSString *city; //<! 必填,POI所在城市
+@property (nonatomic, copy) NSString *city; ///< 必填,POI所在城市
 
 @end
 
@@ -441,8 +441,8 @@ typedef NS_ENUM(NSInteger, AMapCloudSortType)
 /// 云图搜索返回
 @interface AMapCloudPOISearchResponse : AMapSearchObject
 
-@property (nonatomic, assign) NSInteger  count; //<! 返回结果总数目
-@property (nonatomic, strong) NSArray   *POIs; //<! 返回的结果, AMapCloudPOI 数组
+@property (nonatomic, assign) NSInteger  count; ///< 返回结果总数目
+@property (nonatomic, strong) NSArray   *POIs; ///< 返回的结果, AMapCloudPOI 数组
 
 @end
 
@@ -456,18 +456,18 @@ typedef NS_ENUM(NSInteger, AMapCloudSortType)
 /// 位置短串分享请求
 @interface AMapLocationShareSearchRequest : AMapShareSearchBaseRequest
 
-@property (nonatomic, copy) AMapGeoPoint *location; //<! 必填, 位置坐标
-@property (nonatomic, copy) NSString     *name; //<! 位置名称，请不要包含【,%&@#】等特殊符号。
+@property (nonatomic, copy) AMapGeoPoint *location; ///< 必填, 位置坐标
+@property (nonatomic, copy) NSString     *name; ///< 位置名称，请不要包含【,%&@#】等特殊符号。
 
 @end
 
 /// 兴趣点短串分享请求
 @interface AMapPOIShareSearchRequest : AMapShareSearchBaseRequest
 
-@property (nonatomic, copy) NSString     *uid; //<! POI的ID，如果有ID则指定POI，否则按name查询。
-@property (nonatomic, copy) AMapGeoPoint *location; //<! 坐标
-@property (nonatomic, copy) NSString     *name; //<! 名称，请不要包含【,%&@#】等特殊符号。
-@property (nonatomic, copy) NSString     *address; //<! 地址，请不要包含【,%&@#】等特殊符号。
+@property (nonatomic, copy) NSString     *uid; ///< POI的ID，如果有ID则指定POI，否则按name查询。
+@property (nonatomic, copy) AMapGeoPoint *location; ///< 坐标
+@property (nonatomic, copy) NSString     *name; ///< 名称，请不要包含【,%&@#】等特殊符号。
+@property (nonatomic, copy) NSString     *address; ///< 地址，请不要包含【,%&@#】等特殊符号。
 
 @end
 
@@ -477,12 +477,12 @@ typedef NS_ENUM(NSInteger, AMapCloudSortType)
 /// 驾车:0-速度最快（时间）; 1-避免收费（不走收费路段的最快道路）; 2-距离优先; 3-不走高速; 4-结合实时交通（躲避拥堵）; 5-不走高速且避免收费; 6-不走高速且躲避拥堵; 7-躲避收费和拥堵; 8-不走高速且躲避收费和拥堵
 /// 公交:0-最快捷; 1-最经济; 2-最少换乘; 3-最少步行; 4-最舒适; 5-不乘地铁;
 /// 步行，无策略，均一样
-@property (nonatomic, assign) NSInteger     strategy; //<! 默认为0
-@property (nonatomic, assign) NSInteger     type; //<! Route的type，0为驾车，1为公交，2为步行，默认为0，超出范围为0。
-@property (nonatomic, copy)   AMapGeoPoint *startCoordinate; //<! 起点坐标
-@property (nonatomic, copy)   AMapGeoPoint *destinationCoordinate; //<! 终点坐标
-@property (nonatomic, copy)   NSString     *startName; //<! 起点名称，默认为“已选择的位置”，请不要包含【,%&@#】等特殊符号
-@property (nonatomic, copy)   NSString     *destinationName; //<! 终点名称，默认为“已选择的位置”，请不要包含【,%&@#】等特殊符号
+@property (nonatomic, assign) NSInteger     strategy; ///< 默认为0
+@property (nonatomic, assign) NSInteger     type; ///< Route的type，0为驾车，1为公交，2为步行，默认为0，超出范围为0。
+@property (nonatomic, copy)   AMapGeoPoint *startCoordinate; ///< 起点坐标
+@property (nonatomic, copy)   AMapGeoPoint *destinationCoordinate; ///< 终点坐标
+@property (nonatomic, copy)   NSString     *startName; ///< 起点名称，默认为“已选择的位置”，请不要包含【,%&@#】等特殊符号
+@property (nonatomic, copy)   NSString     *destinationName; ///< 终点名称，默认为“已选择的位置”，请不要包含【,%&@#】等特殊符号
 
 @end
 
@@ -492,13 +492,13 @@ typedef NS_ENUM(NSInteger, AMapCloudSortType)
 /// 驾车:0-速度最快（时间）; 1-避免收费（不走收费路段的最快道路）; 2-距离优先; 3-不走高速; 4-结合实时交通（躲避拥堵）; 5-不走高速且避免收费; 6-不走高速且躲避拥堵; 7-躲避收费和拥堵; 8-不走高速且躲避收费和拥堵
 @property (nonatomic, assign) NSInteger     strategy; //!< 默认为0，超出范围为0
 
-@property (nonatomic, copy)   AMapGeoPoint *startCoordinate; //<! 起点坐标，若跳转到高德地图，默认更换为定位坐标
-@property (nonatomic, copy)   AMapGeoPoint *destinationCoordinate; //<! 终点坐标
+@property (nonatomic, copy)   AMapGeoPoint *startCoordinate; ///< 起点坐标，若跳转到高德地图，默认更换为定位坐标
+@property (nonatomic, copy)   AMapGeoPoint *destinationCoordinate; ///< 终点坐标
 
 @end
 
 @interface AMapShareSearchResponse : AMapSearchObject
 
-@property (nonatomic, copy) NSString *shareURL; //<! 转换后的短串
+@property (nonatomic, copy) NSString *shareURL; ///< 转换后的短串
 
 @end

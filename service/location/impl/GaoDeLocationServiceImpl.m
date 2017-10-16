@@ -10,4 +10,16 @@
 
 @implementation GaoDeLocationServiceImpl
 
+- (void)prepare {
+    
+}
+
+- (void)start {
+    
+}
+
+- (void)stop {
+    
+}
+
 @end

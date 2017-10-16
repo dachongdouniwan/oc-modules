@@ -32,8 +32,8 @@ typedef NS_ENUM(NSInteger, AliPayServiceErrorCode) {
 /**
  @brief 用户来生成order，使用AliPayAutoOrder或者AliPayManualOrder
  */
-@prop_instance(AliPayOrder *, order)
-@prop_instance(AliPayConfig *, config)
+@prop_instance(AliPayOrder, order)
+@prop_instance(AliPayConfig, config)
 
 #pragma mark - Error
 

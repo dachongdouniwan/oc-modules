@@ -144,6 +144,7 @@
     CGFloat fHeight = 0.0f;
     for (NSString *sContent in arrContent) {
         CGSize stringSize = [sContent sizeWithFont:font constrainedToSize:CGSizeMake(CONTENT_MAX_WIDTH, 10000) lineBreakMode:NSLineBreakByWordWrapping];
+
         [arrHeight addObject:[NSNumber numberWithFloat:stringSize.height]];
         
         fHeight += stringSize.height;

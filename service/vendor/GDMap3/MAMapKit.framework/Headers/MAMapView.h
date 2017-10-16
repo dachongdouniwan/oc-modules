@@ -188,7 +188,7 @@ typedef NS_ENUM(NSInteger, MAUserTrackingMode)
 
 /*!
  @brief 设置地图相机角度(范围为[0.f, 60.f]，但高于40度的角度需要在16级以上才能生效)
- @param cameraDegree 角度
+ param cameraDegree 角度
  */
 @property (nonatomic) CGFloat cameraDegree;
 
@@ -292,7 +292,7 @@ typedef NS_ENUM(NSInteger, MAUserTrackingMode)
 /*!
  @brief 设置地图状态
  @param animated 是否动画
- @param duration 动画时间 默认动画时间为0.35s
+ @param status 动画时间 默认动画时间为0.35s
  */
 - (void)setMapStatus:(MAMapStatus *)status
             animated:(BOOL)animated;
@@ -350,7 +350,7 @@ typedef NS_ENUM(NSInteger, MAUserTrackingMode)
 /*!
  @brief 根据当前地图视图frame的大小调整投影范围
  @param mapRect 要调整的投影范围
- @return 调整后的投影范围
+ return 调整后的投影范围
  */
 - (void)setVisibleMapRect:(MAMapRect)mapRect edgePadding:(UIEdgeInsets)insets animated:(BOOL)animate;
 
@@ -447,7 +447,7 @@ typedef NS_ENUM(NSInteger, MAUserTrackingMode)
 
 /*!
  @brief 移除一组标注
- @param annotation 要移除的标注数组
+ @param annotations 要移除的标注数组
  */
 - (void)removeAnnotations:(NSArray *)annotations;
 
@@ -625,8 +625,8 @@ typedef NS_ENUM(NSInteger, MAOverlayLevel) {
 
 /*!
  @brief 交换两个overlay
- @param overlay1
- @param overlay2
+ @param overlay1 overlay1
+ @param overlay2 overlay2
 */
 - (void)exchangeOverlay:(id <MAOverlay>)overlay1 withOverlay:(id <MAOverlay>)overlay2;
 
@@ -726,14 +726,14 @@ typedef NS_ENUM(NSInteger, MAOverlayLevel) {
 
 /*!
  @brief 地图区域即将改变时会调用此接口
- @param mapview 地图View
+ @param mapView 地图View
  @param animated 是否动画
  */
 - (void)mapView:(MAMapView *)mapView regionWillChangeAnimated:(BOOL)animated;
 
 /*!
  @brief 地图区域改变完成后会调用此接口
- @param mapview 地图View
+ @param mapView 地图View
  @param animated 是否动画
  */
 - (void)mapView:(MAMapView *)mapView regionDidChangeAnimated:(BOOL)animated;
@@ -772,7 +772,7 @@ typedef NS_ENUM(NSInteger, MAOverlayLevel) {
 
 /*!
  @brief 地图开始加载
- @param mapview 地图View
+ @param mapView 地图View
  */
 - (void)mapViewWillStartLoadingMap:(MAMapView *)mapView;
 
@@ -814,14 +814,14 @@ typedef NS_ENUM(NSInteger, MAOverlayLevel) {
 /*!
  @brief 当选中一个annotation views时，调用此接口
  @param mapView 地图View
- @param views 选中的annotation views
+ @param view 选中的annotation views
  */
 - (void)mapView:(MAMapView *)mapView didSelectAnnotationView:(MAAnnotationView *)view;
 
 /*!
  @brief 当取消选中一个annotation views时，调用此接口
  @param mapView 地图View
- @param views 取消选中的annotation views
+ @param view 取消选中的annotation views
  */
 - (void)mapView:(MAMapView *)mapView didDeselectAnnotationView:(MAAnnotationView *)view;
 
@@ -887,7 +887,7 @@ fromOldState:(MAAnnotationViewDragState)oldState;
 /*!
  @brief 标注view的accessory view(必须继承自UIControl)被点击时，触发该回调
  @param mapView 地图View
- @param annotationView callout所属的标注view
+ @param view callout所属的标注view
  @param control 对应的control
  */
 - (void)mapView:(MAMapView *)mapView annotationView:(MAAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control;
@@ -910,20 +910,20 @@ fromOldState:(MAAnnotationViewDragState)oldState;
 
 /*!
  @brief 离线地图数据将要被加载, 调用reloadMap会触发该回调，离线数据生效前的回调.
- @param mapview 地图View
+ @param mapView 地图View
  */
 - (void)offlineDataWillReload:(MAMapView *)mapView;
 
 /*!
  @brief 离线地图数据加载完成, 调用reloadMap会触发该回调，离线数据生效后的回调.
- @param mapview 地图View
+ @param mapView 地图View
  */
 - (void)offlineDataDidReload:(MAMapView *)mapView;
 
 /*!
  @brief 当openGLESDisabled变量改变时，调用此接口
  @param mapView 地图View
- @param mode 改变后的openGLESDisabled
+ @param openGLESDisabled 改变后的openGLESDisabled
  */
 - (void)mapView:(MAMapView *)mapView didChangeOpenGLESDisabled:(BOOL)openGLESDisabled;
 

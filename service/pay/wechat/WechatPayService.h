@@ -15,8 +15,8 @@
 
 @singleton( WechatPayService ) // @singleton\prop_instance\error等作为模板
 
-@prop_instance(WechatPayOrder *, order)
-@prop_instance(WechatPayConfig *, config)
+@prop_instance(WechatPayOrder, order)
+@prop_instance(WechatPayConfig, config)
 
 #pragma mark - Error
 

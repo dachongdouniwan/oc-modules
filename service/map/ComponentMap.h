@@ -19,7 +19,7 @@
 
 @singleton( ComponentMap )
 
-@prop_instance( ComponentMapConfig *, config)
+@prop_instance( ComponentMapConfig, config)
 
 - (void)initGDAPIKey;
 

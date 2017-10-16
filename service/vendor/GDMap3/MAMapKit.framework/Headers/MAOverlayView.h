@@ -87,7 +87,7 @@
 
 /*!
  @brief 批量将MAMapPoint转换为opengles可以直接使用的坐标
- @param mapPoint MAMapPoint坐标数据指针
+ @param mapPoints MAMapPoint坐标数据指针
  @param count 个数
  @return opengles 直接支持的坐标数据指针(需要调用者手动释放)
  */

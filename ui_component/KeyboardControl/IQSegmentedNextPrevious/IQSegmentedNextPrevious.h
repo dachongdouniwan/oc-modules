@@ -35,7 +35,7 @@
 /**
  Custom SegmentedControl for Previous/Next button.
  
- @deprecated Deprecated in iOS 7
+ deprecated Deprecated in iOS 7
  */
 @interface IQSegmentedNextPrevious : UISegmentedControl
 

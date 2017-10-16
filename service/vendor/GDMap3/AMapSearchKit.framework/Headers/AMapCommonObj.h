@@ -190,17 +190,17 @@
 /// 地理编码
 @interface AMapGeocode : AMapSearchObject
 
-@property (nonatomic, copy) NSString     *formattedAddress; //<! 格式化地址
-@property (nonatomic, copy) NSString     *province; //<! 所在省/直辖市
-@property (nonatomic, copy) NSString     *city; //<! 城市名
+@property (nonatomic, copy) NSString     *formattedAddress; ///< 格式化地址
+@property (nonatomic, copy) NSString     *province; ///< 所在省/直辖市
+@property (nonatomic, copy) NSString     *city; ///< 城市名
 @property (nonatomic, copy) NSString     *citycode; //!< 城市编码
-@property (nonatomic, copy) NSString     *district; //<! 区域名称
-@property (nonatomic, copy) NSString     *township; //<! 所在乡镇
-@property (nonatomic, copy) NSString     *neighborhood; //<! 社区
-@property (nonatomic, copy) NSString     *building; //<! 楼
-@property (nonatomic, copy) NSString     *adcode; //<! 区域编码
-@property (nonatomic, copy) AMapGeoPoint *location; //<! 坐标点
-@property (nonatomic, copy) NSString     *level; //<! 匹配的等级
+@property (nonatomic, copy) NSString     *district; ///< 区域名称
+@property (nonatomic, copy) NSString     *township; ///< 所在乡镇
+@property (nonatomic, copy) NSString     *neighborhood; ///< 社区
+@property (nonatomic, copy) NSString     *building; ///< 楼
+@property (nonatomic, copy) NSString     *adcode; ///< 区域编码
+@property (nonatomic, copy) AMapGeoPoint *location; ///< 坐标点
+@property (nonatomic, copy) NSString     *level; ///< 匹配的等级
 
 @end
 

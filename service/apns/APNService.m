@@ -41,10 +41,12 @@ NSString *PushSereviceAdvertisingId = nil;
                                                           UIUserNotificationTypeAlert)
                                               categories:nil]; // 可以添加自定义categories
     } else {
+#import "_pragma_push.h"
         [JPUSHService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
                                                           UIRemoteNotificationTypeSound |
                                                           UIRemoteNotificationTypeAlert)
                                               categories:nil]; // categories 必须为nil
+#import "_pragma_pop.h"
     }
     
 #ifdef DEBUG
@@ -143,6 +145,8 @@ NSString *PushSereviceAdvertisingId = nil;
             UNTextInputNotificationResponse *textResponse = (UNTextInputNotificationResponse*)response;
             //获取输入内容
             NSString *userText = textResponse.userText;
+            
+            UNUSED(userText)
             
             //发送 userText 给需要接收的方法
     //        [ClassName handleUserText: userText];
@@ -272,10 +276,15 @@ NSString *PushSereviceAdvertisingId = nil;
     [[@"\"" stringByAppendingString:tempStr2] stringByAppendingString:@"\""];
     NSData *tempData = [tempStr3 dataUsingEncoding:NSUTF8StringEncoding];
     NSString *str =
-    [NSPropertyListSerialization propertyListFromData:tempData
-                                     mutabilityOption:NSPropertyListImmutable
+//    [NSPropertyListSerialization propertyListFromData:tempData
+//                                     mutabilityOption:NSPropertyListImmutable
+//                                               format:NULL
+//                                     errorDescription:NULL];
+    
+    [NSPropertyListSerialization propertyListWithData:tempData
+                                              options:NSPropertyListImmutable
                                                format:NULL
-                                     errorDescription:NULL];
+                                                error:NULL];
     return str;
 }
 
