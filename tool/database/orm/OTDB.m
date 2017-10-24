@@ -5,6 +5,7 @@
 #import "FMDB.h"
 #import "OTDB.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 #define db_name @"db.sqlite"
 
