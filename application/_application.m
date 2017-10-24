@@ -113,7 +113,7 @@
                               } click:^{ // 点击事件
                                   advertiseClicked = YES;
                                   
-                                  TODO("这里应该是立即触发的")
+//                                  TODO("这里应该是立即触发的")
                               }];
             }];
         } showFinish:^{ //

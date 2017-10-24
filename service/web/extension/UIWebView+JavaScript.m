@@ -166,7 +166,7 @@
 }
 
 - (CGFloat)getHtmlHeight {
-    TODO("高度计算有问题, 如果还是不对，要么dispatch_after再获取高度，要么请换方案！")
+//    TODO("高度计算有问题, 如果还是不对，要么dispatch_after再获取高度，要么请换方案！")
     self.frame = CGRectMake(0, 0, screen_width, 1); // 很重要！！！
     return [[self stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight"] floatValue];
 }

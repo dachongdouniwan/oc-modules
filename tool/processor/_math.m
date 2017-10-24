@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
-
 #import "_math.h"
+#import "_pragma_push.h"
 
 #pragma mark -
 
@@ -44,3 +44,5 @@ static CGFloat angleForStartPoint(CGPoint startPoint, CGPoint endPoint) {
 @implementation _math
 
 @end
+
+#import "_pragma_pop.h"

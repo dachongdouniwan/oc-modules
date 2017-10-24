@@ -1,6 +1,7 @@
 
 #import "_building_precompile.h"
 #import "_building_application.h"
+#import "BaseNavigationController.h"
 #import "PhotosPreviewController.h"
 #import "PYPhotoCell.h"
 

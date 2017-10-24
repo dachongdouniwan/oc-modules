@@ -63,7 +63,7 @@
     [sdk payOrder:orderString
        fromScheme:appSchema
          callback:^(NSDictionary *resultDic) {
-             TODO("为什么两个都有？？而这里不回调了，新的sdk，搞毛!!")
+//             TODO("为什么两个都有？？而这里不回调了，新的sdk，搞毛!!")
              [self process:resultDic];
          }];
     

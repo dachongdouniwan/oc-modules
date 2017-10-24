@@ -266,7 +266,9 @@ static NSString * const DiskCacheSharedName = @"DiskCacheShared";
                                             withIntermediateDirectories:YES
                                                              attributes:nil
                                                                   error:&error];
-    if (error) LOG(@"%@", error); TODO("要做好错误处理")
+    if (error) LOG(@"%@", error);
+    
+//    TODO("要做好错误处理")
     
     return success;
 }

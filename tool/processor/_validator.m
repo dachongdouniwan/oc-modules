@@ -465,7 +465,7 @@ static __strong NSMutableDictionary * __rules = nil;
             
         case ValidatorRule_Same:
         {
-            TODO( "same: xxx" );
+//            TODO( "same: xxx" );
         }
             break;
             

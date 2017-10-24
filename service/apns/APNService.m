@@ -42,9 +42,9 @@ NSString *PushSereviceAdvertisingId = nil;
                                               categories:nil]; // 可以添加自定义categories
     } else {
 #import "_pragma_push.h"
-        [JPUSHService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
-                                                          UIRemoteNotificationTypeSound |
-                                                          UIRemoteNotificationTypeAlert)
+        [JPUSHService registerForRemoteNotificationTypes:(UNAuthorizationOptionBadge |
+                                                          UNAuthorizationOptionSound |
+                                                          UNAuthorizationOptionAlert)
                                               categories:nil]; // categories 必须为nil
 #import "_pragma_pop.h"
     }

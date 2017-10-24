@@ -81,7 +81,7 @@ static CGFloat AutoLocationViewWidthConstant = 0;
 // 用于长按地址搜索的点
 @property (atomic, strong) MATouchPoi *longTouchPoi;
 
-@property (nonatomic, strong) NSMutableArray *dataArr;
+//@property (nonatomic, strong) NSMutableArray *dataArr;
 
 //用于保存当前用户已经输入的第二行地址
 @property (nonatomic, strong) NSString *textfieldExistStr;
@@ -149,7 +149,6 @@ static CGFloat AutoLocationViewWidthConstant = 0;
     [super viewDidLoad];
     
     self.title = @"街道地址";
-    TODO("ugly")
     self.scrollContentHeight = kHeightOfSectionHeader;
     
     [self initAddressView];

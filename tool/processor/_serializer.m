@@ -305,7 +305,7 @@
     
     if ( EncodingType_Array == type )
     {
-        TODO( "does not support array" );
+//        TODO( "does not support array" );
         return;
     }
     else if ( EncodingType_Dict == type )

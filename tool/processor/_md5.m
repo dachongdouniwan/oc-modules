@@ -62,7 +62,7 @@
 }
 
 - (NSString *)MD5Hash {
-    TODO("对应上面方法测试看看，一致么")
+//    TODO("对应上面方法测试看看，一致么")
     unsigned char result[CC_MD5_DIGEST_LENGTH];
     CC_MD5( self.bytes, (CC_LONG)self.length, result ); // This is the md5 call
     return [NSString stringWithFormat:

@@ -157,7 +157,7 @@
         } else {
             NSString *responseString = [completedRequest responseAsString];
             
-            TODO("ugly")
+//            TODO("ugly")
             // map nullable to blank
             {
                 if ([responseString contains:@"\"(null)\""]) {
