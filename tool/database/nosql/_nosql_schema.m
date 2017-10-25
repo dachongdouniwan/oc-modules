@@ -6,10 +6,10 @@
 //
 //
 
-#import "NyaruSchema.h"
-#import "NyaruConfig.h"
-#import "NyaruIndex.h"
-#import "NyaruKey.h"
+#import "_nosql_schema.h"
+#import "_nosql_config.h"
+#import "_nosql_index.h"
+#import "_nosql_key.h"
 
 
 // these are for passing Cocoapods Travis CI build [function-declaration]

@@ -1,22 +1,3 @@
-//
-//  FMDBMigrationManager.h
-//  FMDBMigrationManager
-//
-//  Created by Blake Watters on 6/4/14.
-//  Copyright (c) 2014 Layer Inc. All rights reserved.
-//
-//  Licensed under the Apache License, Version 2.0 (the "License");
-//  you may not use this file except in compliance with the License.
-//  You may obtain a copy of the License at
-//
-//  http://www.apache.org/licenses/LICENSE-2.0
-//
-//  Unless required by applicable law or agreed to in writing, software
-//  distributed under the License is distributed on an "AS IS" BASIS,
-//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//  See the License for the specific language governing permissions and
-//  limitations under the License.
-//
 
 #import "FMDatabase.h"
 #import "FMDatabaseQueue.h"
@@ -24,10 +5,10 @@
 @protocol FMDBMigrating;
 
 /**
- @abstract The `FMDBMigrationManager` class provides a simple, flexible interface for managing migrations for
+ @abstract The `_FMDBMigration` class provides a simple, flexible interface for managing migrations for
  a SQLite database that is accessed via FMDB.
  */
-@interface FMDBMigrationManager : NSObject
+@interface _FMDBMigration : NSObject
 
 ///-----------------------------------
 /// @name Creating a Migration Manager
@@ -39,7 +20,7 @@
  @param bundle The bundle containing the migrations.
  @return A new migration manager.
  */
-+ (instancetype)managerWithDatabase:(FMDatabase *)database migrationsBundle:(NSBundle *)bundle;
++ (instancetype)migrationWithDatabase:(FMDatabase *)database migrationsBundle:(NSBundle *)bundle;
 
 /**
  @abstract Creates a new migration manager with a database for the given database and migrations bundle.
@@ -47,7 +28,7 @@
  @param bundle The bundle containing the migrations.
  @return A new migration manager.
  */
-+ (instancetype)managerWithDatabaseAtPath:(NSString *)path migrationsBundle:(NSBundle *)bundle;
++ (instancetype)migrationWithDatabaseAtPath:(NSString *)path migrationsBundle:(NSBundle *)bundle;
 
 /**
  @abstract Determines whether the receiver will perform a search for dynamically defined migrations. Default: `YES`.

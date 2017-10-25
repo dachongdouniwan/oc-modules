@@ -6,7 +6,7 @@
 //
 //
 
-#import "NyaruQueryCell.h"
+#import "_nosql_query_cell.h"
 
 @implementation NyaruQueryCell
 

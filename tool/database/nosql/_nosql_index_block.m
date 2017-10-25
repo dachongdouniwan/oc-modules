@@ -6,7 +6,7 @@
 //
 //
 
-#import "NyaruIndexBlock.h"
+#import "_nosql_index_block.h"
 
 @implementation NyaruIndexBlock
 

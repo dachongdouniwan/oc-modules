@@ -6,8 +6,8 @@
 //  Copyright © 2016年 PB-Tech. All rights reserved.
 //
 
-#import "PBKeyValueDB.h"
 #import "FMDB.h"
+#import "_fmdb_kv_store.h"
 #import <sqlite3.h>
 
 #define DEFAULT_TABLE   @"_table_"
@@ -162,6 +162,7 @@ static inline NSString *FIND_ALL_VALUE_MULTI_MATCH_SQL(NSString *table ,NSDictio
 
 
 #pragma mark - delete
+
 - (void)remove:(PBKeyValueDBResult)result key:(NSString*)key table:(NSString*)table {
     
     [self.dbQueue inDatabase:^(FMDatabase *db) {

@@ -6,8 +6,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "NyaruCollection.h"
-#import "NyaruQuery.h"
+#import "_nosql_collection.h"
+#import "_nosql_query.h"
 
 
 @interface NyaruDB : NSObject {

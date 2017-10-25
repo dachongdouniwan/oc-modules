@@ -6,7 +6,7 @@
 //
 //
 
-#import "NyaruKey.h"
+#import "_nosql_key.h"
 
 @implementation NyaruKey
 

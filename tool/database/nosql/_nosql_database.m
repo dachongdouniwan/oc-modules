@@ -21,9 +21,9 @@
  */
 
 
-#import "NyaruDB.h"
-#import "NyaruConfig.h"
-#import "NyaruCollection.h"
+#import "_nosql_database.h"
+#import "_nosql_config.h"
+#import "_nosql_collection.h"
 
 
 // these are for passing Cocoapods Travis CI build [function-declaration]

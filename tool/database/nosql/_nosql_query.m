@@ -6,9 +6,9 @@
 //
 //
 
-#import "NyaruQuery.h"
-#import "NyaruCollection.h"
-#import "NyaruQueryCell.h"
+#import "_nosql_query.h"
+#import "_nosql_collection.h"
+#import "_nosql_query_cell.h"
 
 
 @implementation NyaruQuery
