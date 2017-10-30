@@ -98,16 +98,16 @@ NYARU_BURST_LINK NSComparisonResult compareDate(NSDate *value1, NSDate *value2);
 
 
 #pragma mark - Get NyaruKey / NyaruIndex
-- (NSDictionary *)allKeys
-{
+
+- (NSDictionary *)allKeys {
     return _indexKey;
 }
-- (NSArray *)allNilIndexes
-{
+
+- (NSArray *)allNilIndexes {
     return _indexNil;
 }
-- (NSArray *)allNotNilIndexes
-{
+
+- (NSArray *)allNotNilIndexes {
     return _index;
 }
 
@@ -197,7 +197,7 @@ NYARU_BURST_LINK NSComparisonResult compareDate(NSDate *value1, NSDate *value2);
  @param array _index
  @param key document.key
  @param insertValue NyaruIndex.value
- @param schemaType
+ @param schemaType schemaType
  */
 NYARU_BURST_LINK void insertIndexIntoArrayWithSort(NSMutableArray *array, NSString *key, id insertValue, NyaruSchemaType schemaType)
 {

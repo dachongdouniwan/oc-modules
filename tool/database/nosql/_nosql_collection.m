@@ -848,7 +848,7 @@ NYARU_BURST_LINK NSArray *nyaruKeysWithSortByIndexValue(NyaruSchema *schema, Nya
  Get all NyaruIndex.key which's value is equal to target.
  @param allIndexes schema.allNotNillIndexes
  @param target NyaruQuery.value match target
- @param targetType NyaruSchemaType of target and schema
+ @param type NyaruSchemaType of target and schema
  @return @[NyaruIndex.key]
  */
 NYARU_BURST_LINK NSArray *filterEqual(NSArray *allIndexes, id target, NyaruSchemaType type)
@@ -865,7 +865,7 @@ NYARU_BURST_LINK NSArray *filterEqual(NSArray *allIndexes, id target, NyaruSchem
  Get all NyaruIndex.key which's value is not equal to target.
  @param allIndexes schema.allNotNillIndexes
  @param target NyaruQuery.value match target
- @param targetType NyaruSchemaType of target and schema
+ @param type NyaruSchemaType of target and schema
  @return NSMutableArray [NyaruIndex.key]
  */
 NYARU_BURST_LINK NSMutableArray *filterUnequal(NSArray *allIndexes, id target, NyaruSchemaType type)
@@ -896,7 +896,7 @@ NYARU_BURST_LINK NSMutableArray *filterUnequal(NSArray *allIndexes, id target, N
  Get all NyaruIndex.key which's value is less(equal) to target.
  @param allIndexes schema.allNotNillIndexes
  @param target NyaruQuery.value match target
- @param targetType NyaruSchemaType of target and schema
+ @param type NyaruSchemaType of target and schema
  @param includeEqual YES: LessEqual, NO: Less
  @return @[NyaruIndex.key]
  */
@@ -927,7 +927,7 @@ NYARU_BURST_LINK NSMutableArray *filterLess(NSArray *allIndexes, id target, Nyar
  Get all NyaruIndex.key which's value is greater(equal) to target.
  @param allIndexes schema.allNotNillIndexes
  @param target NyaruQuery.value match target
- @param targetType NyaruSchemaType of target and schema
+ @param type NyaruSchemaType of target and schema
  @param includeEqual YES: LessEqual, NO: Less
  @return @[NyaruIndex.key]
  */
@@ -963,7 +963,7 @@ NYARU_BURST_LINK NSArray *filterGreater(NSArray *allIndexes, id target, NyaruSch
  Get all NyaruIndex.key which's value is like, beginning of, end of to target.
  @param allIndexes schema.allNotNillIndexes
  @param target NyaruQuery.value match target
- @param targetType NyaruSchemaType of target and schema
+ @param type NyaruSchemaType of target and schema
  @return NSMutableArray [NyaruIndex.key]
  */
 NYARU_BURST_LINK NSMutableArray *filterLike(NSArray *allIndexes, NSString *target, NyaruSchemaType type)
@@ -1099,8 +1099,8 @@ NYARU_BURST_LINK NSComparisonResult compareDate(NSDate *value1, NSDate *value2)
  [K]<0xFFFFFFFF>{key}[SNTLDA]<0xFFFFFFFF>{value}
  (length)
  
- @param document: NSDictionary
- @return: NSData
+ @param document NSDictionary
+ @return NSData
  */
 NYARU_BURST_LINK NSData *serialize(NSDictionary *document)
 {
@@ -1110,7 +1110,7 @@ NYARU_BURST_LINK NSData *serialize(NSDictionary *document)
     NSUInteger bufferLength = 0U;       // buffer length
     NSData *dataKey;                        // key data
     unsigned char valueType;            // value type [SNTL]
-    unsigned char *bufferValue;         // value buffer
+    unsigned char *bufferValue = NULL;         // value buffer
     unsigned bufferValueLength = 0U;   // value bugger length
     
     // content
@@ -1267,8 +1267,8 @@ NYARU_BURST_LINK unsigned char *serializeArray(unsigned *length, NSArray *source
  Member of document format:
  [K]<0xFFFFFFFF>{key}[SNTLDA]<0xFFFFFFFF>{value}
  
- @param data: NSData
- @return: NSMutableDictionary
+ @param data NSData
+ @return NSMutableDictionary
  */
 NYARU_BURST_LINK NSMutableDictionary *deserialize(NSData *data)
 {
@@ -1606,7 +1606,7 @@ NYARU_BURST_LINK void loadIndexForSchema(NyaruSchema *schema, NSMutableDictionar
 #pragma mark - Others
 /**
  Get the last schema
- @param _schemas
+ @param allSchemas
  @return NyaruSchema / nil
  */
 NYARU_BURST_LINK NyaruSchema *getLastSchema(NSDictionary *allSchemas)
@@ -1622,7 +1622,7 @@ NYARU_BURST_LINK NyaruSchema *getLastSchema(NSDictionary *allSchemas)
 
 /**
  Check file's header match NyaruDB.
- @param patch file patch
+ @param path file patch
  @return YES / NO
  */
 NYARU_BURST_LINK BOOL isNyaruHeaderOK(NSString *path)

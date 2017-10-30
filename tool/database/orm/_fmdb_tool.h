@@ -52,7 +52,7 @@
  根据类属性值和属性类型返回数据库存储的值.
  @value 数值.
  @type 数组value的类型.
- @encode YES:编码 , NO:解码.
+ @param encode YES:编码 , NO:解码.
  */
 +(id _Nonnull)getSqlValue:(id _Nonnull)value type:(NSString* _Nonnull)type encode:(BOOL)encode;
 /**

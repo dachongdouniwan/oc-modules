@@ -90,10 +90,10 @@
 #pragma mark Put
 /**
  Put the document into the collection.
- @param document: put this document into the collection.
+ @param document put this document into the collection.
         If the document has no 'key' then it will be generate.
         If there is a document has the same 'key', it will be replace with the new.
- @return: the put document.
+ @return the put document.
  */
 - (NSMutableDictionary *)put:(NSDictionary *)document;
 - (void)waitForWriting;

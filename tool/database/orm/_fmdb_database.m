@@ -2,6 +2,7 @@
 #import "_fmdb_database.h"
 #import "_fmdb_entity_info.h"
 #import "_fmdb_tool.h"
+#import "_pragma_push.h"
 
 /**
  默认数据库名称
@@ -1995,3 +1996,5 @@ static BGDB* BGdb = nil;
 }
 
 @end
+
+#import "_pragma_pop.h"

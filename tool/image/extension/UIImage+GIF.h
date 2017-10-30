@@ -34,6 +34,6 @@
 
 + (UIImage *)animatedGIFWithData:(NSData *)data;
 
-- (UIImage *)jk_animatedImageByScalingAndCroppingToSize:(CGSize)size;
+- (UIImage *)animatedImageByScalingAndCroppingToSize:(CGSize)size;
 
 @end

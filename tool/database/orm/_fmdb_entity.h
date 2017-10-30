@@ -540,7 +540,7 @@
 /**
  遍历字典元素.
  */
-+(void)bg_enumerateKeysAndObjectsUsingBlock:(void (^ _Nonnull)(NSString* _Nonnull key, id _Nonnull value,BOOL *stop))block;
++(void)bg_enumerateKeysAndObjectsUsingBlock:(void (^ _Nonnull)(NSString* _Nonnull key, id _Nonnull value,BOOL * _Nonnull stop))block;
 /**
  移除字典某个元素.
  */

@@ -59,46 +59,46 @@
 -(void)updateObjects:(NSArray* _Nonnull)array ignoredKeys:(NSArray* const _Nullable)ignoredKeys complete:(bg_complete_B)complete;
 /**
  根据条件查询对象.
- @cla 代表对应的类.
- @where 形式 @[@"key",@"=",@"value",@"key",@">=",@"value"] .
- @param 额外条件参数 例如排序 @"order by id desc" 等.
- @complete 回调的block.
+ @param cla 代表对应的类.
+ @param where 形式 @[@"key",@"=",@"value",@"key",@">=",@"value"] .
+ @param param 额外条件参数 例如排序 @"order by id desc" 等.
+ @param complete 回调的block.
  */
 -(void)queryObjectWithClass:(__unsafe_unretained _Nonnull Class)cla where:(NSArray* _Nullable)where param:(NSString* _Nullable)param complete:(bg_complete_A)complete;
 /**
  根据条件查询对象.
- @cla 代表对应的类.
- @keys 存放的是要查询的哪些key,为nil时代表查询全部.
- @where 形式 @[@"key",@"=",@"value",@"key",@">=",@"value"] .
- @complete 回调的block.
+ @param cla 代表对应的类.
+ @param keys 存放的是要查询的哪些key,为nil时代表查询全部.
+ @param where 形式 @[@"key",@"=",@"value",@"key",@">=",@"value"] .
+ @param complete 回调的block.
  */
 -(void)queryObjectWithClass:(__unsafe_unretained _Nonnull Class)cla keys:(NSArray<NSString*>* _Nullable)keys where:(NSArray* _Nullable)where complete:(bg_complete_A)complete;
 /**
  根据keyPath查询对象
- @cla 代表对应的类.
- @keyPathValues数组,形式@[@"user.student.name",Equal,@"小芳",@"user.student.conten",Contains,@"书"]
+ @param cla 代表对应的类.
+ @param keyPathValues 数组,形式@[@"user.student.name",Equal,@"小芳",@"user.student.conten",Contains,@"书"]
  即查询user.student.name等于@"小芳" 和 user.student.content中包含@“书”这个字符串的对象.
  */
 -(void)queryObjectWithClass:(__unsafe_unretained _Nonnull Class)cla forKeyPathAndValues:(NSArray* _Nonnull)keyPathValues complete:(bg_complete_A)complete;
 /**
  根据条件改变对象数据.
- @object 要更新的对象.
- @where 数组的形式 @[@"key",@"=",@"value",@"key",@">=",@"value"],为nil时设置全部.
- @complete 回调的block
+ @param object 要更新的对象.
+ @param where 数组的形式 @[@"key",@"=",@"value",@"key",@">=",@"value"],为nil时设置全部.
+ @param complete 回调的block
  */
 -(void)updateWithObject:(id _Nonnull)object where:(NSArray* _Nullable)where ignoreKeys:(NSArray* const _Nullable)ignoreKeys complete:(bg_complete_B)complete;
 /**
  根据keyPath改变对象数据.
- @keyPathValues数组,形式@[@"user.student.name",Equal,@"小芳",@"user.student.conten",Contains,@"书"]
+ @param keyPathValues 数组,形式@[@"user.student.name",Equal,@"小芳",@"user.student.conten",Contains,@"书"]
  即更新user.student.name=@"小芳" 和 user.student.content中包含@“书”这个字符串的对象.
  */
 -(void)updateWithObject:(id _Nonnull)object forKeyPathAndValues:(NSArray* _Nonnull)keyPathValues ignoreKeys:(NSArray* const _Nullable)ignoreKeys complete:(bg_complete_B)complete;
 /**
  根据条件改变对象的部分变量值.
- @cla 代表对应的类.
- @valueDict 存放的是key和value 即@{key:value,key:value}..
- @where 数组的形式 @[@"key",@"=",@"value",@"key",@">=",@"value"],为nil时设置全部.
- @complete 回调的block
+ @param cla 代表对应的类.
+ @param valueDict 存放的是key和value 即@{key:value,key:value}..
+ @param where 数组的形式 @[@"key",@"=",@"value",@"key",@">=",@"value"],为nil时设置全部.
+ @param complete 回调的block
  */
 -(void)updateWithClass:(__unsafe_unretained _Nonnull Class)cla valueDict:(NSDictionary* _Nonnull)valueDict where:(NSArray* _Nullable)where complete:(bg_complete_B)complete;
 /**
@@ -107,28 +107,28 @@
 -(void)updateObject:(id _Nonnull)object ignoreKeys:(NSArray* const _Nullable)ignoreKeys conditions:(NSString* _Nonnull)conditions complete:(bg_complete_B)complete;
 /**
  根据条件删除对象表中的对象数据.
- @cla 代表对应的类.
- @where 形式 @[@"key",@"=",@"value",@"key",@">=",@"value"],where要非空.
- @complete 回调的block
+ @param cla 代表对应的类.
+ @param where 形式 @[@"key",@"=",@"value",@"key",@">=",@"value"],where要非空.
+ @param complete 回调的block
  */
 -(void)deleteWithClass:(__unsafe_unretained _Nonnull Class)cla where:(NSArray* _Nonnull)where complete:(bg_complete_B)complete;
 /**
  根据类删除此类所有数据.
- @cla 代表对应的类.
- @complete 回调的block
+ @param cla 代表对应的类.
+ @param complete 回调的block
  */
 -(void)clearWithClass:(__unsafe_unretained _Nonnull Class)cla complete:(bg_complete_B)complete;
 /**
  根据类,删除这个类的表.
- @cla 代表对应的类.
- @complete 回调的block
+ @param cla 代表对应的类.
+ @param complete 回调的block
  */
 -(void)dropWithClass:(__unsafe_unretained _Nonnull Class)cla complete:(bg_complete_B)complete;
 /**
  将某表的数据拷贝给另一个表
- @srcCla 源类.
- @destCla 目标类.
- @keyDict 拷贝的对应key集合,形式@{@"srcKey1":@"destKey1",@"srcKey2":@"destKey2"},即将源类srcCla中的变量值拷贝给目标类destCla中的变量destKey1，srcKey2和destKey2同理对应,以此推类.
+ @param srcCla 源类.
+ @param destCla 目标类.
+ @param keydict 拷贝的对应key集合,形式@{@"srcKey1":@"destKey1",@"srcKey2":@"destKey2"},即将源类srcCla中的变量值拷贝给目标类destCla中的变量destKey1，srcKey2和destKey2同理对应,以此推类.
  @append YES: 不会覆盖destCla的原数据,在其末尾继续添加；NO: 覆盖掉原数据,即将原数据删掉,然后将新数据拷贝过来.
  */
 -(void)copyClass:(__unsafe_unretained _Nonnull Class)srcCla to:(__unsafe_unretained _Nonnull Class)destCla keyDict:(NSDictionary* const _Nonnull)keydict append:(BOOL)append complete:(bg_complete_I)complete;
@@ -174,9 +174,9 @@
 -(void)queryWithTableName:(NSString* _Nonnull)name keys:(NSArray<NSString*>* _Nullable)keys where:(NSArray* _Nullable)where complete:(bg_complete_A)complete;
 /**
  全部查询.
- @name 表名称.
- @param 额外条件参数 例如排序 @"order by id desc" 等.
- @complete 回调的block,返回的数组元素是字典 @[@{key:value},@{key:value}] .
+ @param name 表名称.
+ @param param 额外条件参数 例如排序 @"order by id desc" 等.
+ @param complete 回调的block,返回的数组元素是字典 @[@{key:value},@{key:value}] .
  */
 -(void)queryWithTableName:(NSString* _Nonnull)name param:(NSString* _Nullable)param where:(NSArray* _Nullable)where complete:(bg_complete_A)complete;
 /**
@@ -316,7 +316,7 @@
 /**
  遍历字典元素.
  */
--(void)bg_enumerateKeysAndObjectsUsingBlock:(void (^ _Nonnull)(NSString* _Nonnull key, id _Nonnull value,BOOL *stop))block;
+-(void)bg_enumerateKeysAndObjectsUsingBlock:(void (^ _Nonnull)(NSString* _Nonnull key, id _Nonnull value, BOOL * _Nonnull stop))block;
 /**
  获取字典元素.
  */

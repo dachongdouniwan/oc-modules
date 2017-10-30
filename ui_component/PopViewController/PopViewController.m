@@ -30,7 +30,7 @@
     self.view.backgroundColor = [UIColor clearColor];
     self.view.layer.masksToBounds = YES;
     
-    TODO("可以选择以下效果")
+//    TODO("可以选择以下效果")
     // http://www.code4app.com/forum.php?mod=viewthread&tid=10726&extra=page%3D1%26filter%3Dsortid%26sortid%3D1
     // https://github.com/1em0nsOft/LemonKit4Android
     // https://github.com/1em0nsOft/LemonKit4iOS

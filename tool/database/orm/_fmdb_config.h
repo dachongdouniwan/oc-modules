@@ -89,7 +89,7 @@ extern void bg_setDebug(BOOL debug);
 
 /**
  事务操作.
- @return 返回YES提交事务, 返回NO回滚事务.
+ @param block return 返回YES提交事务, 返回NO回滚事务.
  */
 extern void bg_inTransaction(BOOL (^ _Nonnull block)());
 

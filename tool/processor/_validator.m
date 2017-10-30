@@ -546,12 +546,12 @@ static __strong NSMutableDictionary * __rules = nil;
             break;
             
         case ValidatorRule_DateFormat: {
-            TODO( "data_format: xxx" );
+//            TODO( "data_format: xxx" );
         }
             break;
             
         case ValidatorRule_Different: {
-            TODO( "different: xxx" );
+//            TODO( "different: xxx" );
         }
             break;
             
