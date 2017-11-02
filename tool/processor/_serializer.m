@@ -148,33 +148,23 @@
                 NSObject *	tempValue = [dict objectForKey:propertyName];
                 NSObject *	value = nil;
                 
-                if ( tempValue )
-                {
+                if ( tempValue ) {
                     NSInteger propertyType = [_Encoding typeOfAttribute:attr];
                     
-                    if ( EncodingType_Null == propertyType )
-                    {
+                    if ( EncodingType_Null == propertyType ) {
                         value = nil;
-                    }
-                    else if ( EncodingType_Number == propertyType )
-                    {
+                    } else if ( EncodingType_Number == propertyType ) {
                         value = [tempValue toNumber];
-                    }
-                    else if ( EncodingType_String == propertyType )
-                    {
+                    } else if ( EncodingType_String == propertyType ) {
                         value = [tempValue toString];
-                    }
-                    else if ( EncodingType_Array == propertyType )
-                    {
+                    } else if ( EncodingType_Array == propertyType ) {
                         value = tempValue;
                         
                         __autoreleasing Class convertClass = nil;
                         
-                        if ( nil == convertClass )
-                        {
+                        if ( nil == convertClass ) {
                             SEL convertSelector = NSSelectorFromString( [NSString stringWithFormat:@"convertClass_%@", propertyName] );
-                            if ( [clazz respondsToSelector:convertSelector] )
-                            {
+                            if ( [clazz respondsToSelector:convertSelector] ) {
                                 //								convertClass = [clazz performSelector:convertSelector];
                                 
                                 NSMethodSignature * signature = [clazz methodSignatureForSelector:convertSelector];
@@ -187,49 +177,34 @@
                             }
                         }
                         
-                        if ( nil == convertClass )
-                        {
+                        if ( nil == convertClass ) {
                             NSString * convertClassName = [clazzType extentionForProperty:propertyName stringValueWithKey:@"Class"];
-                            if ( convertClassName )
-                            {
+                            if ( convertClassName ) {
                                 convertClass = NSClassFromString( convertClassName );
                             }
                         }
                         
-                        if ( convertClass )
-                        {
+                        if ( convertClass ) {
                             NSMutableArray * arrayTemp = [NSMutableArray array];
                             
-                            for ( NSObject * tempObject in (NSArray *)tempValue )
-                            {
+                            for ( NSObject * tempObject in (NSArray *)tempValue ) {
                                 id elem = [convertClass unserialize:tempObject];
-                                if ( elem )
-                                {
+                                if ( elem ) {
                                     [arrayTemp addObject:elem];
                                 }
                             }
                             
                             value = arrayTemp;
                         }
-                    }
-                    else if ( EncodingType_Dict == propertyType )
-                    {
+                    } else if ( EncodingType_Dict == propertyType ) {
                         value = tempValue;
-                    }
-                    else if ( EncodingType_Date == propertyType )
-                    {
+                    } else if ( EncodingType_Date == propertyType ) {
                         value = [tempValue toDate];
-                    }
-                    else if ( EncodingType_Data == propertyType )
-                    {
+                    } else if ( EncodingType_Data == propertyType ) {
                         value = [tempValue toData];
-                    }
-                    else if ( EncodingType_Url == propertyType )
-                    {
+                    } else if ( EncodingType_Url == propertyType ) {
                         value = [tempValue toURL];
-                    }
-                    else
-                    {
+                    } else {
                         Class classType = [_Encoding classOfAttribute:attr];
                         if ( classType )
                         {

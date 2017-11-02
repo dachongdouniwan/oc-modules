@@ -2,6 +2,34 @@
 
 基于框架之上的代码构件案例与指导
 
+### 系统库 依赖
+
+- Accelerate.framework
+- CFNetwork.framework
+- CoreFoundation.framework
+- ImageIO.framework
+- AVFoundation.framework
+- CoreImage.framework
+- SystemConfiguration.framework
+- MobileCoreServices.framework
+- AssetsLibrary.framework
+- Photos.framework
+- CoreMotion.framework
+- AddressBook.framework
+- MapKit.framework
+- CoreMedia.framework
+- EventKit.framework
+- CoreText.framework
+- CoreBluetooth.framework
+- MediaPlayer.framework
+- MessageUI.framework
+
+- libz.tbd
+- libstdc++.6.0.9.tdb
+- libxml2.tbd
+- libsqlite3.0.tbd
+- libicucore.tbd
+
 ### base
 
 基础类，用于架构分层、基础模块使用的基类
