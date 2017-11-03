@@ -102,7 +102,7 @@ extern "C" {
     
     /*!
      @brief 平面投影矩形转region
-     @param mapPoint 要转化的平面投影矩形
+     @param rect 要转化的平面投影矩形
      @return region
      */
     extern MACoordinateRegion MACoordinateRegionForMapRect(MAMapRect rect);

@@ -10,6 +10,8 @@
 #import "NSObject+DB.h"
 #import "NSObject+DBCallback.h"
 
+#import "_pragma_push.h"
+
 static const void * const kDispatchTransactionQueueSpecificKey = &kDispatchTransactionQueueSpecificKey;
 
 @interface DBAssistant ()
@@ -788,3 +790,4 @@ static const void * const kDispatchTransactionQueueSpecificKey = &kDispatchTrans
 
 @end
 
+#import "_pragma_pop.h"

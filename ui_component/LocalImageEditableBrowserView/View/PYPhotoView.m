@@ -318,8 +318,8 @@ static CGSize originalSize;
     if (!gr) return CGPointMake(0.5, 0.5);
     
     // 创建锚点
-    CGPoint anchorPoint; // scrollView的虚拟锚点
-    CGPoint cellAnchorPoint; // photoCell的虚拟锚点
+    CGPoint anchorPoint = CGPointZero; // scrollView的虚拟锚点
+    CGPoint cellAnchorPoint = CGPointZero; // photoCell的虚拟锚点
     UIScrollView *scrollView = (UIScrollView *)[self superview];
     if ([gr isKindOfClass:[UIPinchGestureRecognizer class]]) { // 捏合手势
         if (gr.numberOfTouches == 2) {
@@ -344,8 +344,10 @@ static CGSize originalSize;
         CGPoint photoCellPoint = [gr locationOfTouch:0 inView:gr.view];
         cellAnchorPoint.x = photoCellPoint.x / gr.view.width;
         cellAnchorPoint.y = photoCellPoint.y / gr.view.height;
-    };
+    }
+    
     self.photoCellAnchorPoint = cellAnchorPoint;
+    
     return anchorPoint;
 }
 

@@ -51,7 +51,6 @@ extern NSString *const kJPFServiceErrorNotification;  // 错误提示
  * @param appKey 一个JPush 应用必须的,唯一的标识. 请参考 JPush 相关说明文档来获取这个标识.
  * @param channel 发布渠道. 可选.
  * @param isProduction 是否生产环境. 如果为开发状态,设置为 NO; 如果为生产状态,应改为 YES.
- * @param advertisingIdentifier 广告标识符（IDFA） 如果不需要使用IDFA，传nil.
  *
  * @discussion 提供SDK启动必须的参数, 来启动 SDK.
  * 此接口必须在 App 启动时调用, 否则 JPush SDK 将无法正常工作.
@@ -77,9 +76,7 @@ extern NSString *const kJPFServiceErrorNotification;  // 错误提示
  * @abstract 注册要处理的远程通知类型
  *
  * @param types 通知类型
- * @param categories
- *
- * @discussion
+ * @param categories ...
  */
 + (void)registerForRemoteNotificationTypes:(NSUInteger)types
                                 categories:(NSSet *)categories;
@@ -247,7 +244,6 @@ callbackSelector:(SEL)cbSelector
  * @abstract 删除本地推送定义
  *
  * @param notificationKey 本地推送标示符
- * @param myUILocalNotification 本地推送对象
  */
 + (void)deleteLocalNotificationWithIdentifierKey:(NSString *)notificationKey;
 

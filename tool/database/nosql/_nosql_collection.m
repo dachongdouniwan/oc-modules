@@ -1606,7 +1606,7 @@ NYARU_BURST_LINK void loadIndexForSchema(NyaruSchema *schema, NSMutableDictionar
 #pragma mark - Others
 /**
  Get the last schema
- @param allSchemas
+ @param allSchemas allSchemas
  @return NyaruSchema / nil
  */
 NYARU_BURST_LINK NyaruSchema *getLastSchema(NSDictionary *allSchemas)

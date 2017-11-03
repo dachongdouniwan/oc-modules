@@ -124,11 +124,11 @@ static CGSize AssetGridThumbnailSize;
     CGFloat collectionViewHeight = 0;
     if (self.navigationController.navigationBar.isTranslucent) {
         top = 44;
-        if (iOS7Later) top += 20;
+        top += 20;
         collectionViewHeight = tzImagePickerVc.showSelectBtn ? self.view.tz_height - 50 - top : self.view.tz_height - top;;
     } else {
         CGFloat navigationHeight = 44;
-        if (iOS7Later) navigationHeight += 20;
+        navigationHeight += 20;
         collectionViewHeight = tzImagePickerVc.showSelectBtn ? self.view.tz_height - 50 - navigationHeight : self.view.tz_height - navigationHeight;
     }
 
@@ -177,7 +177,7 @@ static CGSize AssetGridThumbnailSize;
         yOffset = self.view.tz_height - 50;
     } else {
         CGFloat navigationHeight = 44;
-        if (iOS7Later) navigationHeight += 20;
+        navigationHeight += 20;
         yOffset = self.view.tz_height - 50 - navigationHeight;
     }
     
@@ -475,7 +475,7 @@ static CGSize AssetGridThumbnailSize;
 
 - (void)takePhoto {
     AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
-    if ((authStatus == AVAuthorizationStatusRestricted || authStatus ==AVAuthorizationStatusDenied) && iOS7Later) {
+    if ((authStatus == AVAuthorizationStatusRestricted || authStatus ==AVAuthorizationStatusDenied)) {
         // 无权限 做一个友好的提示
         NSString *appName = [[NSBundle mainBundle].infoDictionary valueForKey:@"CFBundleDisplayName"];
         if (!appName) appName = [[NSBundle mainBundle].infoDictionary valueForKey:@"CFBundleName"];

@@ -25,7 +25,7 @@
     self.imageView.center = CGPointMake(self.width/2, 120.f);
     
     // layout textLabel
-    int numbersOfLine = [self.text textLineNumWithFont:self.textLabel.font constrainedToSize:CGSizeMake(screen_width, MAXFLOAT)];
+    int numbersOfLine = [self.text linesWithFont:self.textLabel.font constrainedToWidth:screen_width];
     self.textLabel.frame = CGRectMake(0, 0, self.width, PIXEL_24*numbersOfLine);
     self.textLabel.center = CGPointMake(self.width/2, self.imageView.bottom+PIXEL_16*numbersOfLine);
     

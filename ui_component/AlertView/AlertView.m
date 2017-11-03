@@ -591,11 +591,7 @@ static void* __backgroundViewKey = &__backgroundViewKey;
     self.lastKeyWindow.hidden = NO;
 }
 
-@end
-
 #pragma mark - AlertView (Appearance)
-
-@implementation AlertView (Appearance)
 
 - (void)setTitleColor:(UIColor *)titleColor {
     _titleColor = titleColor;

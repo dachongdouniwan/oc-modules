@@ -336,12 +336,12 @@ NSArray *propertiesToMapColumnsForClass(Class targetClass){
 /*
  * 判断一个表是否存在；
  */
-- (BOOL)tableExists:(NSString *)tableName {
-    if ([tableName isNotEmpty]) {
-        return [[self allTableNames] containsObject:tableName ];
-    }
-    return NO;
-}
+//- (BOOL)tableExists:(NSString *)tableName {
+//    if ([tableName isNotEmpty]) {
+//        return [[self allTableNames] containsObject:tableName ];
+//    }
+//    return NO;
+//}
 
 
 - (void)getAllTableInfoForKey:(NSString *)key outPut:(NSMutableArray *)outPut{

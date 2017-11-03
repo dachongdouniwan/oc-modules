@@ -233,6 +233,8 @@ static void RACExceptionHandler (NSException *ex) {
 }
 
 - (void)dealloc {
+    [super dealloc];
+    
 	if (_queue != NULL) {
 		dispatch_release(_queue);
 		_queue = NULL;

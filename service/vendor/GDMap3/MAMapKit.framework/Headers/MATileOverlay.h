@@ -15,7 +15,7 @@
 
 /*!
  @brief 根据指定的URLTemplate生成tileOverlay
- @param URLTemplate是一个包含"{x}","{y}","{z}","{scale}"的字符串,"{x}","{y}","{z}","{scale}"会被tile path的值所替换，并生成用来加载tile图片数据的URL 。例如： http://server/path?x={x}&y={y}&z={z}&scale={scale}。
+ @param URLTemplate path的值所替换，并生成用来加载tile图片数据的URL 。例如： http://server/path?x={x}&y={y}&z={z}&scale={scale}。
  @return 以指定的URLTemplate字符串生成tileOverlay
  */
 - (id)initWithURLTemplate:(NSString *)URLTemplate;
@@ -66,15 +66,15 @@ typedef struct {
 
 /*!
  @brief 以tile path生成URL。用于加载tile,此方法默认填充URLTemplate
- @param tile path
+ @param path path
  @return 以tile path生成tileOverlay
  */
 - (NSURL *)URLForTilePath:(MATileOverlayPath)path;
 
 /*!
  @brief 加载被请求的tile,并以tile数据或加载tile失败error访问回调block;默认实现为首先用URLForTilePath去获取URL,然后用异步NSURLConnection加载tile
- @param tile path
- @param 用来传入tile数据或加载tile失败的error访问的回调block
+ @param path tile path
+ @param result 用来传入tile数据或加载tile失败的error访问的回调block
  */
 - (void)loadTileAtPath:(MATileOverlayPath)path result:(void (^)(NSData *tileData, NSError *error))result;
 

@@ -843,9 +843,9 @@ char pinyinFirstLetter(unsigned short hanzi) {
         } else {
             //如果是字母或其它符号，都返回 #
             if ([firstLetters length]) {
-                firstLetters = [firstLetters stringByAppendingFormat:@" %c",true ? '#' : letter];
+                firstLetters = [firstLetters stringByAppendingFormat:@" %c", '#'];
             } else {
-                firstLetters = [firstLetters stringByAppendingFormat:@"%c", true ? '#' : letter];
+                firstLetters = [firstLetters stringByAppendingFormat:@"%c", '#'];
             }
         }
     }];

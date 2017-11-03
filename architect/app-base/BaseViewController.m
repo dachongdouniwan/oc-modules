@@ -74,7 +74,7 @@ static NSString *backButtonImageName = @"buckbutton";
     }
     self.hideKeyboardWhenEndEditing = YES;
     
-    [self aspect_hookSelector:@selector(viewDidLoad) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> aspectInfo) {
+    [self hookSelector:@selector(viewDidLoad) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> aspectInfo) {
 //        UIViewController *viewController = aspectInfo.instance;
         
         

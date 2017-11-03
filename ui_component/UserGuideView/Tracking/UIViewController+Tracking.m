@@ -14,7 +14,7 @@
 @implementation UIViewController (Tracking)
 
 + (void)load {
-    TODO("暂时先注释")
+//    TODO("暂时先注释")
 //    [self aspect_hookSelector:@selector(viewWillAppear:) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> aspectInfo, NSNumber *anmated){
 //        [self postNotification:SGGuideTrigNotification withObject:@{@"viewController":self}];
 //    } error:nil];

@@ -18,7 +18,7 @@
 
 @implementation NSString ( Matcher )
 
-- (NSArray *)jmatchWithRegex:(NSString *)regex {
+- (NSArray *)matchWithRegex:(NSString *)regex {
     NSTextCheckingResult *result = [self firstMatchedResultWithRegex:regex];
     NSMutableArray *mArray = [[NSMutableArray alloc] initWithCapacity:[result numberOfRanges]];
     

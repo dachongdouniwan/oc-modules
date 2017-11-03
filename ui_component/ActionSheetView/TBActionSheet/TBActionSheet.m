@@ -276,16 +276,11 @@ typedef void (^TBBlurEffectBlock)(void);
         //获取当前文本的属性
         NSDictionary * tdic = @{NSFontAttributeName:label.font};
         CGSize actualsize;
-        if (kiOS7Later) {
+        {
             //iOS7方法，获取文本需要的size，限制宽度
             actualsize =[content boundingRectWithSize:size options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:tdic context:nil].size;
         }
-        else {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-            actualsize = [content sizeWithFont:label.font];
-#pragma GCC diagnostic pop
-        }
+        
         label.frame = CGRectMake(0, lastY, self.sheetWidth, actualsize.height);
         lastY = CGRectGetMaxY(label.frame);
     };
@@ -649,7 +644,7 @@ typedef void (^TBBlurEffectBlock)(void);
 
 - (void)setupContainerFrame
 {
-    self.actionContainer.frame = CGRectMake(kContainerLeft, kScreenHeight - self.actionContainer.frame.size.height - (!kiOS7Later? 20: 0), self.actionContainer.frame.size.width, self.actionContainer.frame.size.height);
+    self.actionContainer.frame = CGRectMake(kContainerLeft, kScreenHeight - self.actionContainer.frame.size.height, self.actionContainer.frame.size.width, self.actionContainer.frame.size.height);
 }
 /**
  *  显示 ActionSheet
@@ -681,11 +676,8 @@ typedef void (^TBBlurEffectBlock)(void);
         }
         self.visible = YES;
     };
-    if (kiOS7Later) {
+    {
         [UIView animateWithDuration:self.animationDuration delay:0 usingSpringWithDamping:self.animationDampingRatio initialSpringVelocity:self.animationVelocity options:UIViewAnimationOptionCurveEaseInOut animations:animations completion:completion];
-    }
-    else {
-        [UIView animateWithDuration:self.animationDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:animations completion:completion];
     }
 }
 
@@ -834,7 +826,6 @@ typedef void (^TBBlurEffectBlock)(void);
  *  从区域截屏
  *
  *  @param aRect 区域
- *  @param view  截取的 view
  *
  *  @return  截取的图片
  */

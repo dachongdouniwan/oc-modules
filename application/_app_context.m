@@ -42,7 +42,7 @@
 @def_prop_strong( NSString *, areaName )
 
 - (void)checkUserLocationIfChanged:(BOOL (^)(BOOL))locationChangedHandler {
-    TODO("我想让一个 item，可以cache，可以database，可以json序列化")
+//    TODO("我想让一个 item，可以cache，?可以database，可以json序列化")
     
     [service.location currentLocationWithBlock:^(LocationModel *location) {
         // 判断城市是否改变

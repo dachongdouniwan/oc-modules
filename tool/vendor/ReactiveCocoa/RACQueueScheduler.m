@@ -17,6 +17,8 @@
 #pragma mark Lifecycle
 
 - (void)dealloc {
+    [super dealloc];
+    
 	dispatch_release(_queue);
 }
 

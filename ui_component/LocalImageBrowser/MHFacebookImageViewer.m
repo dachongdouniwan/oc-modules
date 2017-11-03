@@ -196,7 +196,7 @@ static const CGFloat kMinImageScale = 1.0f;
 
     __imageView.frame = frame;
 
-    CGFloat yDiff = abs((y + __imageView.frame.size.height/2) - windowSize.height/2);
+    CGFloat yDiff = fabs((y + __imageView.frame.size.height/2) - windowSize.height/2);
     _blackMask.alpha = MAX(1 - yDiff/(windowSize.height/0.5),kMinBlackMaskAlpha);
 
     if ((panGesture.state == UIGestureRecognizerStateEnded || panGesture.state == UIGestureRecognizerStateCancelled) && __scrollView.zoomScale == 1.0f) {

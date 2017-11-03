@@ -30,7 +30,7 @@
 
 - (NSArray *)allTableNames;
 - (NSArray *)allTableInfos;
-- (BOOL)tableExists:(NSString *)tableName;
+//- (BOOL)tableExists:(NSString *)tableName;
 - (NSString *)sqlStatementForTable:(NSString *)tableName;
 
 - (NSString *)getTableDumpString:(NSString *)tableName;
