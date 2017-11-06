@@ -1,7 +1,7 @@
 
 #import <objc/message.h>
 #import <UIKit/UIKit.h>
-
+#import "_building_precompile.h"
 #import "_db_entity.h"
 #import "_database.h"
 #import "_db_tool.h"
@@ -38,23 +38,23 @@
  */
 + (BOOL)_isExist {
     __block BOOL result;
-    [[_Database shareManager] isExistWithTableName:NSStringFromClass([self class]) complete:^(BOOL isSuccess) {
+    [[_Database sharedInstance] isExistWithTableName:NSStringFromClass([self class]) complete:^(BOOL isSuccess) {
         result  = isSuccess;
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 /**
  同步存储.
  */
--(BOOL)_save{
+- (BOOL)_save {
     __block BOOL result;
-    [[_Database shareManager] saveObject:self ignoredKeys:nil complete:^(BOOL isSuccess) {
+    [[_Database sharedInstance] saveObject:self ignoredKeys:nil complete:^(BOOL isSuccess) {
         result = isSuccess;
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 /**
@@ -73,11 +73,11 @@
 + (BOOL)_saveArray:(NSArray *)array ignoreKeys:(NSArray * const)ignoreKeys {
     NSAssert(array||array.count,@"数组没有元素!");
     __block BOOL result = YES;
-        [[_Database shareManager] saveObjects:array ignoredKeys:ignoreKeys complete:^(BOOL isSuccess) {
+        [[_Database sharedInstance] saveObjects:array ignoredKeys:ignoreKeys complete:^(BOOL isSuccess) {
             result = isSuccess;
         }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 /**
@@ -97,13 +97,13 @@
  */
 + (void)_saveOrUpdateArray:(NSArray*)array ignoreKeys:(NSArray * const)ignoreKeys {
     NSAssert(array||array.count,@"数组没有元素!");
-    NSString* uniqueKey = [_DatabaseTool isRespondsToSelector:NSSelectorFromString(bg_uniqueKeySelector) forClass:[self class]];
+    NSString* uniqueKey = [_DatabaseTool isRespondsToSelector:NSSelectorFromString(stringify(_uniqueKey)) forClass:[self class]];
     if (uniqueKey) {
         id uniqueKeyVlaue = [array.lastObject valueForKey:uniqueKey];
         NSInteger count = [[array.lastObject class] _countWhere:@[uniqueKey,@"=",uniqueKeyVlaue]];
         if (count){//有数据存在就更新.
             //此处更新数据.
-            [[_Database shareManager] updateObjects:array ignoredKeys:ignoreKeys complete:nil];
+            [[_Database sharedInstance] updateObjects:array ignoredKeys:ignoreKeys complete:nil];
         }else{//没有就存储.
             [self _saveArray:array ignoreKeys:ignoreKeys];
         }
@@ -126,7 +126,7 @@
  提示：“唯一约束”优先级高于"主键".
  */
 - (BOOL)_saveOrUpdate {
-    NSString* uniqueKey = [_DatabaseTool isRespondsToSelector:NSSelectorFromString(bg_uniqueKeySelector) forClass:[self class]];
+    NSString* uniqueKey = [_DatabaseTool isRespondsToSelector:NSSelectorFromString(stringify(_uniqueKey)) forClass:[self class]];
     if (uniqueKey) {
         id uniqueKeyVlaue = [self valueForKey:uniqueKey];
         NSInteger count = [[self class] _countWhere:@[uniqueKey,@"=",uniqueKeyVlaue]];
@@ -160,11 +160,11 @@
  */
 - (BOOL)_saveIgnoredKeys:(NSArray * const)ignoredKeys {
     __block BOOL result;
-    [[_Database shareManager] saveObject:self ignoredKeys:ignoredKeys complete:^(BOOL isSuccess) {
+    [[_Database sharedInstance] saveObject:self ignoredKeys:ignoredKeys complete:^(BOOL isSuccess) {
         result = isSuccess;
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 /**
@@ -184,16 +184,16 @@
  */
 - (BOOL)_cover  {
     __block BOOL result;
-    [[_Database shareManager] clearWithClass:[self class] complete:^(BOOL isSuccess) {
+    [[_Database sharedInstance] clearWithClass:[self class] complete:^(BOOL isSuccess) {
         if(isSuccess)
-            [[_Database shareManager] saveObject:self ignoredKeys:nil complete:^(BOOL isSuccess) {
+            [[_Database sharedInstance] saveObject:self ignoredKeys:nil complete:^(BOOL isSuccess) {
                 result = isSuccess;
             }];
         else
             result = NO;
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 
@@ -215,16 +215,16 @@
  */
 - (BOOL)_coverIgnoredKeys:(NSArray* const _Nonnull)ignoredKeys {
     __block BOOL result;
-    [[_Database shareManager] clearWithClass:[self class] complete:^(BOOL isSuccess) {
+    [[_Database sharedInstance] clearWithClass:[self class] complete:^(BOOL isSuccess) {
         if(isSuccess)
-            [[_Database shareManager] saveObject:self ignoredKeys:ignoredKeys complete:^(BOOL isSuccess) {
+            [[_Database sharedInstance] saveObject:self ignoredKeys:ignoredKeys complete:^(BOOL isSuccess) {
                 result = isSuccess;
             }];
         else
             result = NO;
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 /**
@@ -244,11 +244,11 @@
  */
 + (NSArray*)_findAll {
     __block NSArray* results;
-    [[_Database shareManager] queryObjectWithClass:[self class] where:nil param:nil complete:^(NSArray * _Nullable array) {
+    [[_Database sharedInstance] queryObjectWithClass:[self class] where:nil param:nil complete:^(NSArray * _Nullable array) {
         results = array;
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return results;
 }
 /**
@@ -294,11 +294,11 @@
     !limit?:[param appendFormat:@"limit %@",@(limit)];
     param = param.length?param:nil;
     __block NSArray* results;
-     [[_Database shareManager] queryObjectWithClass:[self class] where:nil param:param complete:^(NSArray * _Nullable array) {
+     [[_Database sharedInstance] queryObjectWithClass:[self class] where:nil param:param complete:^(NSArray * _Nullable array) {
          results = array;
      }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return results;
 }
 /**
@@ -323,11 +323,11 @@
     NSAssert((range.location>=0)&&(range.length>0),@"range参数错误,location应该大于或等于零,length应该大于零");
     [param appendFormat:@"limit %@,%@",@(range.location),@(range.length)];
     __block NSArray* results;
-    [[_Database shareManager] queryObjectWithClass:[self class] where:nil param:param complete:^(NSArray * _Nullable array) {
+    [[_Database sharedInstance] queryObjectWithClass:[self class] where:nil param:param complete:^(NSArray * _Nullable array) {
         results = array;
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return results;
 }
 /**
@@ -349,11 +349,11 @@
  */
 + (NSArray *)_findWhere:(NSArray *)where {
     __block NSArray* results;
-    [[_Database shareManager] queryObjectWithClass:[self class] keys:nil where:where complete:^(NSArray * _Nullable array) {
+    [[_Database sharedInstance] queryObjectWithClass:[self class] keys:nil where:where complete:^(NSArray * _Nullable array) {
         results = array;
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return results;
 }
 /**
@@ -386,11 +386,11 @@
     va_end (ap);
     NSString* tableName = NSStringFromClass([self class]);
     __block NSArray* results;
-    [[_Database shareManager] queryWithTableName:tableName conditions:conditions complete:^(NSArray * _Nullable array) {
+    [[_Database sharedInstance] queryWithTableName:tableName conditions:conditions complete:^(NSArray * _Nullable array) {
         results = [_DatabaseTool tansformDataFromSqlDataWithTableName:tableName array:array];
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return results;
 }
 /**
@@ -401,11 +401,11 @@
  */
 + (NSArray *)_findForKeyPathAndValues:(NSArray *)keyPathValues {
     __block NSArray *results;
-    [[_Database shareManager] queryObjectWithClass:[self class] forKeyPathAndValues:keyPathValues complete:^(NSArray * _Nullable array) {
+    [[_Database sharedInstance] queryObjectWithClass:[self class] forKeyPathAndValues:keyPathValues complete:^(NSArray * _Nullable array) {
         results = array;
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return results;
 }
 /**
@@ -448,11 +448,11 @@
  */
 - (BOOL)_updateWhere:(NSArray *)where {
     __block BOOL result;
-    [[_Database shareManager] updateWithObject:self where:where ignoreKeys:nil complete:^(BOOL isSuccess) {
+    [[_Database sharedInstance] updateWithObject:self where:where ignoreKeys:nil complete:^(BOOL isSuccess) {
         result = isSuccess;
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 /**
@@ -464,11 +464,11 @@
  */
 -(BOOL)_updateWhere:(NSArray *)where ignoreKeys:(NSArray * const)ignoreKeys {
     __block BOOL result;
-    [[_Database shareManager] updateWithObject:self where:where ignoreKeys:ignoreKeys complete:^(BOOL isSuccess) {
+    [[_Database sharedInstance] updateWithObject:self where:where ignoreKeys:ignoreKeys complete:^(BOOL isSuccess) {
         result = isSuccess;
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 
@@ -502,11 +502,11 @@
     NSString* tableName = NSStringFromClass([self class]);
     //加入更新时间字段值.
     __block BOOL result;
-    [[_Database shareManager] updateWithTableName:tableName valueDict:nil conditions:conditions complete:^(BOOL isSuccess) {
+    [[_Database sharedInstance] updateWithTableName:tableName valueDict:nil conditions:conditions complete:^(BOOL isSuccess) {
         result = isSuccess;
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 /**
@@ -526,11 +526,11 @@
     NSString* tableName = NSStringFromClass([self class]);
     NSDictionary* valueDict = [_DatabaseTool getDictWithObject:self ignoredKeys:nil isUpdate:YES];
     __block BOOL result;
-    [[_Database shareManager] updateWithTableName:tableName valueDict:valueDict conditions:conditions complete:^(BOOL isSuccess) {
+    [[_Database sharedInstance] updateWithTableName:tableName valueDict:valueDict conditions:conditions complete:^(BOOL isSuccess) {
         result = isSuccess;
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 /**
@@ -546,11 +546,11 @@
  */
 - (BOOL)_updateFormatSqlConditions:(NSString*)conditions ignoreKeys:(NSArray * const)ignoreKeys{
     __block BOOL result;
-    [[_Database shareManager] updateObject:self ignoreKeys:ignoreKeys conditions:conditions complete:^(BOOL isSuccess) {
+    [[_Database sharedInstance] updateObject:self ignoreKeys:ignoreKeys conditions:conditions complete:^(BOOL isSuccess) {
         result = isSuccess;
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 
@@ -562,11 +562,11 @@
  */
 -(BOOL)_updateForKeyPathAndValues:(NSArray *)keyPathValues{
     __block BOOL result;
-    [[_Database shareManager] updateWithObject:self forKeyPathAndValues:keyPathValues ignoreKeys:nil complete:^(BOOL isSuccess) {
+    [[_Database sharedInstance] updateWithObject:self forKeyPathAndValues:keyPathValues ignoreKeys:nil complete:^(BOOL isSuccess) {
         result = isSuccess;
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 /**
@@ -578,11 +578,11 @@
  */
 - (BOOL)_updateForKeyPathAndValues:(NSArray *)keyPathValues ignoreKeys:(NSArray * const)ignoreKeys{
     __block BOOL result;
-    [[_Database shareManager] updateWithObject:self forKeyPathAndValues:keyPathValues ignoreKeys:ignoreKeys complete:^(BOOL isSuccess) {
+    [[_Database sharedInstance] updateWithObject:self forKeyPathAndValues:keyPathValues ignoreKeys:ignoreKeys complete:^(BOOL isSuccess) {
         result = isSuccess;
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 
@@ -606,11 +606,11 @@
  */
 + (BOOL)_deleteWhere:(NSArray *)where {
     __block BOOL result;
-    [[_Database shareManager] deleteWithClass:[self class] where:where complete:^(BOOL isSuccess) {
+    [[_Database sharedInstance] deleteWithClass:[self class] where:where complete:^(BOOL isSuccess) {
         result = isSuccess;
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 /**
@@ -643,11 +643,11 @@
     va_end (ap);
     NSString* tableName = NSStringFromClass([self class]);
     __block BOOL result;
-    [[_Database shareManager] deleteWithTableName:tableName conditions:conditions complete:^(BOOL isSuccess) {
+    [[_Database sharedInstance] deleteWithTableName:tableName conditions:conditions complete:^(BOOL isSuccess) {
         result = isSuccess;
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 /**
@@ -658,11 +658,11 @@
  */
 +(BOOL)_deleteForKeyPathAndValues:(NSArray* _Nonnull)keyPathValues{
     __block BOOL result;
-    [[_Database shareManager] deleteWithTableName:NSStringFromClass([self class]) forKeyPathAndValues:keyPathValues complete:^(BOOL isSuccess) {
+    [[_Database sharedInstance] deleteWithTableName:NSStringFromClass([self class]) forKeyPathAndValues:keyPathValues complete:^(BOOL isSuccess) {
         result = isSuccess;
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 /**
@@ -701,11 +701,11 @@
  */
 +(BOOL)_clear{
     __block BOOL result;
-    [[_Database shareManager] clearWithClass:[self class] complete:^(BOOL isSuccess){
+    [[_Database sharedInstance] clearWithClass:[self class] complete:^(BOOL isSuccess){
         result = isSuccess;
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 /**
@@ -722,11 +722,11 @@
  */
 + (BOOL)_drop {
     __block BOOL result;
-    [[_Database shareManager] dropWithClass:[self class] complete:^(BOOL isSuccess) {
+    [[_Database sharedInstance] dropWithClass:[self class] complete:^(BOOL isSuccess) {
         result = isSuccess;
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 /**
@@ -744,9 +744,9 @@
  不支持keypath的key,即嵌套的自定义类, 形式如@[@"user.name",@"=",@"习大大"]暂不支持(有专门的keyPath查询条数接口).
  */
 + (NSInteger)_countWhere:(NSArray *)where {
-    NSUInteger count = [[_Database shareManager] countForTable:NSStringFromClass([self class]) where:where];
+    NSUInteger count = [[_Database sharedInstance] countForTable:NSStringFromClass([self class]) where:where];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return count;
 }
 /**
@@ -765,9 +765,9 @@
     va_start (ap, format);
     NSString *conditions = [[NSString alloc] initWithFormat:format arguments:ap];
     va_end (ap);
-    NSInteger count = [[_Database shareManager] countForTable:NSStringFromClass([self class]) conditions:conditions];
+    NSInteger count = [[_Database sharedInstance] countForTable:NSStringFromClass([self class]) conditions:conditions];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return count;
 }
 
@@ -777,9 +777,9 @@
  即查询user.student.name=@"小芳" 和 user.student.content中包含@“书”这个字符串的对象的条数.
  */
 + (NSInteger)_countForKeyPathAndValues:(NSArray* _Nonnull)keyPathValues{
-    NSInteger count = [[_Database shareManager] countForTable:NSStringFromClass([self class]) forKeyPathAndValues:keyPathValues];
+    NSInteger count = [[_Database sharedInstance] countForTable:NSStringFromClass([self class]) forKeyPathAndValues:keyPathValues];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return count;
 }
 /**
@@ -792,9 +792,9 @@
     va_start (ap,where);
     NSString *conditions = where?[[NSString alloc] initWithFormat:where arguments:ap]:nil;
     va_end (ap);
-    NSInteger num = [[_Database shareManager] sqliteMethodForTable:NSStringFromClass([self class]) type:methodType key:key where:conditions];
+    NSInteger num = [[_Database sharedInstance] sqliteMethodForTable:NSStringFromClass([self class]) type:methodType key:key where:conditions];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return num;
 }
 /**
@@ -816,11 +816,11 @@
     if(version > oldVersion){
         [_DatabaseTool setIntegerWithKey:tableName value:version];
         __block DatabaseDealState state;
-        [[_Database shareManager] refreshTable:tableName keys:[_DatabaseTool getClassIvarList:[self class] onlyKey:NO] complete:^(DatabaseDealState result) {
+        [[_Database sharedInstance] refreshTable:tableName keys:[_DatabaseTool getClassIvarList:[self class] onlyKey:NO] complete:^(DatabaseDealState result) {
             state = result;
         }];
         //关闭数据库
-        [[_Database shareManager] closeDB];
+        [[_Database sharedInstance] closeDB];
         return state;
     }else{
         return  DatabaseDealStateError;
@@ -859,11 +859,11 @@
     if(version > oldVersion){
         [_DatabaseTool setIntegerWithKey:tableName value:version];
         __block DatabaseDealState state;
-        [[_Database shareManager] refreshTable:tableName keyDict:keydict complete:^(DatabaseDealState result) {
+        [[_Database sharedInstance] refreshTable:tableName keyDict:keydict complete:^(DatabaseDealState result) {
             state = result;
         }];
         //关闭数据库
-        [[_Database shareManager] closeDB];
+        [[_Database sharedInstance] closeDB];
         return state;
     }else{
         return DatabaseDealStateError;
@@ -900,11 +900,11 @@
  */
 + (DatabaseDealState)_copyToClass:(__unsafe_unretained _Nonnull Class)destCla keyDict:(NSDictionary* const _Nonnull)keydict append:(BOOL)append{
     __block DatabaseDealState state;
-    [[_Database shareManager] copyClass:[self class] to:destCla keyDict:keydict append:append complete:^(DatabaseDealState result) {
+    [[_Database sharedInstance] copyClass:[self class] to:destCla keyDict:keydict append:append complete:^(DatabaseDealState result) {
         state = result;
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return state;
 }
 /**
@@ -928,7 +928,7 @@
  */
 + (BOOL)_registerChangeWithName:(NSString * const)name block:(DatabaseDealStateBlock)block{
     NSString* uniqueName = [NSString stringWithFormat:@"%@*%@",NSStringFromClass([self class]),name];
-    return [[_Database shareManager] registerChangeWithName:uniqueName block:block];
+    return [[_Database sharedInstance] registerChangeWithName:uniqueName block:block];
 }
 /**
  移除数据变化监听.
@@ -937,7 +937,7 @@
  */
 +(BOOL)_removeChangeWithName:(NSString * const)name{
      NSString* uniqueName = [NSString stringWithFormat:@"%@*%@",NSStringFromClass([self class]),name];
-    return [[_Database shareManager] removeChangeWithName:uniqueName];
+    return [[_Database sharedInstance] removeChangeWithName:uniqueName];
 }
 
 /**
@@ -946,9 +946,9 @@
  提示：字段名要增加BG_前缀
  */
 id _executeSql(NSString* _Nonnull sql,NSString* _Nullable className){
-    id result = [[_Database shareManager] bg_executeSql:sql className:className];
+    id result = [[_Database sharedInstance] bg_executeSql:sql className:className];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 
@@ -996,11 +996,11 @@ id _executeSql(NSString* _Nonnull sql,NSString* _Nullable className){
 - (BOOL)_saveArrayWithName:(NSString* const _Nonnull)name{
     if([self isKindOfClass:[NSArray class]]) {
         __block BOOL result;
-        [[_Database shareManager] saveArray:self name:name complete:^(BOOL isSuccess) {
+        [[_Database sharedInstance] saveArray:self name:name complete:^(BOOL isSuccess) {
             result = isSuccess;
         }];
         //关闭数据库
-        [[_Database shareManager] closeDB];
+        [[_Database sharedInstance] closeDB];
         return result;
     }else{
         return NO;
@@ -1014,11 +1014,11 @@ id _executeSql(NSString* _Nonnull sql,NSString* _Nullable className){
 + (BOOL)_addObjectWithName:(NSString* const _Nonnull)name object:(id const _Nonnull)object{
     NSAssert(object,@"元素不能为空!");
     __block BOOL result;
-    [[_Database shareManager] saveArray:@[object] name:name complete:^(BOOL isSuccess) {
+    [[_Database sharedInstance] saveArray:@[object] name:name complete:^(BOOL isSuccess) {
         result = isSuccess;
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 /**
@@ -1026,9 +1026,9 @@ id _executeSql(NSString* _Nonnull sql,NSString* _Nullable className){
  @name 唯一标识名称.
  */
 + (NSInteger)_countWithName:(NSString* const _Nonnull)name{
-    NSUInteger count = [[_Database shareManager] countForTable:name where:nil];
+    NSUInteger count = [[_Database sharedInstance] countForTable:name where:nil];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return count;
 
 }
@@ -1037,13 +1037,13 @@ id _executeSql(NSString* _Nonnull sql,NSString* _Nullable className){
  */
 + (NSArray*)_arrayWithName:(NSString* const _Nonnull)name{
     __block NSMutableArray* results;
-    [[_Database shareManager] queryArrayWithName:name complete:^(NSArray * _Nullable array) {
+    [[_Database sharedInstance] queryArrayWithName:name complete:^(NSArray * _Nullable array) {
         if(array&&array.count){
             results = [NSMutableArray arrayWithArray:array];
         }
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return results;
 }
 /**
@@ -1052,9 +1052,9 @@ id _executeSql(NSString* _Nonnull sql,NSString* _Nullable className){
  @index 数组元素位置.
  */
 + (id)_objectWithName:(NSString * const)name index:(NSInteger)index {
-    id resultValue = [[_Database shareManager] queryArrayWithName:name index:index];
+    id resultValue = [[_Database sharedInstance] queryArrayWithName:name index:index];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return resultValue;
 }
 /**
@@ -1063,9 +1063,9 @@ id _executeSql(NSString* _Nonnull sql,NSString* _Nullable className){
  @index 数组元素位置.
  */
 + (BOOL)_updateObjectWithName:(NSString* const _Nonnull)name object:(id _Nonnull)object index:(NSInteger)index{
-    BOOL result = [[_Database shareManager] updateObjectWithName:name object:object index:index];
+    BOOL result = [[_Database sharedInstance] updateObjectWithName:name object:object index:index];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 /**
@@ -1074,9 +1074,9 @@ id _executeSql(NSString* _Nonnull sql,NSString* _Nullable className){
  @index 数组元素位置.
  */
 + (BOOL)_deleteObjectWithName:(NSString* const _Nonnull)name index:(NSInteger)index {
-    BOOL result = [[_Database shareManager] deleteObjectWithName:name index:index];
+    BOOL result = [[_Database sharedInstance] deleteObjectWithName:name index:index];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 /**
@@ -1085,11 +1085,11 @@ id _executeSql(NSString* _Nonnull sql,NSString* _Nullable className){
  */
 + (BOOL)_clearArrayWithName:(NSString * const)name {
     __block BOOL result;
-    [[_Database shareManager] dropSafeTable:name complete:^(BOOL isSuccess) {
+    [[_Database sharedInstance] dropSafeTable:name complete:^(BOOL isSuccess) {
         result = isSuccess;
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 
@@ -1104,11 +1104,11 @@ id _executeSql(NSString* _Nonnull sql,NSString* _Nullable className){
 - (BOOL)_saveDictionary {
     if([self isKindOfClass:[NSDictionary class]]) {
         __block BOOL result;
-        [[_Database shareManager] saveDictionary:self complete:^(BOOL isSuccess) {
+        [[_Database sharedInstance] saveDictionary:self complete:^(BOOL isSuccess) {
             result = isSuccess;
         }];
         //关闭数据库
-        [[_Database shareManager] closeDB];
+        [[_Database sharedInstance] closeDB];
         return result;
     }else{
         return NO;
@@ -1119,44 +1119,44 @@ id _executeSql(NSString* _Nonnull sql,NSString* _Nullable className){
  添加字典元素.
  */
 + (BOOL)_setValue:(id const _Nonnull)value forKey:(NSString* const _Nonnull)key {
-    BOOL result = [[_Database shareManager] bg_setValue:value forKey:key];
+    BOOL result = [[_Database sharedInstance] bg_setValue:value forKey:key];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 /**
  更新字典元素.
  */
 + (BOOL)_updateValue:(id const)value forKey:(NSString * const)key {
-    BOOL result = [[_Database shareManager] bg_updateValue:value forKey:key];
+    BOOL result = [[_Database sharedInstance] bg_updateValue:value forKey:key];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 /**
  遍历字典元素.
  */
 + (void)_enumerateKeysAndObjectsUsingBlock:(void (^)(NSString * key, id value,BOOL *stop))block {
-    [[_Database shareManager] bg_enumerateKeysAndObjectsUsingBlock:block];
+    [[_Database sharedInstance] bg_enumerateKeysAndObjectsUsingBlock:block];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
 }
 /**
  获取字典元素.
  */
 + (id)_valueForKey:(NSString *const)key {
-    id value = [[_Database shareManager] bg_valueForKey:key];
+    id value = [[_Database sharedInstance] bg_valueForKey:key];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return value;
 }
 /**
  移除字典某个元素.
  */
 + (BOOL)_removeValueForKey:(NSString * const)key {
-    BOOL result = [[_Database shareManager] bg_deleteValueForKey:key];
+    BOOL result = [[_Database sharedInstance] bg_deleteValueForKey:key];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 /**
@@ -1165,11 +1165,11 @@ id _executeSql(NSString* _Nonnull sql,NSString* _Nullable className){
 + (BOOL)_clearDictionary {
     __block BOOL result;
     NSString* const tableName = @"BG_Dictionary";
-    [[_Database shareManager] dropSafeTable:tableName complete:^(BOOL isSuccess) {
+    [[_Database sharedInstance] dropSafeTable:tableName complete:^(BOOL isSuccess) {
         result = isSuccess;
     }];
     //关闭数据库
-    [[_Database shareManager] closeDB];
+    [[_Database sharedInstance] closeDB];
     return result;
 }
 @end

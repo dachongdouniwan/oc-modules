@@ -1,43 +1,23 @@
 # BGFMDB让数据的增删改查分别只需要一行代码即可,就是这么简单任性.
-## 最新重大更新:    
-1.增加直接存储数组功能.    
-2.增加直接存储字典功能.       
-## 广而告知
-'简约时尚强悍版'震撼出世,点击此处跳转-> ![BGDB_OC](https://github.com/huangzhibiao/BGDB_OC "简约时尚强悍版")       
-1.BGFMDB是多功能版,同时也由于BGFMDB是在FMDB的基础上进行封装,由于多了中间一层的转化,所以性能有所下降,为了能满足更高性能需求的app,所以我特意重构sqlite API层逻辑,打造这款‘简约时尚强悍版’存储框架,名为BGDB,此款是OC版,欢迎老鸟新鸟们测试使用,找出bug跟我交流😊. 
-## Swift工程中使用方式    
-目前可以存储Swift工程中的OC类model,在桥接文件导入OC类model的头文件即可, 但是不能解析存储Swift类model,后面会补上Swift类model解析部分😊.    
-## 小伙伴们的使用反馈   
-![BGFMDB](http://o7pq80nc2.bkt.clouddn.com/showUse_meitu.jpg "小伙伴们的使用反馈")
-## 交流QQ群:         
-使用交流QQ群: 572359447    
-如果在使用过程中发现什么问题或有什么疑问,请加群反馈.    
-## 完美支持:    
+   
+## 类型支持:    
 int,long,signed,float,double,NSInteger,CGFloat,BOOL,NSString,NSMutableString,NSMutableAttributedString,NSAttributedString,NSNumber,NSArray,NSMutableArray,NSDictionary,NSMutableDictionary,NSMapTable,NSHashTable,NSData,NSMutableData,UIImage,NSDate,NSURL,NSRange,CGRect,CGSize,CGPoint,自定义对象 等的存储.   
+
 ## 写本库的动机: 在对coredata和realm做了探究总结后,发现了很多有缺陷的地方,最明显的就是下面的原因:   
 ### realm缺陷: 
 Realm不支持集合类型,这一点也是比较蛋疼。   
 Realm支持以下的属性类型：BOOL、bool、int、NSInteger、long、long long、float、double、NSString、NSDate、NSData以及 被特殊类型标记的NSNumber。CGFloat属性的支持被取消了，因为它不具备平台独立性。    
 这里就是不支持集合，比如说NSArray，NSMutableArray，NSDictionary，NSMutableDictionary，NSSet，NSMutableSet。如果服务器传来的一个字典，key是一个字符串，对应的value就是一个数组，这时候就想存储这个数组就比较困难了。   
+
 ### coredata缺陷:   
 coredata虽然通过Transformable可以存取集合类型,但需要开发者去进行转换处理,使用起来不方便直观,虽然coredata有很多好用的封装库,像ResKit,MMRecord等,但这些库比较庞大,而且都是英文介绍,不利于国内初中级开发的快速开发使用.    
+
 ## 虽然国内也已经有了对FMDB面相对象层的封装,比如像JRDB,LKDBHelper等,但是在使用总结后还是发现不少的问题,问题如下:    
 JRDB存储数组需要传入对象的泛型,同时还要复写一些函数和映射，这对于初中级开发者是很不利的,看的很萌逼.    
 LKDBHelper好一点,但也要复写不少的函数,而且LKDBHelper的使用demo有点乱,还有就是不支持NSMaptable,NSHashTable的存储,LKDBHelper还有一个致命的弱点就是当类变量名称跟sqlite的关键字一样时,会发生冲突错误！  
-### 而最重要的是: JRDB,LKDBHelper都不支持同一数组中存储不同类型的自定义类型数据,BGFMDB则完美支持,JRDB,LKDBHelper已经成为过去,现在是BGFMDB的时代,作者的宣言是：“要把BGFMDB写成不会写代码的人都会用的库”，欢迎大家反馈和吐槽问题,骚年作者等着你们.
-## 综合上述原因后,我决定写一款适合国内初中级开发者使用的存储封装库(BGFMDB),不管是从使用步骤还是支持的存储类型上,都比JRDB,LKDB简单好用和全面.    
-## 本库几乎支持存储ios所有基本的自带数据类型.    
-## 使用介绍(喜欢的话别忘了给本库一个Star😊).   
-## CocoaPods的方式.
-### Podfile
-```Podfile
-platform :ios, '8.0'
 
-target '工程名称' do
-pod ‘BGFMDB’, '~> 1.50’
-end
-```
-## 直接下载库代码使用方式.
+### 而最重要的是: JRDB,LKDBHelper都不支持同一数组中存储不同类型的自定义类型数据,BGFMDB则完美支持,JRDB,LKDBHelper已经成为过去,现在是BGFMDB的时代,作者的宣言是：“要把BGFMDB写成不会写代码的人都会用的库”，欢迎大家反馈和吐槽问题,骚年作者等着你们.
+
 ### 添加所需依赖库   
 libsqlite3   
 ### 导入头文件   

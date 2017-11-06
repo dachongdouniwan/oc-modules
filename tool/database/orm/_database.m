@@ -17,18 +17,18 @@ static const void * const BGFMDBDispatchQueueSpecificKey = &BGFMDBDispatchQueueS
 @interface _Database()
 //数据库队列
 @property (nonatomic, strong) FMDatabaseQueue *queue;
-@property (nonatomic, strong) FMDatabase* db;
+@property (nonatomic, strong) FMDatabase *db;
 @property (nonatomic, assign) BOOL inTransaction;
 //递归锁.
 //@property (nonatomic, strong) NSRecursiveLock *threadLock;
 
-@property (nonatomic,strong) NSMutableDictionary* changeBlocks;//记录注册监听数据变化的block.
+@property (nonatomic,strong) NSMutableDictionary *changeBlocks;//记录注册监听数据变化的block.
 
 @end
 
-static _Database * BGdb = nil;
-
 @implementation _Database
+
+@def_singleton( _Database )
 
 - (void)dealloc {
     [self destroy];
@@ -43,15 +43,12 @@ static _Database * BGdb = nil;
         _semaphore = 0x00;
     }
     [self closeDB];
-    if (BGdb) {
-        BGdb = nil;
-    }
-    
 }
+
 /**
  关闭数据库.
  */
--(void)closeDB{
+- (void)closeDB {
     if(_disableCloseDB)return;
     
     dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
@@ -74,7 +71,7 @@ static _Database * BGdb = nil;
     return error==nil;
 }
 
--(instancetype)init{
+- (instancetype)init {
     self = [super init];
     if (self) {
         
@@ -86,13 +83,15 @@ static _Database * BGdb = nil;
     return self;
 }
 
--(FMDatabaseQueue *)queue{
-    if(_queue)return _queue;
-    //获得沙盒中的数据库文件名
-    NSString* name;
+- (FMDatabaseQueue *)queue {
+    if(_queue)
+        return _queue;
+    
+    // 获得沙盒中的数据库文件名
+    NSString *name;
     if(_sqliteName) {
         name = [NSString stringWithFormat:@"%@.db",_sqliteName];
-    }else{
+    } else {
         name = SQLITE_NAME;
     }
     NSString *filename = CachePath(name);
@@ -101,16 +100,6 @@ static _Database * BGdb = nil;
     return _queue;
 }
 
-/**
- 获取单例函数.
- */
-+(_Nonnull instancetype)shareManager{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        BGdb = [[_Database alloc] init];
-    });
-    return BGdb;
-}
 //事务操作
 -(void)inTransaction:(BOOL (^_Nonnull)())block{
     NSAssert(block, @"block is nil!");
@@ -134,7 +123,7 @@ static _Database * BGdb = nil;
 /**
  为了对象层的事物操作而封装的函数.
  */
--(void)executeDB:(void (^_Nonnull)(FMDatabase *_Nonnull db))block{
+- (void)executeDB:(void (^_Nonnull)(FMDatabase *_Nonnull db))block {
     NSAssert(block, @"block is nil!");
     //[self.threadLock lock];//加锁
     
@@ -142,8 +131,9 @@ static _Database * BGdb = nil;
         block(_db);
         return;
     }
+    
     __weak typeof(self) weakSelf = self;
-    [self.queue inDatabase:^(FMDatabase *db){
+    [self.queue inDatabase:^(FMDatabase *db) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         strongSelf.db = db;
         block(db);
@@ -202,7 +192,7 @@ static _Database * BGdb = nil;
 /**
  数据库中是否存在表.
  */
--(void)isExistWithTableName:(NSString* _Nonnull)name complete:(DatabaseSuccessBlock)complete{
+- (void)isExistWithTableName:(NSString* _Nonnull)name complete:(DatabaseSuccessBlock)complete {
     NSAssert(name,@"表名不能为空!");
     __block BOOL result;
     [self executeDB:^(FMDatabase * _Nonnull db) {
@@ -211,11 +201,10 @@ static _Database * BGdb = nil;
     bg_completeBlock(result);
 }
 
-
 /**
  创建表(如果存在则不创建).
  */
--(void)createTableWithTableName:(NSString* _Nonnull)name keys:(NSArray<NSString*>* _Nonnull)keys uniqueKey:(NSString* _Nullable)uniqueKey complete:(DatabaseSuccessBlock)complete{
+- (void)createTableWithTableName:(NSString* _Nonnull)name keys:(NSArray<NSString*>* _Nonnull)keys uniqueKey:(NSString* _Nullable)uniqueKey complete:(DatabaseSuccessBlock)complete {
     NSAssert(name,@"表名不能为空!");
     NSAssert(keys,@"字段数组不能为空!");
     //创表
@@ -225,7 +214,7 @@ static _Database * BGdb = nil;
         NSMutableString* sql = [[NSMutableString alloc] init];
         [sql appendString:header];
         BOOL uniqueKeyFlag = NO;
-        for(int i=0;i<keys.count;i++){
+        for (int i = 0; i < keys.count; i++) {
             
             if(uniqueKey){
                 if([_DatabaseTool isUniqueKey:uniqueKey with:keys[i]]){
@@ -251,7 +240,7 @@ static _Database * BGdb = nil;
             }
         }
         
-        if(uniqueKey){
+        if (uniqueKey) {
             NSAssert(uniqueKeyFlag,@"没有找到设置的'唯一约束',请检查uniqueKey返回值是否正确!");
         }
         LOG(@"%@", sql);
@@ -349,7 +338,7 @@ static _Database * BGdb = nil;
         [dictArray enumerateObjectsUsingBlock:^(NSDictionary * _Nonnull dict, NSUInteger idx, BOOL * _Nonnull stop) {
             @autoreleasepool {
                 NSMutableArray* arguments = [NSMutableArray array];
-                NSString* uniqueKey = [_DatabaseTool isRespondsToSelector:NSSelectorFromString(bg_uniqueKeySelector) forClass:NSClassFromString(name)];
+                NSString* uniqueKey = [_DatabaseTool isRespondsToSelector:NSSelectorFromString(stringify(_uniqueKey)) forClass:NSClassFromString(name)];
                 NSString* sqlUniqueKey = [NSString stringWithFormat:@"%@%@",BG,uniqueKey];
                 NSString* where = nil;
                 NSMutableDictionary* tempDict = [[NSMutableDictionary alloc] initWithDictionary:dict];
@@ -941,7 +930,7 @@ static _Database * BGdb = nil;
 
 -(void)copyA:(NSString* _Nonnull)A toB:(NSString* _Nonnull)B keys:(NSArray<NSString*>* const _Nonnull)keys complete:(DatabaseDealStateBlock)complete{
     //获取"唯一约束"字段名
-    NSString* uniqueKey = [_DatabaseTool isRespondsToSelector:NSSelectorFromString(bg_uniqueKeySelector) forClass:NSClassFromString(A)];//[BGTool getUnique:[NSClassFromString(A) new]];
+    NSString* uniqueKey = [_DatabaseTool isRespondsToSelector:NSSelectorFromString(stringify(_uniqueKey)) forClass:NSClassFromString(A)];
     //建立一张临时表
     __block BOOL createFlag;
     [self createTableWithTableName:B keys:keys uniqueKey:uniqueKey complete:^(BOOL isSuccess) {
@@ -1061,7 +1050,7 @@ static _Database * BGdb = nil;
 
 -(void)copyA:(NSString* _Nonnull)A toB:(NSString* _Nonnull)B keyDict:(NSDictionary* const _Nullable)keyDict complete:(DatabaseDealStateBlock)complete{
     //获取"唯一约束"字段名
-    NSString* uniqueKey = [_DatabaseTool isRespondsToSelector:NSSelectorFromString(bg_uniqueKeySelector) forClass:NSClassFromString(A)];//[BGTool getUnique:[NSClassFromString(A) new]];
+    NSString* uniqueKey = [_DatabaseTool isRespondsToSelector:NSSelectorFromString(stringify(_uniqueKey)) forClass:NSClassFromString(A)];
     __block NSArray* keys = [_DatabaseTool getClassIvarList:NSClassFromString(A) onlyKey:NO];
     NSArray* newKeys = keyDict.allKeys;
     NSArray* oldKeys = keyDict.allValues;
@@ -1348,13 +1337,35 @@ static _Database * BGdb = nil;
 /**
  批量更新.
  */
--(void)updateObjects:(NSArray* _Nonnull)array ignoredKeys:(NSArray* const _Nullable)ignoredKeys complete:(DatabaseSuccessBlock)complete{
+- (void)updateObjects:(NSArray* _Nonnull)array ignoredKeys:(NSArray* const _Nullable)ignoredKeys complete:(DatabaseSuccessBlock)complete{
     dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
     @autoreleasepool {
         [self updateSetWithObjects:array ignoredKeys:ignoredKeys complete:complete];
     }
     dispatch_semaphore_signal(self.semaphore);
 }
+
+- (void)queryTableNamesWithComplete:(DatabaseCompleteBlcok)completeHandler {
+    
+    [self.queue inDatabase:^(FMDatabase * _Nonnull db) {
+        // 根据请求参数查询数据
+        FMResultSet *resultSet = nil;
+        
+        resultSet = [db executeQuery:@"SELECT * FROM sqlite_master where type='table';"];
+        
+        NSMutableArray *tableNames = [NSMutableArray array];
+        // 遍历查询结果
+        while (resultSet.next) {
+            
+            NSString *str1 = [resultSet stringForColumnIndex:1];
+            [tableNames addObject:str1];
+            
+        }
+        
+        invoke_nullable_block(completeHandler, tableNames)
+    }];
+}
+
 /**
  存储一个对象.
  */
@@ -1608,7 +1619,7 @@ static _Database * BGdb = nil;
                 }
             }
             //获取"唯一约束"字段名
-            NSString* uniqueKey = [_DatabaseTool isRespondsToSelector:NSSelectorFromString(bg_uniqueKeySelector) forClass:destCla];//[BGTool getUnique:[destCla new]];
+            NSString* uniqueKey = [_DatabaseTool isRespondsToSelector:NSSelectorFromString(stringify(_uniqueKey)) forClass:destCla];
             [BGSelf createTableWithTableName:destTable keys:destKeyAndTypes uniqueKey:uniqueKey complete:^(BOOL isSuccess) {
                 NSAssert(isSuccess,@"目标表创建失败,复制失败!");
             }];

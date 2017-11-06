@@ -1,12 +1,10 @@
 
 #import "_typedef.h"
 
-#define bg_uniqueKeySelector @"bg_uniqueKey"
-
 #define BG @"BG_"
-#define bg_primaryKey @"bg_id"
-#define bg_createTimeKey @"bg_createTime"
-#define bg_updateTimeKey @"bg_updateTime"
+#define bg_primaryKey @"_identifier"
+#define bg_createTimeKey @"_createTime"
+#define bg_updateTimeKey @"_updateTime"
 
 //keyPath查询用的关系，bg_equal:等于的关系；bg_contains：包含的关系.
 #define bg_equal @"Relation_Equal"
@@ -70,11 +68,6 @@ extern BOOL bg_deleteSqlite(NSString*_Nonnull sqliteName);
  默认是NO.
  */
 extern void bg_setDisableCloseDB(BOOL disableCloseDB);
-/**
- 设置调试模式
- @debug YES:打印调试信息, NO:不打印调试信息.
- */
-extern void bg_setDebug(BOOL debug);
 
 /**
  事务操作.

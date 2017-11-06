@@ -21,24 +21,24 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 
-// 提示：“唯一约束”优先级高于"主键".
-+ (NSString *)db_uniqueKey;
+// 提示：“唯一约束”优先级高于"主键", 但需要自己维护这个字段
++ (NSString *)_uniqueKey;
 
 /**
  *  数组中需要转换的模型类(‘字典转模型’ 或 ’模型转字典‘ 都需要实现该函数)
  *  @return 字典中的key是数组属性名，value是数组中存放模型的Class
  */
-+ (NSDictionary *)db_objectClassInArray;
++ (NSDictionary *)_objectClassInArray;
 /**
  如果模型中有自定义类变量,则实现该函数对应进行集合到模型的转换.
  字典转模型用.
  */
-+ (NSDictionary *)db_objectClassForCustom;
++ (NSDictionary *)_objectClassForCustom;
 /**
  将模型中对应的自定义类变量转换为字典.
  模型转字典用.
  */
-+ (NSDictionary *)db_dictForCustomClass;
++ (NSDictionary *)_dictForCustomClass;
 
 /**
 替换变量的功能(及当字典的key和属性名不一样时，进行映射对应起来)

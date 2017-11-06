@@ -1,23 +1,21 @@
 
 #import <Foundation/Foundation.h>
-
+#import "_building_precompile.h"
 #import "_db_config.h"
 #import "FMDB.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface _Database : NSObject
+
+@singleton( _Database )
 
 // 信号量.
 @property (nonatomic, strong) dispatch_semaphore_t _Nullable semaphore;
-@property (nonatomic, assign) BOOL debug;
 @property (nonatomic, copy) NSString * _Nonnull sqliteName;
 
 // 设置操作过程中不可关闭数据库(即closeDB函数无效).
 @property (nonatomic, assign) BOOL disableCloseDB;
-
-/**
- 获取单例函数.
- */
-+ (_Nonnull instancetype)shareManager;
 
 /**
  关闭数据库.
@@ -64,6 +62,8 @@
  批量更新.
  */
 - (void)updateObjects:(NSArray * _Nonnull)array ignoredKeys:(NSArray * const _Nullable)ignoredKeys complete:(DatabaseSuccessBlock _Nullable)complete;
+
+- (void)queryTableNamesWithComplete:(DatabaseCompleteBlcok _Nullable)completeHandler;
 /**
  根据条件查询对象.
  @param cla 代表对应的类.
@@ -140,7 +140,6 @@
  */
 - (void)copyClass:(__unsafe_unretained _Nonnull Class)srcCla to:(__unsafe_unretained _Nonnull Class)destCla keyDict:(NSDictionary* const _Nonnull)keydict append:(BOOL)append complete:( nullable DatabaseDealStateBlock)complete;
 
-/**----------------------------------华丽分割线---------------------------------------------*/
 #pragma mark --> 以下是非直接存储一个对象的API
 
 /**
@@ -335,3 +334,5 @@
 - (BOOL)bg_deleteValueForKey:(NSString * const _Nonnull)key;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
+#import "_building_precompile.h"
 #import "_db_tool.h"
 #import "_database.h"
 #import "_db_entity_info.h"
@@ -60,8 +61,8 @@ NSString* bg_keyPathValues(NSArray* keyPathValues){
  自定义数据库名称.
  */
 void bg_setSqliteName(NSString*_Nonnull sqliteName){
-    if (![sqliteName isEqualToString:[_Database shareManager].sqliteName]) {
-        [_Database shareManager].sqliteName = sqliteName;
+    if (![sqliteName isEqualToString:[_Database sharedInstance].sqliteName]) {
+        [_Database sharedInstance].sqliteName = sqliteName;
     }
 }
 /**
@@ -75,17 +76,8 @@ BOOL bg_deleteSqlite(NSString*_Nonnull sqliteName){
  默认是NO.
  */
 void bg_setDisableCloseDB(BOOL disableCloseDB){
-    if ([_Database shareManager].disableCloseDB != disableCloseDB){//防止重复设置.
-        [_Database shareManager].disableCloseDB = disableCloseDB;
-    }
-}
-/**
- 设置调试模式
- @debug YES:打印调试信息, NO:不打印调试信息.
- */
-void bg_setDebug(BOOL debug){
-    if ([_Database shareManager].debug != debug){//防止重复设置.
-        [_Database shareManager].debug = debug;
+    if ([_Database sharedInstance].disableCloseDB != disableCloseDB){//防止重复设置.
+        [_Database sharedInstance].disableCloseDB = disableCloseDB;
     }
 }
 
@@ -94,7 +86,7 @@ void bg_setDebug(BOOL debug){
  @return 返回YES提交事务, 返回NO回滚事务.
  */
 void bg_inTransaction(BOOL (^ _Nonnull block)()){
-    [[_Database shareManager] inTransaction:block];
+    [[_Database sharedInstance] inTransaction:block];
 }
 /**
  清除缓存
@@ -928,16 +920,12 @@ void bg_cleanCache(){
     }
     return valueDict;
 }
-/**
- 如果表格不存在就新建.
- */
-+(BOOL)ifNotExistWillCreateTableWithObject:(id)object ignoredKeys:(NSArray* const)ignoredKeys{
-    //检查是否建立了跟对象相对应的数据表
-    NSString* tableName = NSStringFromClass([object class]);
-    //获取"唯一约束"字段名
-    NSString* uniqueKey = [self isRespondsToSelector:NSSelectorFromString(bg_uniqueKeySelector) forClass:[object class]];
+
++ (BOOL)ifNotExistWillCreateTableWithObject:(id)object ignoredKeys:(NSArray* const)ignoredKeys {
+    NSString *tableName = string_from_class([object class]);
+    NSString *uniqueKey = [self isRespondsToSelector:selectorify(_uniqueKey) forClass:[object class]];
     __block BOOL isExistTable;
-    [[_Database shareManager] isExistWithTableName:tableName complete:^(BOOL isExist) {
+    [[_Database sharedInstance] isExistWithTableName:tableName complete:^(BOOL isExist) {
         if (!isExist){//如果不存在就新建
             NSMutableArray* createKeys = [NSMutableArray arrayWithArray:[self getClassIvarList:[object class] onlyKey:NO]];
             //判断是否有需要忽略的key集合.
@@ -953,7 +941,7 @@ void bg_cleanCache(){
                     }];
                 }
             }
-            [[_Database shareManager] createTableWithTableName:tableName keys:createKeys uniqueKey:uniqueKey complete:^(BOOL isSuccess) {
+            [[_Database sharedInstance] createTableWithTableName:tableName keys:createKeys uniqueKey:uniqueKey complete:^(BOOL isSuccess) {
                 isExistTable = isSuccess;
             }];
         }
