@@ -77,7 +77,7 @@
 }
 
 - (void)GET:(NSString *)path param:(NSDictionary *)param success:(ObjectBlock)successHandler failure:(ErrorBlock)failureHandler {
-    LOG(@"parameter = %@", param);
+    LOG(@"host = %@, api = %@, parameter = %@", self.hostname, path, param);
     
     // 显示指示器
     [self showHud];
@@ -138,7 +138,7 @@
         [mutableParameters addEntriesFromDictionary:param];
     }
     
-    LOG(@"api = %@, parameter = %@", path, mutableParameters);
+    LOG(@"host = %@, api = %@, parameter = %@", self.hostname, path, mutableParameters);
     
     _NetworkHostRequest *request = [self.host requestWithPath:path params:mutableParameters httpMethod:@"POST"];
     if (headers.allKeys.count) {
@@ -153,6 +153,9 @@
         [self dismissHud];
         
         if (completedRequest.error) { // http error
+            
+            LOG(@"api = %@, error = %@", path, completedRequest.error);
+            
             if (failureHandler) failureHandler(completedRequest.error);
         } else {
             NSString *responseString = [completedRequest responseAsString];
