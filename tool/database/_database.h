@@ -13,6 +13,3 @@
 
 #import "_fmdb_entity.h"
 
-@interface _Database : NSObject
-
-@end

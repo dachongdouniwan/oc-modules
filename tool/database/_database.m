@@ -8,7 +8,4 @@
 
 #import "_database.h"
 
-@implementation _Database
-
-@end
 

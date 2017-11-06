@@ -22,7 +22,7 @@
         
         //检查 str 是不是 NSString 类型
         if (![str isKindOfClass:[NSString class]]) {
-            assert(@"object in array is not NSString");
+            NSAssert(YES, @"object in array is not NSString");
             
             continue;
         }

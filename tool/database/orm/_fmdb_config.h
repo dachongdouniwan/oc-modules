@@ -1,16 +1,5 @@
-//
-//  BGFMDBConfig.h
-//  BGFMDB
-//
-//  Created by biao on 2017/7/19.
-//  Copyright © 2017年 Biao. All rights reserved.
-//
 
-#ifndef BGFMDBConfig_h
-#define BGFMDBConfig_h
-
-// 过期方法注释
-//#define BGFMDBDeprecated(instead) NS_DEPRECATED(2_0, 2_0, 2_0, 2_0, instead)
+#import "_typedef.h"
 
 #define bg_uniqueKeySelector @"bg_uniqueKey"
 
@@ -23,23 +12,23 @@
 #define bg_equal @"Relation_Equal"
 #define bg_contains @"Relation_Contains"
 
-#define bg_complete_B void(^_Nullable)(BOOL isSuccess)
-#define bg_complete_I void(^_Nullable)(bg_dealState result)
-#define bg_complete_A void(^_Nullable)(NSArray* _Nullable array)
-#define bg_changeBlock void(^_Nullable)(bg_changeState result)
+typedef enum : NSUInteger {
+    DatabaseOperationInsert,    // 插入
+    DatabaseOperationUpdate,    // 更新
+    DatabaseOperationDelete,    // 删除
+    DatabaseOperationDrop       // 删表
+} DatabaseOperation;
 
-typedef NS_ENUM(NSInteger,bg_changeState){//数据改变状态
-    bg_insert,//插入
-    bg_update,//更新
-    bg_delete,//删除
-    bg_drop//删表
-};
+typedef enum : NSUInteger {
+    DatabaseDealStateError = -1,        // 处理失败
+    DatabaseDealStateIncomplete = 0,    // 处理不完整
+    DatabaseDealStateComplete = 1,      // 处理完整
+} DatabaseDealState;
 
-typedef NS_ENUM(NSInteger,bg_dealState){//处理状态
-    bg_error = -1,//处理失败
-    bg_incomplete = 0,//处理不完整
-    bg_complete = 1//处理完整
-};
+typedef BOOLBlock DatabaseSuccessBlock;
+typedef ArrayBlock DatabaseCompleteBlcok;
+typedef void(^ DatabaseDealStateBlock)(DatabaseDealState result);
+typedef void(^ DatabaseOperationBlock)(DatabaseOperation result);
 
 typedef NS_ENUM(NSInteger,bg_sqliteMethodType){//sqlite数据库原生方法枚举
     bg_min,//求最小值
@@ -98,4 +87,3 @@ extern void bg_inTransaction(BOOL (^ _Nonnull block)());
  */
 extern void bg_cleanCache();
 
-#endif /* BGFMDBConfig_h */

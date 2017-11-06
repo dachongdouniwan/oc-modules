@@ -11,11 +11,12 @@
 
 #define bg_completeBlock(obj) !complete?:complete(obj);
 
-@interface BGTool : NSObject
+@interface _DatabaseTool : NSObject
+
 /**
  json字符转json格式数据 .
  */
-+(id _Nonnull)jsonWithString:(NSString* _Nonnull)jsonString;
++ (id _Nonnull)jsonWithString:(NSString* _Nonnull)jsonString;
 /**
  字典转json字符 .
  */

@@ -36,7 +36,7 @@
 typedef void (^BGClassesEnumeration)(Class c, BOOL *stop);
 static NSSet *foundationClasses_;
 
-@implementation BGTool
+@implementation _DatabaseTool
 /**
  封装处理传入数据库的key和value.
  */
@@ -54,29 +54,29 @@ NSString* bg_sqlValue(id value){
  根据keyPath和Value的数组, 封装成数据库语句，来操作库.
  */
 NSString* bg_keyPathValues(NSArray* keyPathValues){
-    return [BGTool getLikeWithKeyPathAndValues:keyPathValues where:NO];
+    return [_DatabaseTool getLikeWithKeyPathAndValues:keyPathValues where:NO];
 }
 /**
  自定义数据库名称.
  */
 void bg_setSqliteName(NSString*_Nonnull sqliteName){
-    if (![sqliteName isEqualToString:[BGDB shareManager].sqliteName]) {
-        [BGDB shareManager].sqliteName = sqliteName;
+    if (![sqliteName isEqualToString:[_Database shareManager].sqliteName]) {
+        [_Database shareManager].sqliteName = sqliteName;
     }
 }
 /**
  删除数据库文件
  */
 BOOL bg_deleteSqlite(NSString*_Nonnull sqliteName){
-    return [BGDB deleteSqlite:sqliteName];
+    return [_Database deleteSqlite:sqliteName];
 }
 /**
  设置操作过程中不可关闭数据库(即closeDB函数无效).
  默认是NO.
  */
 void bg_setDisableCloseDB(BOOL disableCloseDB){
-    if ([BGDB shareManager].disableCloseDB != disableCloseDB){//防止重复设置.
-        [BGDB shareManager].disableCloseDB = disableCloseDB;
+    if ([_Database shareManager].disableCloseDB != disableCloseDB){//防止重复设置.
+        [_Database shareManager].disableCloseDB = disableCloseDB;
     }
 }
 /**
@@ -84,8 +84,8 @@ void bg_setDisableCloseDB(BOOL disableCloseDB){
  @debug YES:打印调试信息, NO:不打印调试信息.
  */
 void bg_setDebug(BOOL debug){
-    if ([BGDB shareManager].debug != debug){//防止重复设置.
-        [BGDB shareManager].debug = debug;
+    if ([_Database shareManager].debug != debug){//防止重复设置.
+        [_Database shareManager].debug = debug;
     }
 }
 
@@ -94,7 +94,7 @@ void bg_setDebug(BOOL debug){
  @return 返回YES提交事务, 返回NO回滚事务.
  */
 void bg_inTransaction(BOOL (^ _Nonnull block)()){
-    [[BGDB shareManager] inTransaction:block];
+    [[_Database shareManager] inTransaction:block];
 }
 /**
  清除缓存
@@ -351,7 +351,7 @@ void bg_cleanCache(){
 //对象转json字符
 +(NSString *)jsonStringWithObject:(id)object{
     NSMutableDictionary* keyValueDict = [NSMutableDictionary dictionary];
-    NSArray* keyAndTypes = [BGTool getClassIvarList:[object class] onlyKey:NO];
+    NSArray* keyAndTypes = [self getClassIvarList:[object class] onlyKey:NO];
     for(NSString* keyAndType in keyAndTypes){
         NSArray* arr = [keyAndType componentsSeparatedByString:@"*"];
         NSString* propertyName = arr[0];
@@ -648,9 +648,9 @@ void bg_cleanCache(){
     }else{
         NSAssert(NO,@"数据格式错误!, 只能转换字典或json格式数据.");
     }
-    NSDictionary* const objectClaInArr = [BGTool isRespondsToSelector:NSSelectorFromString(@"bg_objectClassInArray") forClass:[object class]];
-    NSDictionary* const objectClaForCustom = [BGTool isRespondsToSelector:NSSelectorFromString(@"bg_objectClassForCustom") forClass:[object class]];
-    NSDictionary* const bg_replacedKeyFromPropertyNameDict = [BGTool isRespondsToSelector:NSSelectorFromString(@"bg_replacedKeyFromPropertyName") forClass:[object class]];
+    NSDictionary* const objectClaInArr = [self isRespondsToSelector:NSSelectorFromString(@"bg_objectClassInArray") forClass:[object class]];
+    NSDictionary* const objectClaForCustom = [self isRespondsToSelector:NSSelectorFromString(@"bg_objectClassForCustom") forClass:[object class]];
+    NSDictionary* const bg_replacedKeyFromPropertyNameDict = [self isRespondsToSelector:NSSelectorFromString(@"bg_replacedKeyFromPropertyName") forClass:[object class]];
     NSArray* const claKeys = [self getClassIvarList:cla onlyKey:YES];
     //遍历自定义变量集合信息.
     !objectClaForCustom?:[objectClaForCustom enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull customKey, id  _Nonnull customObj, BOOL * _Nonnull stop) {
@@ -721,8 +721,8 @@ void bg_cleanCache(){
     if (ignoredKeys) {
         [keys removeObjectsInArray:ignoredKeys];
     }
-    NSDictionary* const objectClaInArr = [BGTool isRespondsToSelector:NSSelectorFromString(@"bg_objectClassInArray") forClass:[object class]];
-    NSDictionary* const objectClaForCustom = [BGTool isRespondsToSelector:NSSelectorFromString(@"bg_dictForCustomClass") forClass:[object class]];
+    NSDictionary* const objectClaInArr = [self isRespondsToSelector:NSSelectorFromString(@"bg_objectClassInArray") forClass:[object class]];
+    NSDictionary* const objectClaForCustom = [self isRespondsToSelector:NSSelectorFromString(@"bg_dictForCustomClass") forClass:[object class]];
     NSMutableDictionary* dictM = [NSMutableDictionary dictionary];
     
     [keys enumerateObjectsUsingBlock:^(NSString * _Nonnull key, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -874,7 +874,7 @@ void bg_cleanCache(){
 +(NSArray*)tansformDataFromSqlDataWithTableName:(NSString*)tableName array:(NSArray*)array{
     NSMutableArray* arrM = [NSMutableArray array];
     for(NSDictionary* dict in array){
-        id object = [BGTool objectFromJsonStringWithClassName:tableName valueDict:dict];
+        id object = [self objectFromJsonStringWithClassName:tableName valueDict:dict];
         [arrM addObject:object];
     }
     return arrM;
@@ -935,11 +935,11 @@ void bg_cleanCache(){
     //检查是否建立了跟对象相对应的数据表
     NSString* tableName = NSStringFromClass([object class]);
     //获取"唯一约束"字段名
-    NSString* uniqueKey = [BGTool isRespondsToSelector:NSSelectorFromString(bg_uniqueKeySelector) forClass:[object class]];
+    NSString* uniqueKey = [self isRespondsToSelector:NSSelectorFromString(bg_uniqueKeySelector) forClass:[object class]];
     __block BOOL isExistTable;
-    [[BGDB shareManager] isExistWithTableName:tableName complete:^(BOOL isExist) {
+    [[_Database shareManager] isExistWithTableName:tableName complete:^(BOOL isExist) {
         if (!isExist){//如果不存在就新建
-            NSMutableArray* createKeys = [NSMutableArray arrayWithArray:[BGTool getClassIvarList:[object class] onlyKey:NO]];
+            NSMutableArray* createKeys = [NSMutableArray arrayWithArray:[self getClassIvarList:[object class] onlyKey:NO]];
             //判断是否有需要忽略的key集合.
             if (ignoredKeys){
                 for(__block int i=0;i<createKeys.count;i++){
@@ -953,7 +953,7 @@ void bg_cleanCache(){
                     }];
                 }
             }
-            [[BGDB shareManager] createTableWithTableName:tableName keys:createKeys uniqueKey:uniqueKey complete:^(BOOL isSuccess) {
+            [[_Database shareManager] createTableWithTableName:tableName keys:createKeys uniqueKey:uniqueKey complete:^(BOOL isSuccess) {
                 isExistTable = isSuccess;
             }];
         }

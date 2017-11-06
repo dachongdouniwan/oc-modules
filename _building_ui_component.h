@@ -1,10 +1,3 @@
-//
-//  _ui_component.h
-//  student
-//
-//  Created by fallen.ink on 23/03/2017.
-//  Copyright © 2017 alliance. All rights reserved.
-//
 
 // ----------------------------------
 // 以下为 较通用或扁平化的设计风格
