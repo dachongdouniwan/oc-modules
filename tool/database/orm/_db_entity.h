@@ -13,7 +13,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "_fmdb_database.h"
+#import "_database.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

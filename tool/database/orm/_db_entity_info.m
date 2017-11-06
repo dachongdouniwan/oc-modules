@@ -6,9 +6,9 @@
 //  Copyright © 2017年 Biao. All rights reserved.
 //
 
-#import "_fmdb_entity_info.h"
-#import "_fmdb_tool.h"
-#import "_fmdb_config.h"
+#import "_db_entity_info.h"
+#import "_db_tool.h"
+#import "_db_config.h"
 
 @implementation BGModelInfo
 

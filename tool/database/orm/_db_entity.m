@@ -2,9 +2,9 @@
 #import <objc/message.h>
 #import <UIKit/UIKit.h>
 
-#import "_fmdb_entity.h"
-#import "_fmdb_database.h"
-#import "_fmdb_tool.h"
+#import "_db_entity.h"
+#import "_database.h"
+#import "_db_tool.h"
 
 @implementation NSObject ( ORMEntity )
 

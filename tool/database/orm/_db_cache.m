@@ -6,7 +6,7 @@
 //  Copyright © 2017年 Biao. All rights reserved.
 //
 
-#import "_fmdb_cache.h"
+#import "_db_cache.h"
 
 static NSCache* keyCaches;
 @implementation NSCache (BGCache)

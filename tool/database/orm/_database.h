@@ -1,7 +1,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "_fmdb_config.h"
+#import "_db_config.h"
 #import "FMDB.h"
 
 @interface _Database : NSObject

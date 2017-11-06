@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
-#import "_fmdb_tool.h"
-#import "_fmdb_database.h"
-#import "_fmdb_entity_info.h"
-#import "_fmdb_cache.h"
+#import "_db_tool.h"
+#import "_database.h"
+#import "_db_entity_info.h"
+#import "_db_cache.h"
 
 #define SqlText @"text" //数据库的字符类型
 #define SqlReal @"real" //数据库的浮点类型
