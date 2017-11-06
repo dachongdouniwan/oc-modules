@@ -1,24 +1,12 @@
 
+#import "_building_precompile.h"
+
 #import "_database.h"
 #import "_db_entity_info.h"
 #import "_db_tool.h"
 #import "_pragma_push.h"
 
-/**
- 默认数据库名称
- */
 #define SQLITE_NAME @"BGFMDB.db"
-
-// 日志输出
-#ifdef DEBUG
-#define bg_log(...) NSLog(__VA_ARGS__)
-#else
-#define bg_log(...)
-#endif
-
-#define bg_debug(param) do{\
-if(self.debug){bg_log(@"调试输出: %@",param);}\
-}while(0)
 
 #define MaxQueryPageNum 50
 
@@ -172,7 +160,7 @@ static _Database * BGdb = nil;
     if ([_changeBlocks.allKeys containsObject:name]){
         NSArray* array = [name componentsSeparatedByString:@"*"];
         NSString* reason = [NSString stringWithFormat:@"%@类注册监听名称%@重复,注册监听失败!",array.firstObject,array.lastObject];
-        bg_debug(reason);
+        LOG(@"%@", reason);
         return NO;
     }else{
         [_changeBlocks setObject:block forKey:name];
@@ -189,7 +177,7 @@ static _Database * BGdb = nil;
     }else{
         NSArray* array = [name componentsSeparatedByString:@"*"];
         NSString* reason = [NSString stringWithFormat:@"没有找到类%@对应的%@名称监听,移除监听失败!",array.firstObject,array.lastObject];
-        bg_debug(reason);
+        LOG(@"%@", reason);
         return NO;
     }
 }
@@ -266,7 +254,7 @@ static _Database * BGdb = nil;
         if(uniqueKey){
             NSAssert(uniqueKeyFlag,@"没有找到设置的'唯一约束',请检查uniqueKey返回值是否正确!");
         }
-        bg_debug(sql);
+        LOG(@"%@", sql);
         result = [db executeUpdate:sql];
     }];
     
@@ -302,7 +290,7 @@ static _Database * BGdb = nil;
             }
         }
         
-        bg_debug(SQL);
+        LOG(@"%@", SQL);
         result = [db executeUpdate:SQL withArgumentsInArray:values];
     }];
     //数据监听执行函数
@@ -340,7 +328,7 @@ static _Database * BGdb = nil;
                         [SQL appendString:@","];
                     }
                 }
-                bg_debug(SQL);
+                LOG(@"%@", SQL);
                 result = [db executeUpdate:SQL withArgumentsInArray:values];
                 if(!result)*stop=YES;
             }
@@ -380,7 +368,7 @@ static _Database * BGdb = nil;
                 if (where) {
                     [SQL appendString:where];
                 }
-                bg_debug(SQL);
+                LOG(@"%@", SQL);
                 result = [db executeUpdate:SQL withArgumentsInArray:arguments];
             }
         }];
@@ -397,11 +385,11 @@ static _Database * BGdb = nil;
     NSMutableArray* arrM = [[NSMutableArray alloc] init];
     [self executeDB:^(FMDatabase * _Nonnull db){
         NSString* SQL = [NSString stringWithFormat:@"select * from %@ %@",name,conditions];
-        bg_debug(SQL);
+        LOG(@"%@", SQL);
         // 1.查询数据
         FMResultSet *rs = [db executeQuery:SQL];
         if (rs == nil) {
-            bg_debug(@"查询错误,可能是'类变量名'发生了改变或'字段','表格'不存在!,请存储后再读取!");
+            LOG(@"%@", @"查询错误,可能是'类变量名'发生了改变或'字段','表格'不存在!,请存储后再读取!");
         }
         // 2.遍历结果集
         while (rs.next) {
@@ -457,11 +445,12 @@ static _Database * BGdb = nil;
             arguments = results[1];
         }
         
-        bg_debug(SQL);
+        LOG(@"%@", SQL);
+        
         // 1.查询数据
         FMResultSet *rs = [db executeQuery:SQL withArgumentsInArray:arguments];
         if (rs == nil) {
-            bg_debug(@"查询错误,可能是'类变量名'发生了改变或'字段','表格'不存在!,请存储后再读取,或检查条件数组'字段名称'是否正确");
+            LOG(@"%@", @"查询错误,可能是'类变量名'发生了改变或'字段','表格'不存在!,请存储后再读取,或检查条件数组'字段名称'是否正确");
         }
         // 2.遍历结果集
         while (rs.next) {
@@ -496,11 +485,13 @@ static _Database * BGdb = nil;
         }
         
         !param?:[SQL appendFormat:@" %@",param];
-        bg_debug(SQL);
+        
+        LOG(@"%@", SQL);
+        
         // 1.查询数据
         FMResultSet *rs = [db executeQuery:SQL withArgumentsInArray:arguments];
         if (rs == nil) {
-            bg_debug(@"查询错误,'表格'不存在!,请存储后再读取!");
+            LOG(@"%@", @"查询错误,'表格'不存在!,请存储后再读取!");
         }
         // 2.遍历结果集
         while (rs.next) {
@@ -523,11 +514,11 @@ static _Database * BGdb = nil;
     NSString* like = [_DatabaseTool getLikeWithKeyPathAndValues:keyPathValues where:YES];
     [self executeDB:^(FMDatabase * _Nonnull db) {
         NSString* SQL = [NSString stringWithFormat:@"select * from %@%@",name,like];
-        bg_debug(SQL);
+        LOG(@"%@", SQL);
         // 1.查询数据
         FMResultSet *rs = [db executeQuery:SQL];
         if (rs == nil) {
-            bg_debug(@"查询错误,数据不存在,请存储后再读取!");
+            LOG(@"%@", @"查询错误,数据不存在,请存储后再读取!");
         }
         // 2.遍历结果集
         while (rs.next) {
@@ -569,7 +560,7 @@ static _Database * BGdb = nil;
             [arguments addObjectsFromArray:results[1]];
         }
         
-        bg_debug(SQL);
+        LOG(@"%@", SQL);
         result = [db executeUpdate:SQL withArgumentsInArray:arguments];
     }];
     
@@ -602,7 +593,7 @@ static _Database * BGdb = nil;
             [param appendFormat:@" %@",conditions];
             SQL = param;
         }
-        bg_debug(SQL);
+        LOG(@"%@", SQL);
         result = [db executeUpdate:SQL];
     }];
     
@@ -655,7 +646,7 @@ static _Database * BGdb = nil;
         }
         [SQL appendString:like];
         result = [db executeUpdate:SQL withArgumentsInArray:arguments];
-        bg_debug(SQL);
+        LOG(@"%@", SQL);
     }];
     
     //数据监听执行函数
@@ -680,7 +671,7 @@ static _Database * BGdb = nil;
             [arguments addObjectsFromArray:results[1]];
         }
         
-        bg_debug(SQL);
+        LOG(@"%@", SQL);
         result = [db executeUpdate:SQL withArgumentsInArray:arguments];
     }];
     
@@ -695,7 +686,7 @@ static _Database * BGdb = nil;
     __block BOOL result;
     [self executeDB:^(FMDatabase * _Nonnull db) {
         NSString* SQL = [NSString stringWithFormat:@"delete from %@ %@",name,conditions];
-        bg_debug(SQL);
+        LOG(@"%@", SQL);
         result = [db executeUpdate:SQL];
     }];
     
@@ -718,7 +709,7 @@ static _Database * BGdb = nil;
     [self executeDB:^(FMDatabase * _Nonnull db) {
         NSMutableString* SQL = [[NSMutableString alloc] init];
         [SQL appendFormat:@"delete from %@%@",name,like];
-        bg_debug(SQL);
+        LOG(@"%@", SQL);
         result = [db executeUpdate:SQL];
     }];
     
@@ -739,7 +730,7 @@ static _Database * BGdb = nil;
     __block BOOL result;
     [self executeDB:^(FMDatabase * _Nonnull db) {
         NSString* SQL = [NSString stringWithFormat:@"delete from %@",name];
-        bg_debug(SQL);
+        LOG(@"%@", SQL);
         result = [db executeUpdate:SQL];
     }];
     
@@ -756,7 +747,7 @@ static _Database * BGdb = nil;
     __block BOOL result;
     [self executeDB:^(FMDatabase * _Nonnull db) {
         NSString* SQL = [NSString stringWithFormat:@"drop table %@",name];
-        bg_debug(SQL);
+        LOG(@"%@", SQL);
         result = [db executeUpdate:SQL];
     }];
     
@@ -783,7 +774,7 @@ static _Database * BGdb = nil;
     __block BOOL result;
     [self executeDB:^(FMDatabase * _Nonnull db) {
         NSString* SQL = [NSString stringWithFormat:@"alter table %@ add %@;",name,[_DatabaseTool keyAndType:key]];
-        bg_debug(SQL);
+        LOG(@"%@", SQL);
         result = [db executeUpdate:SQL];
     }];
     bg_completeBlock(result);
@@ -810,7 +801,7 @@ static _Database * BGdb = nil;
     __block NSUInteger count=0;
     [self executeDB:^(FMDatabase * _Nonnull db) {
         NSString* SQL = [NSString stringWithFormat:@"select count(*) from %@%@",name,strM];
-        bg_debug(SQL);
+        LOG(@"%@", SQL);
         [db executeStatements:SQL withResultBlock:^int(NSDictionary *resultsDictionary) {
             count = [[resultsDictionary.allValues lastObject] integerValue];
             return 0;
@@ -839,7 +830,7 @@ static _Database * BGdb = nil;
     __block NSUInteger count=0;
     [self executeDB:^(FMDatabase * _Nonnull db) {
         NSString* SQL = [NSString stringWithFormat:@"select count(*) from %@ %@",name,conditions];
-        bg_debug(SQL);
+        LOG(@"%@", SQL);
         [db executeStatements:SQL withResultBlock:^int(NSDictionary *resultsDictionary) {
             count = [[resultsDictionary.allValues lastObject] integerValue];
             return 0;
@@ -891,7 +882,7 @@ static _Database * BGdb = nil;
         }else{
             SQL = [NSString stringWithFormat:@"select %@ from %@",method,name];
         }
-        bg_debug(SQL);
+        LOG(@"%@", SQL);
         [db executeStatements:SQL withResultBlock:^int(NSDictionary *resultsDictionary){
             id dbResult = [resultsDictionary.allValues lastObject];
             if(dbResult && ![dbResult isKindOfClass:[NSNull class]]) {
@@ -926,7 +917,7 @@ static _Database * BGdb = nil;
     __block NSUInteger count=0;
     [self executeDB:^(FMDatabase * _Nonnull db) {
         NSString* SQL = [NSString stringWithFormat:@"select count(*) from %@%@",name,like];
-        bg_debug(SQL);
+        LOG(@"%@", SQL);
         [db executeStatements:SQL withResultBlock:^int(NSDictionary *resultsDictionary) {
             count = [[resultsDictionary.allValues lastObject] integerValue];
             return 0;
@@ -957,7 +948,7 @@ static _Database * BGdb = nil;
         createFlag = isSuccess;
     }];
     if (!createFlag){
-        bg_debug(@"数据库更新失败!");
+        LOG(@"%@", @"数据库更新失败!");
         bg_completeBlock(DatabaseDealStateError);
         return;
     }
@@ -1016,7 +1007,7 @@ static _Database * BGdb = nil;
     NSAssert(keys,@"字段数组不能为空!");
     [self isExistWithTableName:name complete:^(BOOL isSuccess){
         if (!isSuccess){
-            bg_debug(@"没有数据存在,数据库更新失败!");
+            LOG(@"%@", @"没有数据存在,数据库更新失败!");
             bg_completeBlock(DatabaseDealStateError);
             return;
         }
@@ -1042,7 +1033,7 @@ static _Database * BGdb = nil;
             if(isSuccess)recordFailCount++;
         }];
         if(recordFailCount != 4){
-            bg_debug(@"发生错误，更新数据库失败!");
+            LOG(@"%@", @"发生错误，更新数据库失败!");
         }
         return recordFailCount==4;
     }];
@@ -1080,7 +1071,7 @@ static _Database * BGdb = nil;
         createFlag = isSuccess;
     }];
     if (!createFlag){
-        bg_debug(@"数据库更新失败!");
+        LOG(@"%@", @"数据库更新失败!");
         bg_completeBlock(DatabaseDealStateError);
         return;
     }
@@ -1151,7 +1142,7 @@ static _Database * BGdb = nil;
     NSAssert(keyDict,@"变量名影射集合不能为空!");
     [self isExistWithTableName:name complete:^(BOOL isSuccess){
         if (!isSuccess){
-            bg_debug(@"没有数据存在,数据库更新失败!");
+            LOG(@"%@", @"没有数据存在,数据库更新失败!");
             bg_completeBlock(DatabaseDealStateError);
             return;
         }
@@ -1162,7 +1153,7 @@ static _Database * BGdb = nil;
     for(int i=0;i<newKeys.count;i++){
         if (![keys containsObject:newKeys[i]]){
             NSString* result = [NSString stringWithFormat:@"新变量出错名称 = %@",newKeys[i]];
-            bg_debug(result);
+            LOG(@"%@", result);
             @throw [NSException exceptionWithName:@"类新变量名称写错" reason:@"请检查keydict中的 新Key 是否书写正确!" userInfo:nil];
         }
     }
@@ -1174,7 +1165,7 @@ static _Database * BGdb = nil;
             tableKey = [NSString stringWithFormat:@"%@%@",BG,oldKeys[i]];
             if (![tableKeys containsObject:tableKey]){
                 NSString* result = [NSString stringWithFormat:@"旧变量出错名称 = %@",oldKeys[i]];
-                bg_debug(result);
+                LOG(@"%@", result);
                 @throw [NSException exceptionWithName:@"类旧变量名称写错" reason:@"请检查keydict中的 旧Key 是否书写正确!" userInfo:nil];
             }
         }
@@ -1201,7 +1192,7 @@ static _Database * BGdb = nil;
             if(isSuccess)recordFailCount++;
         }];
         if (recordFailCount != 4) {
-            bg_debug(@"发生错误，更新数据库失败!");
+            LOG(@"%@", @"发生错误，更新数据库失败!");
         }
         return recordFailCount==4;
     }];
@@ -1593,11 +1584,11 @@ static _Database * BGdb = nil;
     for(int i=0;i<srcKeys.count;i++){
         if (![srcOnlyKeys containsObject:srcKeys[i]]){
             NSString* result = [NSString stringWithFormat:@"源类变量名称写错 = %@",srcKeys[i]];
-            bg_debug(result);
+            LOG(@"%@", result);
             @throw [NSException exceptionWithName:@"源类变量名称写错" reason:@"请检查keydict中的srcKey是否书写正确!" userInfo:nil];
         }else if(![destOnlyKeys containsObject:destKeys[i]]){
             NSString* result = [NSString stringWithFormat:@"目标类变量名称写错 = %@",destKeys[i]];
-            bg_debug(result);
+            LOG(@"%@", result);
             @throw [NSException exceptionWithName:@"目标类变量名称写错" reason:@"请检查keydict中的destKey字段是否书写正确!" userInfo:nil];
         }else;
     }
@@ -1704,19 +1695,19 @@ static _Database * BGdb = nil;
             // 1.查询数据
             FMResultSet *rs = [db executeQuery:sql];
             if (rs == nil) {
-                bg_debug(@"查询错误,数据不存在,请存储后再读取!");
+                LOG(@"%@", @"查询错误,数据不存在,请存储后再读取!");
                 result = nil;
-            }else{
-                result = [NSMutableArray array];
             }
+            
             result = [NSMutableArray array];
+            
             // 2.遍历结果集
             while (rs.next) {
                 NSMutableDictionary* dictM = [[NSMutableDictionary alloc] init];
                 for (int i=0;i<[[[rs columnNameToIndexMap] allKeys] count];i++) {
                     dictM[[rs columnNameForIndex:i]] = [rs objectForColumnIndex:i];
                 }
-                [result addObject:dictM];
+                [(NSMutableArray *)result addObject:dictM];
             }
             //查询完后要关闭rs，不然会报@"Warning: there is at least one open result set around after performing
             [rs close];
@@ -1727,7 +1718,7 @@ static _Database * BGdb = nil;
         }else{
             result = @([db executeUpdate:sql]);
         }
-        bg_debug(sql);
+        LOG(@"%@", sql);
     }];
     dispatch_semaphore_signal(self.semaphore);
     return result;

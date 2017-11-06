@@ -11,6 +11,7 @@
 #import "_network_host_object.h"
 #import "_processor.h"
 #import "_date.h"
+#import "_databasedef.h"
 
 #import "_vendor_afnetworking.h"
 #import "_vendor_lumberjack.h"
