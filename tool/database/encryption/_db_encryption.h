@@ -1,10 +1,3 @@
-//
-//  FMDatabase+Encrption.h
-//  test
-//
-//  Created by Jason on 15/03/2017.
-//  Copyright © 2017 51talk. All rights reserved.
-//
 
 #import "FMDB.h"
 

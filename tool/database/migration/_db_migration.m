@@ -1,5 +1,5 @@
 
-#import "_fmdb_migration.h"
+#import "_db_migration.h"
 #import <objc/runtime.h>
 
 // Public Constants
@@ -10,8 +10,7 @@ NSString *const FMDBMigrationManagerProgressMigrationUserInfoKey = @"migration";
 // Private Constants
 static NSString *const FMDBMigrationFilenameRegexString = @"^(\\d+)_?((?<=_)[\\w\\s-]+)?(?<!_)\\.sql$";
 
-BOOL FMDBIsMigrationAtPath(NSString *path)
-{
+BOOL FMDBIsMigrationAtPath(NSString *path) {
     static NSRegularExpression *migrationRegex;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -21,8 +20,7 @@ BOOL FMDBIsMigrationAtPath(NSString *path)
     return [migrationRegex rangeOfFirstMatchInString:filename options:0 range:NSMakeRange(0, [filename length])].location != NSNotFound;
 }
 
-static NSArray *FMDBClassesConformingToProtocol(Protocol *protocol)
-{
+static NSArray *FMDBClassesConformingToProtocol(Protocol *protocol) {
     NSMutableArray *conformingClasses = [NSMutableArray new];
     Class *classes = NULL;
     int numClasses = objc_getClassList(NULL, 0);
@@ -41,28 +39,27 @@ static NSArray *FMDBClassesConformingToProtocol(Protocol *protocol)
 }
 
 @interface _FMDBMigration ()
+
 @property (nonatomic) FMDatabase *database;
 @property (nonatomic, assign) BOOL shouldCloseOnDealloc;
 @property (nonatomic) NSArray *migrations;
 @property (nonatomic) NSMutableArray *externalMigrations;
+
 @end
 
 @implementation _FMDBMigration
 
-+ (instancetype)migrationWithDatabaseAtPath:(NSString *)path migrationsBundle:(NSBundle *)bundle
-{
++ (instancetype)migrationWithDatabaseAtPath:(NSString *)path migrationsBundle:(NSBundle *)bundle {
     FMDatabase *database = [FMDatabase databaseWithPath:path];
     return [[self alloc] initWithDatabase:database migrationsBundle:bundle];
 }
 
-+ (instancetype)migrationWithDatabase:(FMDatabase *)database migrationsBundle:(NSBundle *)bundle
-{
++ (instancetype)migrationWithDatabase:(FMDatabase *)database migrationsBundle:(NSBundle *)bundle {
     return [[self alloc] initWithDatabase:database migrationsBundle:bundle];
 }
 
 // Designated initializer
-- (id)initWithDatabase:(FMDatabase *)database migrationsBundle:(NSBundle *)migrationsBundle
-{
+- (id)initWithDatabase:(FMDatabase *)database migrationsBundle:(NSBundle *)migrationsBundle {
     if (!database) [NSException raise:NSInvalidArgumentException format:@"Cannot initialize a `%@` with nil `database`.", [self class]];
     if (!migrationsBundle) [NSException raise:NSInvalidArgumentException format:@"Cannot initialize a `%@` with nil `migrationsBundle`.", [self class]];
     self = [super init];
@@ -79,18 +76,15 @@ static NSArray *FMDBClassesConformingToProtocol(Protocol *protocol)
     return self;
 }
 
-- (id)init
-{
+- (id)init {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Failed to call designated initializer." userInfo:nil];
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     if (self.shouldCloseOnDealloc) [_database close];
 }
 
-- (BOOL)hasMigrationsTable
-{
+- (BOOL)hasMigrationsTable {
     FMResultSet *resultSet = [self.database executeQuery:@"SELECT name FROM sqlite_master WHERE type='table' AND name=?", @"schema_migrations"];
     if ([resultSet next]) {
         [resultSet close];
@@ -99,20 +93,17 @@ static NSArray *FMDBClassesConformingToProtocol(Protocol *protocol)
     return NO;
 }
 
-- (BOOL)needsMigration
-{
+- (BOOL)needsMigration {
     return !self.hasMigrationsTable || [self.pendingVersions count] > 0;
 }
 
-- (BOOL)createMigrationsTable:(NSError **)error
-{
+- (BOOL)createMigrationsTable:(NSError **)error {
     BOOL success = [self.database executeStatements:@"CREATE TABLE schema_migrations(version INTEGER UNIQUE NOT NULL)"];
     if (!success && error) *error = self.database.lastError;
     return success;
 }
 
-- (uint64_t)currentVersion
-{
+- (uint64_t)currentVersion {
     if (!self.hasMigrationsTable) return 0;
     
     uint64_t version = 0;
@@ -124,8 +115,7 @@ static NSArray *FMDBClassesConformingToProtocol(Protocol *protocol)
     return version;;
 }
 
-- (uint64_t)originVersion
-{
+- (uint64_t)originVersion {
     if (!self.hasMigrationsTable) return 0;
     
     uint64_t version = 0;
@@ -137,8 +127,7 @@ static NSArray *FMDBClassesConformingToProtocol(Protocol *protocol)
     return version;
 }
 
-- (NSArray *)appliedVersions
-{
+- (NSArray *)appliedVersions {
     if (!self.hasMigrationsTable) return nil;
     
     NSMutableArray *versions = [NSMutableArray new];
@@ -151,8 +140,7 @@ static NSArray *FMDBClassesConformingToProtocol(Protocol *protocol)
     return [versions sortedArrayUsingSelector:@selector(compare:)];
 }
 
-- (NSArray *)pendingVersions
-{
+- (NSArray *)pendingVersions {
     if (!self.hasMigrationsTable) return [[self.migrations valueForKey:@"version"] sortedArrayUsingSelector:@selector(compare:)];
     
     NSMutableArray *pendingVersions = [[[self migrations] valueForKey:@"version"] mutableCopy];
@@ -160,14 +148,12 @@ static NSArray *FMDBClassesConformingToProtocol(Protocol *protocol)
     return [pendingVersions sortedArrayUsingSelector:@selector(compare:)];
 }
 
-- (void)addMigration:(id<FMDBMigrating>)migration
-{
+- (void)addMigration:(id<FMDBMigrating>)migration {
     NSParameterAssert(migration);
     [self addMigrationsAndSortByVersion:@[ migration ]];
 }
 
-- (void)addMigrations:(NSArray *)migrations
-{
+- (void)addMigrations:(NSArray *)migrations {
     NSParameterAssert(migrations);
     if (![migrations isKindOfClass:[NSArray class]]) {
         @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Failed to add migrations because `migrations` argument is not an array." userInfo:nil];
@@ -180,8 +166,7 @@ static NSArray *FMDBClassesConformingToProtocol(Protocol *protocol)
     [self addMigrationsAndSortByVersion:migrations];
 }
 
-- (NSArray *)migrations
-{
+- (NSArray *)migrations {
     // Memoize the migrations list
     if (_migrations) return _migrations;
     
@@ -214,24 +199,21 @@ static NSArray *FMDBClassesConformingToProtocol(Protocol *protocol)
     return _migrations;
 }
 
-- (id<FMDBMigrating>)migrationForVersion:(uint64_t)version
-{
+- (id<FMDBMigrating>)migrationForVersion:(uint64_t)version {
     for (id<FMDBMigrating>migration in [self migrations]) {
         if (migration.version == version) return migration;
     }
     return nil;
 }
 
-- (id<FMDBMigrating>)migrationForName:(NSString *)name
-{
+- (id<FMDBMigrating>)migrationForName:(NSString *)name {
     for (id<FMDBMigrating>migration in [self migrations]) {
         if ([migration.name isEqualToString:name]) return migration;
     }
     return nil;
 }
 
-- (BOOL)migrateDatabaseToVersion:(uint64_t)version progress:(void (^)(NSProgress *progress))progressBlock error:(NSError **)error
-{
+- (BOOL)migrateDatabaseToVersion:(uint64_t)version progress:(void (^)(NSProgress *progress))progressBlock error:(NSError **)error {
     BOOL success = YES;
     NSArray *pendingVersions = self.pendingVersions;
     NSProgress *progress = [NSProgress progressWithTotalUnitCount:[pendingVersions count]];
@@ -276,8 +258,7 @@ static NSArray *FMDBClassesConformingToProtocol(Protocol *protocol)
     return success;
 }
 
-- (void)addMigrationsAndSortByVersion:(NSArray *)migrations
-{
+- (void)addMigrationsAndSortByVersion:(NSArray *)migrations {
     [self.externalMigrations addObjectsFromArray:migrations];
     
     // Append to the existing list if already computed
@@ -290,8 +271,7 @@ static NSArray *FMDBClassesConformingToProtocol(Protocol *protocol)
 
 @end
 
-static BOOL FMDBMigrationScanMetadataFromPath(NSString *path, uint64_t *version, NSString **name)
-{
+static BOOL FMDBMigrationScanMetadataFromPath(NSString *path, uint64_t *version, NSString **name) {
     NSError *error = nil;
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:FMDBMigrationFilenameRegexString options:0 error:&error];
     if (!regex) {
@@ -320,13 +300,11 @@ static BOOL FMDBMigrationScanMetadataFromPath(NSString *path, uint64_t *version,
 
 @implementation FMDBFileMigration
 
-+ (instancetype)migrationWithPath:(NSString *)path
-{
++ (instancetype)migrationWithPath:(NSString *)path {
     return [[self alloc] initWithPath:path];
 }
 
-- (id)initWithPath:(NSString *)path
-{
+- (id)initWithPath:(NSString *)path {
     NSString *name;
     uint64_t version;
     if (!FMDBMigrationScanMetadataFromPath(path, &version, &name)) return nil;
@@ -340,18 +318,15 @@ static BOOL FMDBMigrationScanMetadataFromPath(NSString *path, uint64_t *version,
     return self;
 }
 
-- (id)init
-{
+- (id)init {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Failed to call designated initializer." userInfo:nil];
 }
 
-- (NSString *)SQL
-{
+- (NSString *)SQL {
     return [NSString stringWithContentsOfFile:self.path encoding:NSUTF8StringEncoding error:nil];
 }
 
-- (BOOL)migrateDatabase:(FMDatabase *)database error:(out NSError *__autoreleasing *)error
-{
+- (BOOL)migrateDatabase:(FMDatabase *)database error:(out NSError *__autoreleasing *)error {
     BOOL success = [database executeStatements:self.SQL];
     if (!success && error) *error = database.lastError;
     return success;

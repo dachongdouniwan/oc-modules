@@ -1,12 +1,5 @@
-//
-//  FMDatabase+Encrption.m
-//  test
-//
-//  Created by Jason on 15/03/2017.
-//  Copyright © 2017 51talk. All rights reserved.
-//
 
-#import "FMDatabase+Encryption.h"
+#import "_db_encryption.h"
 #import <objc/runtime.h>
 #import <sqlite3.h>
 #import <UIKit/UIKit.h>
