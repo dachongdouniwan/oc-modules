@@ -7,7 +7,8 @@
 //
 
 #import "QRCodePresentVC.h"
-#import "SRActionSheet.h"
+#import "ActionSheetView.h"
+#import "FTIndicator.h"
 #import "QRCodeReaderViewController.h"
 #import "AssetsService.h"
 
@@ -82,23 +83,28 @@
 #pragma mark - Action handler
 
 - (void)onMore {
-    [SRActionSheet sr_showActionSheetViewWithTitle:nil
-                                 cancelButtonTitle:@"取消"
-                            destructiveButtonTitle:nil
-                                 otherButtonTitles:@[@"保存图片", @"扫描二维码"]
-                                  selectSheetBlock:^(SRActionSheet *actionSheetView, NSInteger actionIndex) {
-                                      if (actionIndex == 0) {
-                                          [self onStorePhoto];
-                                      } else if (actionIndex == 1) {
-                                          [self onScanQRCode];
-                                      }
-                                  }];
+    
+    TBAlertController *controller = [TBAlertController alertControllerWithTitle:@"TBAlertController" message:@"AlertStyle" preferredStyle:TBAlertControllerStyleAlert];
+    TBAlertAction *savePicture = [TBAlertAction actionWithTitle:@"保存图片" style: TBAlertActionStyleDefault handler:^(TBAlertAction * _Nonnull action) {
+        [self onStorePhoto];
+    }];
+    TBAlertAction *scanQRCode = [TBAlertAction actionWithTitle:@"扫描二维码" style: TBAlertActionStyleDefault handler:^(TBAlertAction * _Nonnull action) {
+        [self onScanQRCode];
+    }];
+    TBAlertAction *cancel = [TBAlertAction actionWithTitle:@"取消" style: TBAlertActionStyleCancel handler:^(TBAlertAction * _Nonnull action) {
+        NSLog(@"%@",action.title);
+    }];
+    [controller addAction:savePicture];
+    [controller addAction:scanQRCode];
+    [controller addAction:cancel];
+    [self presentViewController:controller animated:YES completion:nil];
+    
 }
 
 - (void)onStorePhoto {
     if ([[AssetsService sharedInstance] configWith:app_display_name]) {
         [[AssetsService sharedInstance] saveImage:_qrcodeImageView.image toAlbum:app_display_name completion:^(NSURL *assetURL, NSError *error) {
-            [self showToastWithText:@"保存图片成功!"];
+            [FTIndicator showToastMessage:@"保存图片成功!"];
         } failure:nil];
     }
 }

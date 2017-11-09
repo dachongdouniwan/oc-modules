@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "YYWebImage.h"
+#import "_web_image.h"
 
 /// Single picture's info.
 @interface YYPhotoGroupItem : NSObject
