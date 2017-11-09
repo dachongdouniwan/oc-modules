@@ -7,7 +7,7 @@
 //
 
 #import "TBActionContainer.h"
-#import "TBMacro.h"
+#import "_building_precompile.h"
 #import "TBActionSheet.h"
 #import "TBActionButton.h"
 #import "UIView+TBAdditions.h"
@@ -48,10 +48,11 @@
 
 - (BOOL)useSystemBlurEffect
 {
-    if (kiOS10Later && self.actionSheet.rectCornerRadius > 0) {
+    if (system_version_iOS10_or_later && self.actionSheet.rectCornerRadius > 0) {
         return NO;
     }
-    if (kiOS8Later) {
+    
+    {
         self.backgroundColor = self.actionSheet.ambientColor;
         self.layer.masksToBounds = YES;
         UIVisualEffectView *blurEffectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
@@ -71,10 +72,10 @@
 
 - (BOOL)useSystemBlurEffectUnderView:(UIView *)view withColor:(UIColor *)color
 {
-    if (!view || (kiOS10Later && self.actionSheet.rectCornerRadius > 0)) {
+    if (!view || (system_version_iOS10_or_later && self.actionSheet.rectCornerRadius > 0)) {
         return NO;
     }
-    if (kiOS8Later) {
+    {
         UIView *colorView = [[UIView alloc] initWithFrame:view.frame];
         colorView.backgroundColor = color ? color : self.actionSheet.ambientColor;
         colorView.layer.masksToBounds = YES;

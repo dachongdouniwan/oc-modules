@@ -7,7 +7,6 @@
 //
 
 #import "TBActionButton.h"
-#import "TBMacro.h"
 
 /**
  *  可定制风格和圆角的按钮

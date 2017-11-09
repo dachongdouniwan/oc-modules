@@ -7,7 +7,7 @@
 //
 
 #import "UIWindow+TBAdditions.h"
-#import "TBMacro.h"
+#import "_building_precompile.h"
 
 @implementation UIWindow (TBAdditions)
 
@@ -40,7 +40,7 @@
     // source (under MIT license): https://github.com/shinydevelopment/SDScreenshotCapture/blob/master/SDScreenshotCapture/SDScreenshotCapture.m#L35
     
     // UIWindow doesn't have to be rotated on iOS 8+.
-    BOOL ignoreOrientation = kiOS8Later;
+    BOOL ignoreOrientation = YES;
     
     UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
     

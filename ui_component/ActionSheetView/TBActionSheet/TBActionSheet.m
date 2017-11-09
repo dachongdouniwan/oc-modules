@@ -7,12 +7,12 @@
 
 #import "TBActionSheet.h"
 #import "UIImage+BoxBlur.h"
-#import "TBMacro.h"
 #import "TBActionContainer.h"
 #import "TBActionBackground.h"
 #import "TBActionSheetController.h"
 #import "UIWindow+TBAdditions.h"
 #import "UIView+TBAdditions.h"
+#import "_building_precompile.h"
 
 const CGFloat bigFragment = 8;
 const CGFloat smallFragment = 0.5;
@@ -49,7 +49,7 @@ typedef void (^TBBlurEffectBlock)(void);
     appearance.tintColor = [UIColor blackColor];
     appearance.destructiveButtonColor = [UIColor redColor];
     appearance.cancelButtonColor = [UIColor blackColor];
-    appearance.sheetWidth = MIN(kScreenWidth, kScreenHeight) - 20;
+    appearance.sheetWidth = MIN(screen_width, screen_height) - 20;
     appearance.backgroundTransparentEnabled = YES;
     appearance.backgroundTouchClosureEnabled = YES;
     appearance.blurEffectEnabled = YES;
@@ -413,7 +413,7 @@ typedef void (^TBBlurEffectBlock)(void);
         lastY -= self.offsetY;
     }
     
-    self.actionContainer.frame = CGRectMake(kContainerLeft, kScreenHeight, self.sheetWidth, lastY);
+    self.actionContainer.frame = CGRectMake(((screen_width - self.sheetWidth)/2), screen_height, self.sheetWidth, lastY);
 }
 
 /**
@@ -427,7 +427,7 @@ typedef void (^TBBlurEffectBlock)(void);
     
     CGFloat containerHeight = self.actionContainer.bounds.size.height;
     
-    self.originalBackgroundImage = [self screenShotRect:CGRectMake(kContainerLeft, kScreenHeight-containerHeight, self.sheetWidth, containerHeight)];
+    self.originalBackgroundImage = [self screenShotRect:CGRectMake(((screen_width - self.sheetWidth)/2), screen_height-containerHeight, self.sheetWidth, containerHeight)];
     
     CGFloat heightLargerThanImage = containerHeight - self.originalBackgroundImage.size.height;// 计算 container 的高度超出截图的数值
     
@@ -437,9 +437,11 @@ typedef void (^TBBlurEffectBlock)(void);
     if (!self.isBackgroundTransparentEnabled) {
         if (self.isBlurEffectEnabled) {
             if (![self.actionContainer useSystemBlurEffect]) {
-                TBWeakSelf(self);
+                @weakify(self);
+                
                 TBBlurEffectBlock blurBlock = ^void() {
-                    TBStrongSelf(self);
+                    @strongify(self);
+                    
                     UIImage *backgroundImage = [self.originalBackgroundImage drn_boxblurImageWithBlur:blurRadius withTintColor:[self.ambientColor colorWithAlphaComponent:0.5]];
                     dispatch_async(dispatch_get_main_queue(), ^{
                         self.actionContainer.image = backgroundImage;
@@ -512,9 +514,9 @@ typedef void (^TBBlurEffectBlock)(void);
         [btn setCornerRadius:self.rectCornerRadius];
     }
     
-    TBWeakSelf(self);
+    @weakify(self);
     UIImage *(^cutOriginalBackgroundImageInRect)(CGRect frame) = ^UIImage *(CGRect sourceFrame) {
-        TBStrongSelf(self);
+        @strongify(self);
         CGRect targetFrame;
         if (heightLargerThanImage > 0) {
             targetFrame = CGRectMake(sourceFrame.origin.x, sourceFrame.origin.y - heightLargerThanImage, sourceFrame.size.width, sourceFrame.size.height);
@@ -532,9 +534,9 @@ typedef void (^TBBlurEffectBlock)(void);
         if (self.isBlurEffectEnabled && self.isBackgroundTransparentEnabled) {
             self.actionContainer.header.backgroundColor = nil;
             if (![self.actionContainer useSystemBlurEffectUnderView:self.actionContainer.header]) {
-                TBWeakSelf(self);
+                @weakify(self);
                 TBBlurEffectBlock blurBlock = ^void() {
-                    TBStrongSelf(self);
+                    @strongify(self);
                     UIImage *backgroundImage = [cutOriginalBackgroundImageInRect(self.actionContainer.header.frame) drn_boxblurImageWithBlur:blurRadius withTintColor:self.ambientColor];
                     dispatch_async(dispatch_get_main_queue(), ^{
                         self.actionContainer.header.image = backgroundImage;
@@ -561,9 +563,9 @@ typedef void (^TBBlurEffectBlock)(void);
         if (self.isBlurEffectEnabled && self.isBackgroundTransparentEnabled) {
             self.actionContainer.custom.backgroundColor = nil;
             if (![self.actionContainer useSystemBlurEffectUnderView:self.actionContainer.custom]) {
-                TBWeakSelf(self);
+                @weakify(self);
                 TBBlurEffectBlock blurBlock = ^void() {
-                    TBStrongSelf(self);
+                    @strongify(self);
                     UIImage *backgroundImage = [cutOriginalBackgroundImageInRect(self.actionContainer.custom.frame) drn_boxblurImageWithBlur:blurRadius withTintColor:self.ambientColor];
                     dispatch_async(dispatch_get_main_queue(), ^{
                         self.actionContainer.custom.image = backgroundImage;
@@ -589,9 +591,9 @@ typedef void (^TBBlurEffectBlock)(void);
     [self.buttons enumerateObjectsUsingBlock:^(TBActionButton * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if (self.isBlurEffectEnabled && self.isBackgroundTransparentEnabled) {
             if (![self.actionContainer useSystemBlurEffectUnderView:obj withColor:obj.normalColor]) {
-                TBWeakSelf(self);
+                @weakify(self);
                 TBBlurEffectBlock blurBlock = ^void() {
-                    TBStrongSelf(self);
+                    @strongify(self);
                     UIImage *cuttedImage = cutOriginalBackgroundImageInRect(obj.frame);
                     UIImage *backgroundImageNormal = [cuttedImage drn_boxblurImageWithBlur:blurRadius withTintColor: (obj.normalColor ? obj.normalColor : self.ambientColor)];
                     UIImage *backgroundImageHighlighted = [cuttedImage drn_boxblurImageWithBlur:blurRadius withTintColor:(obj.highlightedColor ? obj.highlightedColor : [UIColor colorWithWhite:0.5 alpha:0.5])];
@@ -634,7 +636,7 @@ typedef void (^TBBlurEffectBlock)(void);
 {
     CGFloat containerHeight = self.actionContainer.bounds.size.height;
     
-    self.originalBackgroundImage = [self screenShotRect:CGRectMake(kContainerLeft, kScreenHeight-containerHeight, self.sheetWidth, containerHeight)];
+    self.originalBackgroundImage = [self screenShotRect:CGRectMake(((screen_width - self.sheetWidth)/2), screen_height-containerHeight, self.sheetWidth, containerHeight)];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         for (void (^blurBlock)() in self.blurBlocks) {
             blurBlock();
@@ -644,7 +646,7 @@ typedef void (^TBBlurEffectBlock)(void);
 
 - (void)setupContainerFrame
 {
-    self.actionContainer.frame = CGRectMake(kContainerLeft, kScreenHeight - self.actionContainer.frame.size.height, self.actionContainer.frame.size.width, self.actionContainer.frame.size.height);
+    self.actionContainer.frame = CGRectMake(((screen_width - self.sheetWidth)/2), screen_height - self.actionContainer.frame.size.height, self.actionContainer.frame.size.width, self.actionContainer.frame.size.height);
 }
 /**
  *  显示 ActionSheet
@@ -710,7 +712,7 @@ typedef void (^TBBlurEffectBlock)(void);
     
     [UIView animateWithDuration:self.animationDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         self.background.backgroundColor = [UIColor colorWithWhite:0 alpha:0];
-        self.actionContainer.frame = CGRectMake(kContainerLeft, kScreenHeight, self.actionContainer.frame.size.width, self.actionContainer.frame.size.height);
+        self.actionContainer.frame = CGRectMake(((screen_width - self.sheetWidth)/2), screen_height, self.actionContainer.frame.size.width, self.actionContainer.frame.size.height);
     } completion:^(BOOL finished) {
         //这里之所以把各种 delegate 调用都放在动画完成后是有原因的：为了支持在回调方法中 show 另一个 actionsheet，系统的 UIActionSheet 的调用时机也是如此。
         
@@ -751,7 +753,7 @@ typedef void (^TBBlurEffectBlock)(void);
     
     [UIView animateWithDuration:self.animationDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         self.background.backgroundColor = [UIColor colorWithWhite:0 alpha:0];
-        self.actionContainer.frame = CGRectMake(kContainerLeft, kScreenHeight, self.actionContainer.frame.size.width, self.actionContainer.frame.size.height);
+        self.actionContainer.frame = CGRectMake(((screen_width - self.sheetWidth)/2), screen_height, self.actionContainer.frame.size.width, self.actionContainer.frame.size.height);
     } completion:^(BOOL finished) {
         [self cleanWindow];
         
