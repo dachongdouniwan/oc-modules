@@ -7,7 +7,7 @@
 #import "_db_tool.h"
 
 // ----------------------------------
-// MARK: 数据库 实体 协议
+// MARK: 数据库 实体 实现
 // ----------------------------------
 
 @implementation _Entity
@@ -15,6 +15,34 @@
 @def_prop_cate_strong( NSNumber *, id, setId)
 @def_prop_cate_strong( NSString *, createTime, setCreateTime)
 @def_prop_cate_strong( NSString *, updateTime, setUpdateTime)
+
+// ----------------------------------
+// MARK: 数据库 实体 协议 -
+// ----------------------------------
+
++ (NSString *)_uniqueKey {
+    return nil;
+}
+
++ (NSDictionary *)_objectClassInArray {
+    return nil;
+}
+
++ (NSDictionary *)_objectClassForCustom {
+    return nil;
+}
+
++ (NSDictionary *)_dictForCustomClass {
+    return nil;
+}
+
++ (NSDictionary *)db_replacedKeyFromPropertyName {
+    return nil;
+}
+
+// ----------------------------------
+// MARK: -
+// ----------------------------------
 
 /**
  判断这个类的数据表是否已经存在.
@@ -56,7 +84,7 @@
  提示：“唯一约束”优先级高于"主键".
  */
 - (BOOL)saveOrUpdate {
-    NSString *uniqueKey = [_DatabaseTool isRespondsToSelector:NSSelectorFromString(stringify(_uniqueKey)) forClass:[self class]];
+    NSString *uniqueKey = [self.class _uniqueKey];
     if (uniqueKey) {
         id uniqueKeyVlaue = [self valueForKey:uniqueKey];
         NSInteger count = [[self class] _countWhere:@[uniqueKey,@"=",uniqueKeyVlaue]];
@@ -117,7 +145,7 @@
  */
 + (void)_saveOrUpdateArray:(NSArray*)array ignoreKeys:(NSArray * const)ignoreKeys {
     NSAssert(array||array.count,@"数组没有元素!");
-    NSString* uniqueKey = [_DatabaseTool isRespondsToSelector:NSSelectorFromString(stringify(_uniqueKey)) forClass:[self class]];
+    NSString* uniqueKey = [self _uniqueKey];
     if (uniqueKey) {
         id uniqueKeyVlaue = [array.lastObject valueForKey:uniqueKey];
         NSInteger count = [[array.lastObject class] _countWhere:@[uniqueKey,@"=",uniqueKeyVlaue]];
@@ -165,10 +193,9 @@
     });
 
 }
-/**
- 同步覆盖存储.
- 覆盖掉原来的数据,只存储当前的数据.
- */
+
+#pragma mark -
+
 - (BOOL)_cover  {
     __block BOOL result;
     [[_Database sharedInstance] clearWithClass:[self class] complete:^(BOOL isSuccess) {
@@ -265,9 +292,10 @@
 /**
  查询某一行数据
  */
-+ (id)_ObjectWithRow:(NSInteger)row {
-    NSArray* array = [self _findAllWithRange:NSMakeRange(row,1) orderBy:nil desc:NO];
-    return (array&&array.count)?array.firstObject : nil;
++ (id)objectWithRow:(NSInteger)row {
+    NSArray *array = [self _findAllWithRange:NSMakeRange(row, 1) orderBy:nil desc:NO];
+    
+    return (array && array.count) ? array.firstObject : nil;
 }
 /**
  同步查询所有结果.
@@ -343,18 +371,14 @@
     [[_Database sharedInstance] closeDB];
     return results;
 }
-/**
- 异步条件查询所有结果.
- @where 条件数组，形式@[@"name",@"=",@"标哥",@"age",@"=>",@(25)],即查询name=标哥,age=>25的数据;
- 可以为nil,为nil时查询所有数据;
- 不支持keypath的key,即嵌套的自定义类, 形式如@[@"user.name",@"=",@"习大大"]暂不支持(有专门的keyPath查询接口).
- */
-+ (void)_findAsyncWhere:(NSArray *)where complete:(DatabaseCompleteBlcok)complete{
+
++ (void)findWhere:(NSArray *)where complete:(DatabaseCompleteBlcok)complete {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0), ^{
         NSArray* array = [self _findWhere:where];
         bg_completeBlock(array);
     });
 }
+
 /**
  @format 传入sql条件参数,语句来进行查询,方便开发者自由扩展.
  支持keyPath.
@@ -913,7 +937,7 @@
  @name 注册名称,此字符串唯一,不可重复,移除监听的时候使用此字符串移除.
  @return YES: 注册监听成功; NO: 注册监听失败.
  */
-+ (BOOL)_registerChangeWithName:(NSString * const)name block:(DatabaseDealStateBlock)block{
++ (BOOL)observeWithName:(NSString * const)name block:(DatabaseDealStateBlock)block{
     NSString* uniqueName = [NSString stringWithFormat:@"%@*%@",NSStringFromClass([self class]),name];
     return [[_Database sharedInstance] registerChangeWithName:uniqueName block:block];
 }
@@ -922,7 +946,7 @@
  @name 注册监听的时候使用的名称.
  @return YES: 移除监听成功; NO: 移除监听失败.
  */
-+(BOOL)_removeChangeWithName:(NSString * const)name{
++ (BOOL)unobserveWithName:(NSString * const)name {
      NSString* uniqueName = [NSString stringWithFormat:@"%@*%@",NSStringFromClass([self class]),name];
     return [[_Database sharedInstance] removeChangeWithName:uniqueName];
 }
@@ -945,10 +969,11 @@ id _executeSql(NSString* _Nonnull sql,NSString* _Nullable className){
  @keyValues 字典(NSDictionary)或json格式字符.
  说明:如果模型中有数组且存放的是自定义的类(NSString等系统自带的类型就不必要了),那就实现objectClassInArray这个函数返回一个字典,key是数组名称,value是自定的类Class,用法跟MJExtension一样.
  */
-+ (id)_objectWithKeyValues:(id)keyValues{
++ (id)_objectWithKeyValues:(id)keyValues {
     return [_DatabaseTool bg_objectWithClass:[self class] value:keyValues];
 }
-+ (id)_objectWithDictionary:(NSDictionary *)dictionary{
+
++ (id)_objectWithDictionary:(NSDictionary *)dictionary {
     return [_DatabaseTool bg_objectWithClass:[self class] value:dictionary];
 }
 /**
@@ -967,196 +992,8 @@ id _executeSql(NSString* _Nonnull sql,NSString* _Nullable className){
  模型转字典.
  @ignoredKeys 忽略掉模型中的哪些key(即模型变量)不要转,nil时全部转成字典.
  */
--(NSMutableDictionary*)_keyValuesIgnoredKeys:(NSArray*)ignoredKeys{
+- (NSMutableDictionary *)_keyValuesIgnoredKeys:(NSArray *)ignoredKeys {
     return [_DatabaseTool bg_keyValuesWithObject:self ignoredKeys:ignoredKeys];
 }
 @end
 
-#pragma mark 直接存储数组.
-
-@implementation NSArray ( ORMEntity )
-
-/**
- 存储数组.
- @name 唯一标识名称.
- **/
-- (BOOL)_saveArrayWithName:(NSString* const _Nonnull)name{
-    if([self isKindOfClass:[NSArray class]]) {
-        __block BOOL result;
-        [[_Database sharedInstance] saveArray:self name:name complete:^(BOOL isSuccess) {
-            result = isSuccess;
-        }];
-        //关闭数据库
-        [[_Database sharedInstance] closeDB];
-        return result;
-    }else{
-        return NO;
-    }
-}
-/**
- 添加数组元素.
- @name 唯一标识名称.
- @object 要添加的元素.
- */
-+ (BOOL)_addObjectWithName:(NSString* const _Nonnull)name object:(id const _Nonnull)object{
-    NSAssert(object,@"元素不能为空!");
-    __block BOOL result;
-    [[_Database sharedInstance] saveArray:@[object] name:name complete:^(BOOL isSuccess) {
-        result = isSuccess;
-    }];
-    //关闭数据库
-    [[_Database sharedInstance] closeDB];
-    return result;
-}
-/**
- 获取数组元素数量.
- @name 唯一标识名称.
- */
-+ (NSInteger)_countWithName:(NSString* const _Nonnull)name{
-    NSUInteger count = [[_Database sharedInstance] countForTable:name where:nil];
-    //关闭数据库
-    [[_Database sharedInstance] closeDB];
-    return count;
-
-}
-/**
- 查询整个数组
- */
-+ (NSArray*)_arrayWithName:(NSString* const _Nonnull)name{
-    __block NSMutableArray* results;
-    [[_Database sharedInstance] queryArrayWithName:name complete:^(NSArray * _Nullable array) {
-        if(array&&array.count){
-            results = [NSMutableArray arrayWithArray:array];
-        }
-    }];
-    //关闭数据库
-    [[_Database sharedInstance] closeDB];
-    return results;
-}
-/**
- 获取数组某个位置的元素.
- @name 唯一标识名称.
- @index 数组元素位置.
- */
-+ (id)_objectWithName:(NSString * const)name index:(NSInteger)index {
-    id resultValue = [[_Database sharedInstance] queryArrayWithName:name index:index];
-    //关闭数据库
-    [[_Database sharedInstance] closeDB];
-    return resultValue;
-}
-/**
- 更新数组某个位置的元素.
- @name 唯一标识名称.
- @index 数组元素位置.
- */
-+ (BOOL)_updateObjectWithName:(NSString* const _Nonnull)name object:(id _Nonnull)object index:(NSInteger)index{
-    BOOL result = [[_Database sharedInstance] updateObjectWithName:name object:object index:index];
-    //关闭数据库
-    [[_Database sharedInstance] closeDB];
-    return result;
-}
-/**
- 删除数组的某个元素.
- @name 唯一标识名称.
- @index 数组元素位置.
- */
-+ (BOOL)_deleteObjectWithName:(NSString* const _Nonnull)name index:(NSInteger)index {
-    BOOL result = [[_Database sharedInstance] deleteObjectWithName:name index:index];
-    //关闭数据库
-    [[_Database sharedInstance] closeDB];
-    return result;
-}
-/**
- 清空数组元素.
- @name 唯一标识名称.
- */
-+ (BOOL)_clearArrayWithName:(NSString * const)name {
-    __block BOOL result;
-    [[_Database sharedInstance] dropSafeTable:name complete:^(BOOL isSuccess) {
-        result = isSuccess;
-    }];
-    //关闭数据库
-    [[_Database sharedInstance] closeDB];
-    return result;
-}
-
-@end
-
-#pragma mark 直接存储字典.
-
-@implementation NSDictionary ( ORMEntity )
-/**
- 存储字典.
- */
-- (BOOL)_saveDictionary {
-    if([self isKindOfClass:[NSDictionary class]]) {
-        __block BOOL result;
-        [[_Database sharedInstance] saveDictionary:self complete:^(BOOL isSuccess) {
-            result = isSuccess;
-        }];
-        //关闭数据库
-        [[_Database sharedInstance] closeDB];
-        return result;
-    }else{
-        return NO;
-    }
-
-}
-/**
- 添加字典元素.
- */
-+ (BOOL)_setValue:(id const _Nonnull)value forKey:(NSString* const _Nonnull)key {
-    BOOL result = [[_Database sharedInstance] bg_setValue:value forKey:key];
-    //关闭数据库
-    [[_Database sharedInstance] closeDB];
-    return result;
-}
-/**
- 更新字典元素.
- */
-+ (BOOL)_updateValue:(id const)value forKey:(NSString * const)key {
-    BOOL result = [[_Database sharedInstance] bg_updateValue:value forKey:key];
-    //关闭数据库
-    [[_Database sharedInstance] closeDB];
-    return result;
-}
-/**
- 遍历字典元素.
- */
-+ (void)_enumerateKeysAndObjectsUsingBlock:(void (^)(NSString * key, id value,BOOL *stop))block {
-    [[_Database sharedInstance] bg_enumerateKeysAndObjectsUsingBlock:block];
-    //关闭数据库
-    [[_Database sharedInstance] closeDB];
-}
-/**
- 获取字典元素.
- */
-+ (id)_valueForKey:(NSString *const)key {
-    id value = [[_Database sharedInstance] bg_valueForKey:key];
-    //关闭数据库
-    [[_Database sharedInstance] closeDB];
-    return value;
-}
-/**
- 移除字典某个元素.
- */
-+ (BOOL)_removeValueForKey:(NSString * const)key {
-    BOOL result = [[_Database sharedInstance] bg_deleteValueForKey:key];
-    //关闭数据库
-    [[_Database sharedInstance] closeDB];
-    return result;
-}
-/**
- 清空字典.
- */
-+ (BOOL)_clearDictionary {
-    __block BOOL result;
-    NSString* const tableName = @"BG_Dictionary";
-    [[_Database sharedInstance] dropSafeTable:tableName complete:^(BOOL isSuccess) {
-        result = isSuccess;
-    }];
-    //关闭数据库
-    [[_Database sharedInstance] closeDB];
-    return result;
-}
-@end

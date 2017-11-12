@@ -77,7 +77,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)_saveIgnoredKeys:(NSArray * const)ignoredKeys;
 - (void)_saveAsyncIgnoreKeys:(NSArray * const)ignoredKeys complete:(DatabaseSuccessBlock)complete;
 
-// 覆盖存储
+/**
+ 同步覆盖存储.
+ 覆盖掉原来的数据,只存储当前的数据.
+ */
 - (BOOL)_cover;
 - (void)_coverAsync:(DatabaseSuccessBlock)complete;
 - (BOOL)_coverIgnoredKeys:(NSArray * const)ignoredKeys;
@@ -89,11 +92,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (id)_firstObjet;
 + (id)_lastObject;
+
 /**
  查询某一行数据
  @row 从第0行开始算起.
  */
-+ (id)_ObjectWithRow:(NSInteger)row;
++ (id)objectWithRow:(NSInteger)row;
+
 /**
  * 同步查询所有结果.
  * @limit 每次查询限制的条数,0则无限制.
@@ -107,6 +112,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @desc YES:降序，NO:升序.
  */
 + (void)_findAllAsyncWithLimit:(NSInteger)limit orderBy:(NSString *)orderBy desc:(BOOL)desc complete:(DatabaseCompleteBlcok)complete;
+
 /**
  *  同步查询所有结果.
  *  @range 查询的范围(从location开始的后面length条).
@@ -119,34 +125,43 @@ NS_ASSUME_NONNULL_BEGIN
  *  @desc YES:降序，NO:升序.
  */
 + (void)_findAllAsyncWithRange:(NSRange)range orderBy:(NSString *)orderBy desc:(BOOL)desc complete:(DatabaseCompleteBlcok)complete;
-/**
- 同步条件查询所有结果.
- @where 条件数组，形式@[@"name",@"=",@"标哥",@"age",@"=>",@(25)],即查询name=标哥,age=>25的数据;
- 可以为nil,为nil时查询所有数据;
- 目前不支持keypath的key,即嵌套的自定义类, 形式如@[@"user.name",@"=",@"习大大"]暂不支持(有专门的keyPath查询接口).
- */
-+   (NSArray *)_findWhere:(NSArray *)where;
 
 /**
- 异步条件查询所有结果.
- @where 条件数组，形式@[@"name",@"=",@"标哥",@"age",@"=>",@(25)],即查询name=标哥,age=>25的数据;
- 可以为nil,为nil时查询所有数据;
- 目前不支持keypath的key,即嵌套的自定义类, 形式如@[@"user.name",@"=",@"习大大"]暂不支持(有专门的keyPath查询接口).
+ *  同步条件查询所有结果.
+ 
+ *  @param where 条件数组，形式@[@"name",@"=",@"标哥",@"age",@"=>",@(25)],即查询name=标哥,age=>25的数据;
+ *  可以为nil,为nil时查询所有数据;
+ 
+ *  目前不支持keypath的key,即嵌套的自定义类, 形式如@[@"user.name",@"=",@"习大大"]暂不支持 (有专门的keyPath查询接口).
  */
-+ (void)_findAsyncWhere:(NSArray *)where complete:(DatabaseCompleteBlcok)complete;
++  (NSArray *)_findWhere:(NSArray *)where;
 
 /**
- @format 传入sql条件参数,语句来进行查询,方便开发者自由扩展.
- 使用规则请看demo或如下事例:
- 支持keyPath.
- 1.查询name等于爸爸和age等于45,或者name等于马哥的数据.  此接口是为了方便开发者自由扩展更深层次的查询条件逻辑.
+ *  异步条件查询所有结果.
+ *
+ *  @param where 条件数组，形式@[@"name",@"=",@"标哥",@"age",@"=>",@(25)],即查询name=标哥,age=>25的数据;
+ *  可以为nil,为nil时查询所有数据;
+ *  目前不支持keypath的key,即嵌套的自定义类, 形式如@[@"user.name",@"=",@"习大大"]暂不支持(有专门的keyPath查询接口).
+ *
+ */
++ (void)findWhere:(NSArray *)where complete:(DatabaseCompleteBlcok)complete;
+
+/**
+ *  @param format 传入sql条件参数,语句来进行查询,方便开发者自由扩展.
+ *  使用规则请看demo或如下事例:
+ *  支持keyPath.
+ 
+ *  1.查询name等于爸爸和age等于45,或者name等于马哥的数据.  此接口是为了方便开发者自由扩展更深层次的查询条件逻辑.
  NSArray* arrayConds1 = [People findFormatSqlConditions:@"where %@=%@ and %@=%@ or %@=%@",bg_sqlKey(@"age"),bg_sqlValue(@(45)),bg_sqlKey(@"name"),bg_sqlValue(@"爸爸"),bg_sqlKey(@"name"),bg_sqlValue(@"马哥")];
- 2.查询user.student.human.body等于小芳 和 user1.name中包含fuck这个字符串的数据.
+ 
+ *  2.查询user.student.human.body等于小芳 和 user1.name中包含fuck这个字符串的数据.
  [People bg_findFormatSqlConditions:@"where %@",bg_keyPathValues(@[@"user.student.human.body",bg_equal,@"小芳",@"user1.name",bg_contains,@"fuck"])];
- 3.查询user.student.human.body等于小芳,user1.name中包含fuck这个字符串 和 name等于爸爸的数据.
+ 
+ *  3.查询user.student.human.body等于小芳,user1.name中包含fuck这个字符串 和 name等于爸爸的数据.
  NSArray* arrayConds3 = [People bg_findFormatSqlConditions:@"where %@ and %@=%@",bg_keyPathValues(@[@"user.student.human.body",bg_equal,@"小芳",@"user1.name",bg_contains,@"fuck"]),bg_sqlKey(@"name"),bg_sqlValue(@"爸爸")];
  */
 + (NSArray *)_findFormatSqlConditions:(NSString *)format,... NS_FORMAT_FUNCTION(1,2);
+
 /**
  keyPath查询
  同步查询所有keyPath条件结果.
@@ -287,27 +302,33 @@ NS_ASSUME_NONNULL_BEGIN
  即删除user.student.name=@"小芳" 和 user.student.content中包含@“书”这个字符串的对象.
  */
 + (void)_deleteAsyncForKeyPathAndValues:(NSArray *)keyPathValues complete:(DatabaseSuccessBlock)complete;
+
 /**
  删除某一行数据
  @row 从第0行开始算起.
  */
 + (BOOL)_deleteWithRow:(NSInteger)row;
+
 /**
  删除第一条数据
  */
 + (BOOL)_deleteFirstObject;
+
 /**
  删除最后一条数据
  */
 + (BOOL)_deleteLastObject;
+
 /**
  同步清除所有数据
  */
 + (BOOL)_clear;
+
 /**
  异步清除所有数据.
  */
 + (void)_clearAsync:(DatabaseSuccessBlock)complete;
+
 /**
  同步删除这个类的数据表
  */
@@ -316,6 +337,7 @@ NS_ASSUME_NONNULL_BEGIN
  异步删除这个类的数据表.
  */
 + (void)_dropAsync:(DatabaseSuccessBlock)complete;
+
 /**
  查询该表中有多少条数据
  @where 条件数组，形式@[@"name",@"=",@"标哥",@"age",@"=>",@(25)],即name=标哥,age=>25的数据有多少条,为nil时返回全部数据的条数.
@@ -340,23 +362,27 @@ NS_ASSUME_NONNULL_BEGIN
  即查询user.student.name=@"小芳" 和 user.student.content中包含@“书”这个字符串的对象的条数.
  */
 + (NSInteger)_countForKeyPathAndValues:(NSArray *)keyPathValues;
+
 /**
  直接调用sqliteb的原生函数计算sun,min,max,avg等.
  用法：NSInteger num = [People bg_sqliteMethodWithType:bg_sum key:@"age"];
  提示: @param key -> 不支持keyPath , @param where -> 支持keyPath
  */
 + (NSInteger)_sqliteMethodWithType:(bg_sqliteMethodType)methodType key:(NSString *)key where:(NSString *)where,...;
+
 /**
  获取本类数据表当前版本号.
  */
 + (NSInteger)_version;
+
 /**
  刷新,当类"唯一约束"改变时,调用此接口刷新一下.
  同步刷新.
- @version 版本号,从1开始,依次往后递增.
+ @param version 版本号,从1开始,依次往后递增.
  说明: 本次更新版本号不得 低于或等于 上次的版本号,否则不会更新.
  */
 + (DatabaseDealState)_updateVersion:(NSInteger)version;
+
 /**
  刷新,当类"唯一约束"改变时,调用此接口刷新一下.
  异步刷新.
@@ -364,6 +390,7 @@ NS_ASSUME_NONNULL_BEGIN
  说明: 本次更新版本号不得 低于或等于 上次的版本号,否则不会更新.
  */
 + (void)_updateVersionAsync:(NSInteger)version complete:(DatabaseDealStateBlock)complete;
+
 /**
  刷新,当类"唯一约束"改变时,调用此接口刷新一下.
  同步刷新.
@@ -373,6 +400,7 @@ NS_ASSUME_NONNULL_BEGIN
  说明: 本次更新版本号不得 低于或等于 上次的版本号,否则不会更新.
  */
 + (DatabaseDealState)_updateVersion:(NSInteger)version keyDict:(NSDictionary* const)keydict;
+
 /**
  刷新,当类"唯一约束"改变时,调用此接口刷新一下.
  异步刷新.
@@ -382,6 +410,7 @@ NS_ASSUME_NONNULL_BEGIN
  说明: 本次更新版本号不得 低于或等于 上次的版本号,否则不会更新.
  */
 + (void)_updateVersionAsync:(NSInteger)version keyDict:(NSDictionary * const)keydict complete:(DatabaseDealStateBlock)complete;
+
 /**
  将某表的数据拷贝给另一个表
  同步复制.
@@ -398,18 +427,20 @@ NS_ASSUME_NONNULL_BEGIN
  @append YES: 不会覆盖destCla的原数据,在其末尾继续添加；NO: 覆盖掉destCla原数据,即将原数据删掉,然后将新数据拷贝过来.
  */
 + (void)_copyAsyncToClass:(__unsafe_unretained Class)destCla keyDict:(NSDictionary * const)keydict append:(BOOL)append complete:(DatabaseDealStateBlock)complete;
+
 /**
  注册数据变化监听.
  @name 注册名称,此字符串唯一,不可重复,移除监听的时候使用此字符串移除.
  @return YES: 注册监听成功; NO: 注册监听失败.
  */
-+ (BOOL)_registerChangeWithName:(NSString * const)name block:(DatabaseDealStateBlock)block;
++ (BOOL)observeWithName:(NSString * const)name block:(DatabaseDealStateBlock)block;
+
 /**
  移除数据变化监听.
  @name 注册监听的时候使用的名称.
  @return YES: 移除监听成功; NO: 移除监听失败.
  */
-+ (BOOL)_removeChangeWithName:(NSString * const)name;
++ (BOOL)unobserveWithName:(NSString * const)name;
 
 #pragma mark 下面附加字典转模型API,简单好用,在只需要字典转模型功能的情况下,可以不必要再引入MJExtension那么多文件,造成代码冗余,缩减安装包.
 /**
@@ -429,91 +460,6 @@ NS_ASSUME_NONNULL_BEGIN
  @ignoredKeys 忽略掉模型中的哪些key(即模型变量)不要转,nil时全部转成字典.
  */
 - (NSMutableDictionary *)_keyValuesIgnoredKeys:(NSArray *)ignoredKeys;
-
-@end
-
-#pragma mark 直接存储数组.
-
-@interface NSArray ( ORMEntity )
-/**
- 存储数组.
- @name 唯一标识名称.
- **/
-- (BOOL)_saveArrayWithName:(NSString * const)name;
-/**
- 添加数组元素.
- @name 唯一标识名称.
- @object 要添加的元素.
- */
-+ (BOOL)_addObjectWithName:(NSString * const)name object:(id const)object;
-/**
- 获取数组元素数量.
- @name 唯一标识名称.
- */
-+ (NSInteger)_countWithName:(NSString * const)name;
-/**
- 查询整个数组
- */
-+ (NSArray *)_arrayWithName:(NSString * const)name;
-/**
- 获取数组某个位置的元素.
- @name 唯一标识名称.
- @index 数组元素位置.
- */
-+ (id)_objectWithName:(NSString * const)name index:(NSInteger)index;
-/**
- 更新数组某个位置的元素.
- @name 唯一标识名称.
- @index 数组元素位置.
- */
-+ (BOOL)_updateObjectWithName:(NSString * const)name object:(id)object index:(NSInteger)index;
-/**
- 删除数组的某个元素.
- @name 唯一标识名称.
- @index 数组元素位置.
- */
-+ (BOOL)_deleteObjectWithName:(NSString * const)name index:(NSInteger)index;
-/**
- 清空数组元素.
- @name 唯一标识名称.
- */
-+ (BOOL)_clearArrayWithName:(NSString * const)name;
-
-@end
-
-// ----------------------------------
-// MARK: 直接存储字典.
-// ----------------------------------
-
-@interface NSDictionary ( ORMEntity )
-/**
- 存储字典.
- */
-- (BOOL)_saveDictionary;
-/**
- 添加字典元素.
- */
-+ (BOOL)_setValue:(id const)value forKey:(NSString * const)key;
-/**
- 更新字典元素.
- */
-+ (BOOL)_updateValue:(id const)value forKey:(NSString * const)key;
-/**
- 获取字典元素.
- */
-+ (id)_valueForKey:(NSString * const)key;
-/**
- 遍历字典元素.
- */
-+ (void)_enumerateKeysAndObjectsUsingBlock:(void (^)(NSString * key, id value,BOOL *  stop))block;
-/**
- 移除字典某个元素.
- */
-+ (BOOL)_removeValueForKey:(NSString * const)key;
-/**
- 清空字典.
- */
-+ (BOOL)_clearDictionary;
 
 @end
 

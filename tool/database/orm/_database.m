@@ -338,7 +338,7 @@ static const void * const BGFMDBDispatchQueueSpecificKey = &BGFMDBDispatchQueueS
         [dictArray enumerateObjectsUsingBlock:^(NSDictionary * _Nonnull dict, NSUInteger idx, BOOL * _Nonnull stop) {
             @autoreleasepool {
                 NSMutableArray* arguments = [NSMutableArray array];
-                NSString* uniqueKey = [_DatabaseTool isRespondsToSelector:NSSelectorFromString(stringify(_uniqueKey)) forClass:NSClassFromString(name)];
+                NSString* uniqueKey = [classof(name) touchSelector:selectorify(_uniqueKey)];
                 NSString* sqlUniqueKey = [NSString stringWithFormat:@"%@%@",BG,uniqueKey];
                 NSString* where = nil;
                 NSMutableDictionary* tempDict = [[NSMutableDictionary alloc] initWithDictionary:dict];
@@ -930,7 +930,7 @@ static const void * const BGFMDBDispatchQueueSpecificKey = &BGFMDBDispatchQueueS
 
 -(void)copyA:(NSString* _Nonnull)A toB:(NSString* _Nonnull)B keys:(NSArray<NSString*>* const _Nonnull)keys complete:(DatabaseDealStateBlock)complete{
     //获取"唯一约束"字段名
-    NSString* uniqueKey = [_DatabaseTool isRespondsToSelector:NSSelectorFromString(stringify(_uniqueKey)) forClass:NSClassFromString(A)];
+    NSString* uniqueKey = [classof(A) touchSelector:selectorify(_uniqueKey)];
     //建立一张临时表
     __block BOOL createFlag;
     [self createTableWithTableName:B keys:keys uniqueKey:uniqueKey complete:^(BOOL isSuccess) {
@@ -1050,7 +1050,7 @@ static const void * const BGFMDBDispatchQueueSpecificKey = &BGFMDBDispatchQueueS
 
 -(void)copyA:(NSString* _Nonnull)A toB:(NSString* _Nonnull)B keyDict:(NSDictionary* const _Nullable)keyDict complete:(DatabaseDealStateBlock)complete{
     //获取"唯一约束"字段名
-    NSString* uniqueKey = [_DatabaseTool isRespondsToSelector:NSSelectorFromString(stringify(_uniqueKey)) forClass:NSClassFromString(A)];
+    NSString* uniqueKey = [classof(A) touchSelector:selectorify(_uniqueKey)];
     __block NSArray* keys = [_DatabaseTool getClassIvarList:NSClassFromString(A) onlyKey:NO];
     NSArray* newKeys = keyDict.allKeys;
     NSArray* oldKeys = keyDict.allValues;
@@ -1619,7 +1619,7 @@ static const void * const BGFMDBDispatchQueueSpecificKey = &BGFMDBDispatchQueueS
                 }
             }
             //获取"唯一约束"字段名
-            NSString* uniqueKey = [_DatabaseTool isRespondsToSelector:NSSelectorFromString(stringify(_uniqueKey)) forClass:destCla];
+            NSString* uniqueKey = [destCla touchSelector:selectorify(_uniqueKey)];
             [BGSelf createTableWithTableName:destTable keys:destKeyAndTypes uniqueKey:uniqueKey complete:^(BOOL isSuccess) {
                 NSAssert(isSuccess,@"目标表创建失败,复制失败!");
             }];

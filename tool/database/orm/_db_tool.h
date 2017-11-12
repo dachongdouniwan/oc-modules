@@ -69,14 +69,7 @@
  模型转字典.
  */
 +(NSMutableDictionary* _Nonnull)bg_keyValuesWithObject:(id _Nonnull)object ignoredKeys:(NSArray* _Nullable)ignoredKeys;
-/**
- 判断类是否实现了某个类方法.
- */
-+(id _Nonnull)isRespondsToSelector:(SEL _Nonnull)selector forClass:(__unsafe_unretained _Nonnull Class)cla;
-/**
- 判断对象是否实现了某个方法.
- */
-+(id _Nonnull)isRespondsToSelector:(SEL _Nonnull)selector forObject:(id _Nonnull)object;
+
 /**
  根据对象获取要更新或插入的字典.
  */

@@ -638,9 +638,9 @@ void bg_cleanCache() {
         NSAssert(NO,@"数据格式错误!, 只能转换字典或json格式数据.");
     }
     
-    NSDictionary* const objectClaInArr = [self isRespondsToSelector:NSSelectorFromString(@"bg_objectClassInArray") forClass:[object class]];
-    NSDictionary* const objectClaForCustom = [self isRespondsToSelector:NSSelectorFromString(@"bg_objectClassForCustom") forClass:[object class]];
-    NSDictionary* const bg_replacedKeyFromPropertyNameDict = [self isRespondsToSelector:NSSelectorFromString(@"bg_replacedKeyFromPropertyName") forClass:[object class]];
+    NSDictionary *const objectClaInArr = [cla touchSelector:selectorify(_objectClassInArray)];
+    NSDictionary* const objectClaForCustom = [cla touchSelector:selectorify(_objectClassForCustom)];
+    NSDictionary* const bg_replacedKeyFromPropertyNameDict = [cla touchSelector:selectorify(_replacedKeyFromPropertyName)];
     NSArray* const claKeys = [self getClassIvarList:cla onlyKey:YES];
     //遍历自定义变量集合信息.
     !objectClaForCustom?:[objectClaForCustom enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull customKey, id  _Nonnull customObj, BOOL * _Nonnull stop) {
@@ -711,8 +711,8 @@ void bg_cleanCache() {
     if (ignoredKeys) {
         [keys removeObjectsInArray:ignoredKeys];
     }
-    NSDictionary* const objectClaInArr = [self isRespondsToSelector:NSSelectorFromString(@"bg_objectClassInArray") forClass:[object class]];
-    NSDictionary* const objectClaForCustom = [self isRespondsToSelector:NSSelectorFromString(@"bg_dictForCustomClass") forClass:[object class]];
+    NSDictionary *const objectClaInArr = [[object class] touchSelector:selectorify(_objectClassInArray)];
+    NSDictionary* const objectClaForCustom = [[object class] touchSelector:selectorify(_dictForCustomClass)];
     NSMutableDictionary* dictM = [NSMutableDictionary dictionary];
     
     [keys enumerateObjectsUsingBlock:^(NSString * _Nonnull key, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -874,36 +874,11 @@ void bg_cleanCache() {
     }
     return arrM;
 }
-/**
-判断类是否实现了某个类方法.
- */
-+ (id)isRespondsToSelector:(SEL)selector forClass:(Class)cla {
-    id obj = nil;
-    if([cla respondsToSelector:selector]){
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        obj = [cla performSelector:selector];
-#pragma clang diagnostic pop
-    }
-    return obj;
-}
-/**
- 判断对象是否实现了某个方法.
- */
-+ (id)isRespondsToSelector:(SEL)selector forObject:(id)object {
-    id obj = nil;
-    if([object respondsToSelector:selector]){
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        obj = [object performSelector:selector];
-#pragma clang diagnostic pop
-    }
-    return obj;
-}
+
 /**
  根据对象获取要更新或插入的字典.
  */
-+(NSDictionary* _Nonnull)getDictWithObject:(id _Nonnull)object ignoredKeys:(NSArray* const _Nullable)ignoredKeys isUpdate:(BOOL)update{
++ (nonnull NSDictionary *)getDictWithObject:(id)object ignoredKeys:(NSArray* const _Nullable)ignoredKeys isUpdate:(BOOL)update{
     NSArray<BGModelInfo*>* infos = [BGModelInfo modelInfoWithObject:object];
     NSMutableDictionary* valueDict = [NSMutableDictionary dictionary];
     if (ignoredKeys) {
@@ -926,7 +901,7 @@ void bg_cleanCache() {
 
 + (BOOL)ifNotExistWillCreateTableWithObject:(id)object ignoredKeys:(NSArray* const)ignoredKeys {
     NSString *tableName = string_from_class([object class]);
-    NSString *uniqueKey = [self isRespondsToSelector:selectorify(_uniqueKey) forClass:[object class]];
+    NSString *uniqueKey = [[object class] touchSelector:selectorify(_uniqueKey)];
     __block BOOL isExistTable;
     [[_Database sharedInstance] isExistWithTableName:tableName complete:^(BOOL isExist) {
         if (!isExist){//如果不存在就新建
