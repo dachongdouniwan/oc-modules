@@ -1,10 +1,13 @@
 
+#import <Foundation/Foundation.h>
+
+// ----------------------------------
+// MARK: 声明
+// ----------------------------------
+
 #import "_typedef.h"
 
 #define BG @"BG_"
-#define bg_primaryKey @"_identifier"
-#define bg_createTimeKey @"_createTime"
-#define bg_updateTimeKey @"_updateTime"
 
 //keyPath查询用的关系，bg_equal:等于的关系；bg_contains：包含的关系.
 #define bg_equal @"Relation_Equal"
@@ -80,3 +83,10 @@ extern void bg_inTransaction(BOOL (^ _Nonnull block)());
  */
 extern void bg_cleanCache();
 
+// ----------------------------------
+// MARK: 数据库 配置
+// ----------------------------------
+
+@interface _DatabaseConfig : NSObject
+
+@end

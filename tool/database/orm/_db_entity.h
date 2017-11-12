@@ -4,18 +4,17 @@
     int,long,signed,float,double,NSInteger,CGFloat,BOOL,NSString,NSMutableString,NSNumber,
     NSArray,NSMutableArray,NSDictionary,NSMutableDictionary,NSMapTable,NSHashTable,NSData,
     NSMutableData,UIImage,NSDate,NSURL,NSRange,CGRect,CGSize,CGPoint,自定义对象 等的存储.
- 
-     2. 命名：
-     防止和其他类似库命名冲突，（属性、方法）统一一下划线开头
  */
-
-
 
 #import <Foundation/Foundation.h>
 
 #import "_database.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+// ----------------------------------
+// MARK: 数据库 实体 协议
+// ----------------------------------
 
 @protocol _EntityProtocol <NSObject>
 
@@ -29,37 +28,45 @@ NS_ASSUME_NONNULL_BEGIN
  *  @return 字典中的key是数组属性名，value是数组中存放模型的Class
  */
 + (NSDictionary *)_objectClassInArray;
+
 /**
- 如果模型中有自定义类变量,则实现该函数对应进行集合到模型的转换.
- 字典转模型用.
+ *  如果模型中有自定义类变量,则实现该函数对应进行集合到模型的转换.
  */
 + (NSDictionary *)_objectClassForCustom;
+
 /**
- 将模型中对应的自定义类变量转换为字典.
- 模型转字典用.
+ *  将模型中对应的自定义类变量转换为字典.
  */
 + (NSDictionary *)_dictForCustomClass;
 
 /**
-替换变量的功能(及当字典的key和属性名不一样时，进行映射对应起来)
-*/
+ *  替换变量的功能(及当字典的key和属性名不一样时，进行映射对应起来)
+ */
 + (NSDictionary *)db_replacedKeyFromPropertyName;
 
 @end
 
-@interface NSObject ( ORMEntity ) <_EntityProtocol>
+// ----------------------------------
+// MARK: 数据库 实体 实现
+// ----------------------------------
 
-@property (nonatomic, strong) NSNumber * _identifier;//本库自带的自动增长主键.
-@property (nonatomic, copy) NSString * _createTime;
-@property (nonatomic, copy) NSString * _updateTime;
+@interface _Entity : NSObject <_EntityProtocol>
 
-+ (BOOL)_isExist;
+// 预定义 常用字段
 
-- (BOOL)_save;
-- (void)_saveAsync:(DatabaseSuccessBlock)complete;
+@prop_strong( NSNumber *, id )
+@prop_copy( NSString *, createTime )
+@prop_copy( NSString *, updateTime )
 
-- (BOOL)_saveOrUpdate;
-- (void)_saveOrUpdateAsync:(DatabaseSuccessBlock)complete;
+// --
+
++ (BOOL)isExist;
+
+- (BOOL)save;
+- (void)saveAsync:(DatabaseSuccessBlock)complete;
+
+- (BOOL)saveOrUpdate;
+- (void)saveOrUpdateAsync:(DatabaseSuccessBlock)complete;
 
 // ??? ignoreKeys 放在协议中去？
 + (BOOL)_saveArray:(NSArray *)array ignoreKeys:(NSArray * const)ignoreKeys;

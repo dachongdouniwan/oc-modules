@@ -12,9 +12,23 @@
 // Category code
 // ----------------------------------
 
-@interface NSData ( Json )
+@interface NSObject ( Json )
 
-// 还没有实现！！！！！！！！！！！！！！
+@property (nonatomic, readonly) BOOL isJsonObject;
+
+@property (nonatomic, readonly, nonnull) NSString *jsonString;
+
+@end
+
+//@interface NSData ( Json )
+//
+//@property (nonatomic, readonly, nonnull) NSString *jsonString;
+//
+//@end
+
+@interface NSString ( Json )
+
+@property (nonatomic, readonly, nullable) id jsonObject;
 
 @end
 
@@ -22,6 +36,10 @@
 // Class code
 // ----------------------------------
 
-@interface _json : NSObject
+@interface _Json : NSObject
+
++ (nullable NSString *)jsonStringFromJsonObject:(nonnull id)jsonObject;
+
++ (nullable NSDictionary *)jsonObjectFromString:(nonnull NSString *)jsonString;
 
 @end

@@ -9,6 +9,7 @@
 #import "_db_entity_info.h"
 #import "_db_tool.h"
 #import "_db_config.h"
+#import "_foundation.h"
 
 @implementation BGModelInfo
 
@@ -30,13 +31,13 @@
         NSString* sqlType = [_DatabaseTool getSqlType:propertyType];
         [info setValue:sqlType forKey:@"sqlColumnType"];
         //读取属性值
-        if(![propertyName isEqualToString:bg_primaryKey]){
+        if(![propertyName isEqualToString:stringify(id)]){
             
             id propertyValue;
             id sqlValue;
             //crateTime和updateTime两个额外字段单独处理.
-            if([propertyName isEqualToString:bg_createTimeKey] ||
-               [propertyName isEqualToString:bg_updateTimeKey]){
+            if([propertyName isEqualToString:stringify(createTime)] ||
+               [propertyName isEqualToString:stringify(updateTime)]){
                 propertyValue = [_DatabaseTool stringWithDate:[NSDate new]];
             }else{
                 propertyValue = [object valueForKey:propertyName];

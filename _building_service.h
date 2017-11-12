@@ -1,10 +1,3 @@
-//
-//  _building_component.h
-//  student
-//
-//  Created by fallen on 17/4/21.
-//  Copyright © 2017年 alliance. All rights reserved.
-//
 
 // 核心服务
 #import "APNService.h"

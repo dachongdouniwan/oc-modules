@@ -13,6 +13,7 @@
 #import "_database.h"
 #import "_db_entity_info.h"
 #import "_db_cache.h"
+#import "_json.h"
 
 #define SqlText @"text" //数据库的字符类型
 #define SqlReal @"real" //数据库的浮点类型
@@ -38,29 +39,34 @@ typedef void (^BGClassesEnumeration)(Class c, BOOL *stop);
 static NSSet *foundationClasses_;
 
 @implementation _DatabaseTool
-/**
- 封装处理传入数据库的key和value.
- */
-NSString* bg_sqlKey(NSString* key){
+
+// ----------------------------------
+// MARK: 静态 外部方法
+// ----------------------------------
+
+NSString *bg_sqlKey(NSString *key) {
     return [NSString stringWithFormat:@"%@%@",BG,key];
 }
-NSString* bg_sqlValue(id value){
+
+NSString *bg_sqlValue(id value) {
     if ([value isKindOfClass:[NSString class]]) {
         return [NSString stringWithFormat:@"'%@'",value];
-    }else{
+    } else {
         return value;
     }
 }
+
 /**
  根据keyPath和Value的数组, 封装成数据库语句，来操作库.
  */
-NSString* bg_keyPathValues(NSArray* keyPathValues){
+NSString* bg_keyPathValues(NSArray* keyPathValues) {
     return [_DatabaseTool getLikeWithKeyPathAndValues:keyPathValues where:NO];
 }
+
 /**
  自定义数据库名称.
  */
-void bg_setSqliteName(NSString*_Nonnull sqliteName){
+void bg_setSqliteName(NSString*_Nonnull sqliteName) {
     if (![sqliteName isEqualToString:[_Database sharedInstance].sqliteName]) {
         [_Database sharedInstance].sqliteName = sqliteName;
     }
@@ -68,14 +74,15 @@ void bg_setSqliteName(NSString*_Nonnull sqliteName){
 /**
  删除数据库文件
  */
-BOOL bg_deleteSqlite(NSString*_Nonnull sqliteName){
+BOOL bg_deleteSqlite(NSString * _Nonnull sqliteName) {
     return [_Database deleteSqlite:sqliteName];
 }
+
 /**
  设置操作过程中不可关闭数据库(即closeDB函数无效).
  默认是NO.
  */
-void bg_setDisableCloseDB(BOOL disableCloseDB){
+void bg_setDisableCloseDB(BOOL disableCloseDB) {
     if ([_Database sharedInstance].disableCloseDB != disableCloseDB){//防止重复设置.
         [_Database sharedInstance].disableCloseDB = disableCloseDB;
     }
@@ -83,40 +90,21 @@ void bg_setDisableCloseDB(BOOL disableCloseDB){
 
 /**
  事务操作.
- @return 返回YES提交事务, 返回NO回滚事务.
+ 返回YES提交事务, 返回NO回滚事务.
  */
-void bg_inTransaction(BOOL (^ _Nonnull block)()){
+void bg_inTransaction(BOOL (^ _Nonnull block)()) {
     [[_Database sharedInstance] inTransaction:block];
 }
 /**
  清除缓存
  */
-void bg_cleanCache(){
-    [[NSCache bg_cache] removeAllObjects];
+void bg_cleanCache() {
+    [[_DBCache sharedInstance] removeAllObjects];
 }
-/**
- json字符转json格式数据 .
- */
-+(id)jsonWithString:(NSString*)jsonString {
-    NSAssert(jsonString,@"数据不能为空!");
-    NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-    NSError *err;
-    id dic = [NSJSONSerialization JSONObjectWithData:jsonData
-                                             options:NSJSONReadingMutableContainers
-                                               error:&err];
-    
-    NSAssert(!err,@"json解析失败");
-    return dic;
-}
-/**
- 字典转json字符 .
- */
-+(NSString*)dataToJson:(id)data{
-    NSAssert(data,@"数据不能为空!");
-    NSError *parseError = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:&parseError];
-    return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-}
+
+// ----------------------------------
+// MARK: -
+// ----------------------------------
 
 + (NSSet *)foundationClasses
 {
@@ -172,29 +160,31 @@ void bg_cleanCache(){
  根据类获取变量名列表
  @onlyKey YES:紧紧返回key,NO:在key后面添加type.
  */
-+(NSArray*)getClassIvarList:(__unsafe_unretained Class)cla onlyKey:(BOOL)onlyKey{
++ (NSArray*)getClassIvarList:(__unsafe_unretained Class)cla onlyKey:(BOOL)onlyKey {
     
     //获取缓存的属性信息
-    NSCache* cache = [NSCache bg_cache];
-    NSString* cacheKey;
+    NSCache *cache = [_DBCache sharedInstance];
+    NSString *cacheKey;
     cacheKey = onlyKey?[NSString stringWithFormat:@"%@_yes",NSStringFromClass(cla)]:[NSString stringWithFormat:@"%@_no",NSStringFromClass(cla)];
-    NSArray* cachekeys = [cache objectForKey:cacheKey];
-    if(cachekeys){
+    NSArray *cachekeys = [cache objectForKey:cacheKey];
+    if (cachekeys) {
         return cachekeys;
     }
     
-    NSMutableArray* keys = [NSMutableArray array];
-    if(onlyKey){
-        [keys addObject:bg_primaryKey];
-        [keys addObject:bg_createTimeKey];
-        [keys addObject:bg_updateTimeKey];
-    }else{
+    NSMutableArray *keys = [NSMutableArray array];
+    if (onlyKey) {
+        [keys addObject:stringify(id)];
+        [keys addObject:stringify(createTime)];
+        [keys addObject:stringify(updateTime)];
+    } else {
         //手动添加库自带的自动增长主键ID和类型q
-        [keys addObject:[NSString stringWithFormat:@"%@*q",bg_primaryKey]];
+        [keys addObject:[NSString stringWithFormat:@"%@*q", stringify(id)]];
         //建表时此处加入额外的两个字段(createTime和updateTime).
-        [keys addObject:[NSString stringWithFormat:@"%@*@\"NSString\"",bg_createTimeKey]];
-        [keys addObject:[NSString stringWithFormat:@"%@*@\"NSString\"",bg_updateTimeKey]];
+        [keys addObject:[NSString stringWithFormat:@"%@*@\"NSString\"", stringify(createTime)]];
+        [keys addObject:[NSString stringWithFormat:@"%@*@\"NSString\"", stringify(updateTime)]];
     }
+    
+    
     [self bg_enumerateClasses:cla complete:^(__unsafe_unretained Class c, BOOL *stop) {
         unsigned int numIvars; //成员变量个数
         Ivar *vars = class_copyIvarList(c, &numIvars);
@@ -222,9 +212,9 @@ void bg_cleanCache(){
 /**
  抽取封装条件数组处理函数
  */
-+(NSArray*)where:(NSArray*)where{
-    NSMutableArray* results = [NSMutableArray array];
-    NSMutableString* SQL = [NSMutableString string];
++ (NSArray *)where:(NSArray *)where {
+    NSMutableArray *results = [NSMutableArray array];
+    NSMutableString *SQL = [NSMutableString string];
     if(!(where.count%3)){
         [SQL appendString:@" where "];
         for(int i=0;i<where.count;i+=3){
@@ -248,7 +238,7 @@ void bg_cleanCache(){
 /**
  封装like语句获取函数
  */
-+(NSString*)getLikeWithKeyPathAndValues:(NSArray* _Nonnull)keyPathValues where:(BOOL)where{
++ (NSString *)getLikeWithKeyPathAndValues:(NSArray* _Nonnull)keyPathValues where:(BOOL)where {
     NSAssert(keyPathValues,@"集合不能为空!");
     NSAssert(!(keyPathValues.count%3),@"集合格式错误!");
     NSMutableArray* keys = [NSMutableArray array];
@@ -306,26 +296,27 @@ void bg_cleanCache(){
 /**
  判断并获取字段类型
  */
-+(NSString*)keyAndType:(NSString*)param{
-    NSArray* array = [param componentsSeparatedByString:@"*"];
-    NSString* key = array[0];
-    NSString* type = array[1];
-    NSString* SqlType;
++ (NSString *)keyAndType:(NSString *)param {
+    NSArray *array = [param componentsSeparatedByString:@"*"];
+    NSString *key = array[0];
+    NSString *type = array[1];
+    NSString *SqlType;
     type = [self getSqlType:type];
     if ([SqlText isEqualToString:type]) {
         SqlType = SqlText;
-    }else if ([SqlReal isEqualToString:type]){
+    } else if ([SqlReal isEqualToString:type]) {
         SqlType = SqlReal;
-    }else if ([SqlInteger isEqualToString:type]){
+    } else if ([SqlInteger isEqualToString:type]) {
         SqlType = SqlInteger;
-    }else{
+    } else {
         NSAssert(NO,@"没有找到匹配的类型!");
     }
+    
     //设置列名(BG_ + 属性名),加BG_是为了防止和数据库关键字发生冲突.
     return [NSString stringWithFormat:@"%@ %@",[NSString stringWithFormat:@"%@%@",BG,key],SqlType];
 }
 
-+(NSString*)getSqlType:(NSString*)type{
++ (NSString *)getSqlType:(NSString *)type {
     if([type isEqualToString:@"i"]||[type isEqualToString:@"I"]||
              [type isEqualToString:@"s"]||[type isEqualToString:@"S"]||
              [type isEqualToString:@"q"]||[type isEqualToString:@"Q"]||
@@ -333,22 +324,22 @@ void bg_cleanCache(){
              [type isEqualToString:@"c"]||[type isEqualToString:@"C"]|
              [type isEqualToString:@"l"]||[type isEqualToString:@"L"]) {
         return SqlInteger;
-    }else if([type isEqualToString:@"f"]||[type isEqualToString:@"F"]||
-             [type isEqualToString:@"d"]||[type isEqualToString:@"D"]){
+    } else if([type isEqualToString:@"f"]||[type isEqualToString:@"F"]||
+             [type isEqualToString:@"d"]||[type isEqualToString:@"D"]) {
         return SqlReal;
-    }else{
+    } else {
         return SqlText;
     }
 }
 //对象转json字符
-+(NSString *)jsonStringWithObject:(id)object{
++ (NSString *)jsonStringWithObject:(id)object {
     NSMutableDictionary* keyValueDict = [NSMutableDictionary dictionary];
     NSArray* keyAndTypes = [self getClassIvarList:[object class] onlyKey:NO];
     for(NSString* keyAndType in keyAndTypes){
         NSArray* arr = [keyAndType componentsSeparatedByString:@"*"];
         NSString* propertyName = arr[0];
         NSString* propertyType = arr[1];
-        if(![propertyName isEqualToString:bg_primaryKey]){
+        if(![propertyName isEqualToString:stringify(id)]){
             id propertyValue = [object valueForKey:propertyName];
             if (propertyValue){
                 id Value = [self getSqlValue:propertyValue type:propertyType encode:YES];
@@ -356,7 +347,7 @@ void bg_cleanCache(){
             }
         }
     }
-    return [self dataToJson:keyValueDict];
+    return keyValueDict.jsonString;
 }
 //根据value类型返回用于数组插入数据库的NSDictionary
 +(NSDictionary*)dictionaryForArrayInsert:(id)value{
@@ -385,15 +376,15 @@ void bg_cleanCache(){
     
 }
 //NSArray,NSSet转json字符
-+(NSString*)jsonStringWithArray:(id)array{
-    if ([NSJSONSerialization isValidJSONObject:array]) {
-        return [self dataToJson:array];
++ (NSString *)jsonStringWithArray:(id)array {
+    if (objectype(array).isJsonObject) {
+        return objectype(array).jsonString;
     }else{
         NSMutableArray* arrM = [NSMutableArray array];
         for(id value in array){
             [arrM addObject:[self dictionaryForArrayInsert:value]];
         }
-        return [self dataToJson:arrM];
+        return objectype(arrM).jsonString;
     }
 }
 
@@ -421,21 +412,24 @@ void bg_cleanCache(){
         return @{modelKey:[self jsonStringWithObject:value]};
     }
 }
+
 //字典转json字符串.
-+(NSString*)jsonStringWithDictionary:(NSDictionary*)dictionary{
-    if ([NSJSONSerialization isValidJSONObject:dictionary]) {
-        return [self dataToJson:dictionary];
-    }else{
-        NSMutableDictionary* dictM = [NSMutableDictionary dictionary];
-        for(NSString* key in dictionary.allKeys){
++ (NSString *)jsonStringWithDictionary:(NSDictionary *)dictionary {
+    if (dictionary.isJsonObject) {
+        return objectype(dictionary).jsonString;
+    } else {
+        NSMutableDictionary *dictM = [NSMutableDictionary dictionary];
+        for(NSString *key in dictionary.allKeys) {
             dictM[key] = [self dictionaryForDictionaryInsert:dictionary[key]];
         }
-        return [self dataToJson:dictM];
+        
+        return objectype(dictM).jsonString;
     }
 
 }
+
 //NSMapTable转json字符串.
-+(NSString*)jsonStringWithMapTable:(NSMapTable*)mapTable{
++ (NSString *)jsonStringWithMapTable:(NSMapTable *)mapTable {
     NSMutableDictionary* dictM = [NSMutableDictionary dictionary];
     NSArray* objects = mapTable.objectEnumerator.allObjects;
     NSArray* keys = mapTable.keyEnumerator.allObjects;
@@ -444,51 +438,54 @@ void bg_cleanCache(){
         id object = objects[i];
         dictM[key] = [self dictionaryForDictionaryInsert:object];
     }
-    return [self dataToJson:dictM];
+    return dictM.jsonString;
 }
+
 //NSHashTable转json字符串.
-+(NSString*)jsonStringWithNSHashTable:(NSHashTable*)hashTable{
++ (NSString *)jsonStringWithNSHashTable:(NSHashTable *)hashTable {
     NSMutableArray* arrM = [NSMutableArray array];
     NSArray* values = hashTable.objectEnumerator.allObjects;
     for(id value in values){
         [arrM addObject:[self dictionaryForArrayInsert:value]];
     }
-    return  [self dataToJson:arrM];
+    return arrM.jsonString;
 }
+
 //NSDate转字符串,格式: yyyy-MM-dd HH:mm:ss
-+(NSString*)stringWithDate:(NSDate*)date{
-    NSDateFormatter* formatter = [NSDateFormatter new];
++ (NSString *)stringWithDate:(NSDate *)date {
+    NSDateFormatter *formatter = [NSDateFormatter new];
     formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
     return [formatter stringFromDate:date];
 }
+
 //跟value和数据类型type 和编解码标志 返回编码插入数据库的值,或解码数据库的值.
-+(id)getSqlValue:(id)value type:(NSString*)type encode:(BOOL)encode{
++ (id)getSqlValue:(id)value type:(NSString *)type encode:(BOOL)encode {
     if(!value || [value isKindOfClass:[NSNull class]])return nil;
     
     if([type containsString:@"String"]){
         if([type containsString:@"AttributedString"]){//处理富文本.
             if(encode) {
                 return [[NSKeyedArchiver archivedDataWithRootObject:value] base64EncodedDataWithOptions:NSDataBase64Encoding64CharacterLineLength];
-            }else{
-               NSData* data = [[NSData alloc] initWithBase64EncodedString:value options:NSDataBase64DecodingIgnoreUnknownCharacters];
+            } else {
+                NSData* data = [[NSData alloc] initWithBase64EncodedString:value options:NSDataBase64DecodingIgnoreUnknownCharacters];
                 return [NSKeyedUnarchiver unarchiveObjectWithData:data];
             }
-        }else{
+        } else {
             return value;
         }
-    }else if([type containsString:@"Number"]){
+    } else if([type containsString:@"Number"]) {
         if(encode) {
             return [NSString stringWithFormat:@"%@",value];
-        }else{
+        } else {
             return [[NSNumberFormatter new] numberFromString:value];
         }
-    }else if([type containsString:@"Array"]){
+    } else if([type containsString:@"Array"]) {
         if(encode){
             return [self jsonStringWithArray:value];
         }else{
             return [self arrayFromJsonString:value];
         }
-    }else if([type containsString:@"Dictionary"]){
+    } else if([type containsString:@"Dictionary"]){
         if(encode){
             return [self jsonStringWithDictionary:value];
         }else{
@@ -590,7 +587,7 @@ void bg_cleanCache(){
             NSString* jsonString = [self jsonStringWithObject:value];
             return jsonString;
         }else{
-            NSDictionary* dict = [self jsonWithString:value];
+            NSDictionary *dict = stringtype(value).jsonObject;
             type = [type substringWithRange:NSMakeRange(2,type.length-3)];
             return [self objectFromJsonStringWithClassName:type valueDict:dict];
         }
@@ -627,19 +624,20 @@ void bg_cleanCache(){
 /**
  字典或json格式字符转模型用的处理函数.
  */
-+(id)bg_objectWithClass:(__unsafe_unretained _Nonnull Class)cla value:(id)value{
++ (id)bg_objectWithClass:(__unsafe_unretained _Nonnull Class)cla value:(id)value {
     if(value == nil)return nil;
     
     NSMutableDictionary* dataDict;
     id object = [cla new];
     if ([value isKindOfClass:[NSString class]]){
         NSAssert([NSJSONSerialization isValidJSONObject:value],@"json数据格式错误!");
-        dataDict = [[NSMutableDictionary alloc] initWithDictionary:[self jsonWithString:value] copyItems:YES];
-    }else if ([value isKindOfClass:[NSDictionary class]]){
+        dataDict = [[NSMutableDictionary alloc] initWithDictionary:stringtype(value).jsonObject copyItems:YES];
+    } else if ([value isKindOfClass:[NSDictionary class]]) {
         dataDict = [[NSMutableDictionary alloc] initWithDictionary:value copyItems:YES];
-    }else{
+    } else {
         NSAssert(NO,@"数据格式错误!, 只能转换字典或json格式数据.");
     }
+    
     NSDictionary* const objectClaInArr = [self isRespondsToSelector:NSSelectorFromString(@"bg_objectClassInArray") forClass:[object class]];
     NSDictionary* const objectClaForCustom = [self isRespondsToSelector:NSSelectorFromString(@"bg_objectClassForCustom") forClass:[object class]];
     NSDictionary* const bg_replacedKeyFromPropertyNameDict = [self isRespondsToSelector:NSSelectorFromString(@"bg_replacedKeyFromPropertyName") forClass:[object class]];
@@ -764,7 +762,7 @@ void bg_cleanCache(){
        return [self dictionaryFromJsonString:dictionary[key]];
     }else if ([key containsString:BGModel]){
         NSString* claName = [key componentsSeparatedByString:@"*"].lastObject;
-        NSDictionary* valueDict = [self jsonWithString:dictionary[key]];
+        NSDictionary* valueDict = stringtype(dictionary[key]).jsonObject;
         id object = [self objectFromJsonStringWithClassName:claName valueDict:valueDict];
         return object;
     }else{
@@ -774,18 +772,18 @@ void bg_cleanCache(){
 
 }
 //json字符串转NSArray
-+(NSArray*)arrayFromJsonString:(NSString*)jsonString{
++ (NSArray *)arrayFromJsonString:(NSString *)jsonString {
     if(!jsonString || [jsonString isKindOfClass:[NSNull class]])return nil;
     
     if([jsonString containsString:BGModel] || [jsonString containsString:BGData]){
         NSMutableArray* arrM = [NSMutableArray array];
-        NSArray* array = [self jsonWithString:jsonString];
+        NSArray* array = jsonString.jsonObject;
         for(NSDictionary* dict in array){
             [arrM addObject:[self valueForArrayRead:dict]];
         }
         return arrM;
-    }else{
-        return [self jsonWithString:jsonString];
+    } else {
+        return jsonString.jsonObject;
     }
 }
 
@@ -805,7 +803,7 @@ void bg_cleanCache(){
         return [self dictionaryFromJsonString:dictDest[keyDest]];
     }else if([keyDest containsString:BGModel]){
         NSString* claName = [keyDest componentsSeparatedByString:@"*"].lastObject;
-        NSDictionary* valueDict = [self jsonWithString:dictDest[keyDest]];
+        NSDictionary* valueDict = stringtype(dictDest[keyDest]).jsonObject;
         return [self objectFromJsonStringWithClassName:claName valueDict:valueDict];
     }else{
         NSAssert(NO,@"没有找到匹配的解析类型");
@@ -814,27 +812,30 @@ void bg_cleanCache(){
 
 }
 //json字符串转NSDictionary
-+(NSDictionary*)dictionaryFromJsonString:(NSString*)jsonString{
++ (NSDictionary *)dictionaryFromJsonString:(NSString *)jsonString {
     if(!jsonString || [jsonString isKindOfClass:[NSNull class]])return nil;
     
     if([jsonString containsString:BGModel] || [jsonString containsString:BGData]){
         NSMutableDictionary* dictM = [NSMutableDictionary dictionary];
-        NSDictionary* dictSrc = [self jsonWithString:jsonString];
-        for(NSString* keySrc in dictSrc.allKeys){
-            NSDictionary* dictDest = dictSrc[keySrc];
-            dictM[keySrc]= [self valueForDictionaryRead:dictDest];
+        NSDictionary* dictSrc = jsonString.jsonObject;
+        
+        for(NSString *keySrc in dictSrc.allKeys) {
+            NSDictionary *dictDest = dictSrc[keySrc];
+            dictM[keySrc] = [self valueForDictionaryRead:dictDest];
         }
+        
         return dictM;
-    }else{
-        return [self jsonWithString:jsonString];
+    } else {
+        return jsonString.jsonObject;
     }
 }
+
 //json字符串转NSMapTable
-+(NSMapTable*)mapTableFromJsonString:(NSString*)jsonString{
-    if(!jsonString || [jsonString isKindOfClass:[NSNull class]])return nil;
++ (NSMapTable *)mapTableFromJsonString:(NSString *)jsonString {
+    if(is_string_empty(jsonString)) return nil;
     
-    NSDictionary* dict = [self jsonWithString:jsonString];
-    NSMapTable* mapTable = [NSMapTable new];
+    NSDictionary *dict = jsonString.jsonObject;
+    NSMapTable *mapTable = [NSMapTable new];
     for(NSString* key in dict.allKeys){
         id value = [self valueForDictionaryRead:dict[key]];
         [mapTable setObject:value forKey:key];
@@ -845,25 +846,27 @@ void bg_cleanCache(){
 +(NSHashTable*)hashTableFromJsonString:(NSString*)jsonString{
     if(!jsonString || [jsonString isKindOfClass:[NSNull class]])return nil;
     
-    NSArray* arr = [self jsonWithString:jsonString];
-    NSHashTable* hashTable = [NSHashTable new];
+    NSArray *arr = jsonString.jsonObject;
+    NSHashTable *hashTable = [NSHashTable new];
     for (id obj in arr) {
         id value = [self valueForArrayRead:obj];
         [hashTable addObject:value];
     }
     return hashTable;
 }
+
 //json字符串转NSDate
-+(NSDate*)dateFromString:(NSString*)jsonString{
-    if(!jsonString || [jsonString isKindOfClass:[NSNull class]])return nil;
++ (NSDate *)dateFromString:(NSString *)jsonString {
+    if (is_string_empty(jsonString)) return nil;
     
     NSDateFormatter *formatter = [NSDateFormatter new];
     formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
     NSDate *date = [formatter dateFromString:jsonString];
     return date;
 }
+
 //转换从数据库中读取出来的数据.
-+(NSArray*)tansformDataFromSqlDataWithTableName:(NSString*)tableName array:(NSArray*)array{
++ (NSArray *)tansformDataFromSqlDataWithTableName:(NSString *)tableName array:(NSArray *)array {
     NSMutableArray* arrM = [NSMutableArray array];
     for(NSDictionary* dict in array){
         id object = [self objectFromJsonStringWithClassName:tableName valueDict:dict];
@@ -874,7 +877,7 @@ void bg_cleanCache(){
 /**
 判断类是否实现了某个类方法.
  */
-+(id)isRespondsToSelector:(SEL)selector forClass:(Class)cla{
++ (id)isRespondsToSelector:(SEL)selector forClass:(Class)cla {
     id obj = nil;
     if([cla respondsToSelector:selector]){
 #pragma clang diagnostic push
@@ -887,7 +890,7 @@ void bg_cleanCache(){
 /**
  判断对象是否实现了某个方法.
  */
-+(id)isRespondsToSelector:(SEL)selector forObject:(id)object{
++ (id)isRespondsToSelector:(SEL)selector forObject:(id)object {
     id obj = nil;
     if([object respondsToSelector:selector]){
 #pragma clang diagnostic push
@@ -916,7 +919,7 @@ void bg_cleanCache(){
     }
     //移除创建时间字段不做更新.
     if (update) {
-         [valueDict removeObjectForKey:[NSString stringWithFormat:@"%@%@",BG,bg_createTimeKey]];
+         [valueDict removeObjectForKey:[NSString stringWithFormat:@"%@%@",BG, stringify(createTime)]];
     }
     return valueDict;
 }

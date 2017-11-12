@@ -216,26 +216,26 @@ static const void * const BGFMDBDispatchQueueSpecificKey = &BGFMDBDispatchQueueS
         BOOL uniqueKeyFlag = NO;
         for (int i = 0; i < keys.count; i++) {
             
-            if(uniqueKey){
-                if([_DatabaseTool isUniqueKey:uniqueKey with:keys[i]]){
+            if (uniqueKey) {
+                if([_DatabaseTool isUniqueKey:uniqueKey with:keys[i]]) {
                     uniqueKeyFlag = YES;
                     [sql appendFormat:@"%@ unique",[_DatabaseTool keyAndType:keys[i]]];
-                }else if ([[keys[i] componentsSeparatedByString:@"*"][0] isEqualToString:bg_primaryKey]){
+                } else if ([[keys[i] componentsSeparatedByString:@"*"][0] isEqualToString:stringify(id)]) {
                     [sql appendFormat:@"%@ primary key autoincrement",[_DatabaseTool keyAndType:keys[i]]];
-                }else{
+                } else {
                     [sql appendString:[_DatabaseTool keyAndType:keys[i]]];
                 }
-            }else{
-                if ([[keys[i] componentsSeparatedByString:@"*"][0] isEqualToString:bg_primaryKey]){
+            } else {
+                if ([[keys[i] componentsSeparatedByString:@"*"][0] isEqualToString:stringify(id)]) {
                     [sql appendFormat:@"%@ primary key autoincrement",[_DatabaseTool keyAndType:keys[i]]];
-                }else{
+                } else {
                     [sql appendString:[_DatabaseTool keyAndType:keys[i]]];
                 }
             }
             
             if (i == (keys.count-1)) {
                 [sql appendString:@");"];
-            }else{
+            } else {
                 [sql appendString:@","];
             }
         }
@@ -1369,7 +1369,7 @@ static const void * const BGFMDBDispatchQueueSpecificKey = &BGFMDBDispatchQueueS
 /**
  存储一个对象.
  */
-- (void)saveObject:(id _Nonnull)object ignoredKeys:(NSArray* const _Nullable)ignoredKeys complete:(DatabaseSuccessBlock)complete {
+- (void)saveObject:(nonnull id)object ignoredKeys:(nullable NSArray * const)ignoredKeys complete:(DatabaseSuccessBlock)complete {
     dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
     @autoreleasepool {
         [_DatabaseTool ifNotExistWillCreateTableWithObject:object ignoredKeys:ignoredKeys];
@@ -1378,7 +1378,7 @@ static const void * const BGFMDBDispatchQueueSpecificKey = &BGFMDBDispatchQueueS
     dispatch_semaphore_signal(self.semaphore);
 }
 
--(void)queryObjectQueueWithClass:(__unsafe_unretained _Nonnull Class)cla where:(NSArray* _Nullable)where param:(NSString* _Nullable)param complete:(DatabaseCompleteBlcok)complete{
+- (void)queryObjectQueueWithClass:(nonnull __unsafe_unretained Class)cla where:(nullable NSArray *)where param:(NSString* _Nullable)param complete:(DatabaseCompleteBlcok)complete{
     //检查是否建立了跟对象相对应的数据表
     NSString* tableName = NSStringFromClass(cla);
     __weak typeof(self) BGSelf = self;
@@ -1747,7 +1747,7 @@ static const void * const BGFMDBDispatchQueueSpecificKey = &BGFMDBDispatchQueueS
         __weak typeof(self) BGSelf = self;
         [self isExistWithTableName:name complete:^(BOOL isSuccess) {
             if (!isSuccess) {
-                [BGSelf createTableWithTableName:name keys:@[[NSString stringWithFormat:@"%@*i",bg_primaryKey],@"param*@\"NSString\"",@"index*i"] uniqueKey:nil complete:nil];
+                [BGSelf createTableWithTableName:name keys:@[[NSString stringWithFormat:@"%@*i",stringify(id)],@"param*@\"NSString\"",@"index*i"] uniqueKey:nil complete:nil];
             }
         }];
         __block NSInteger sqlCount = [self countQueueForTable:name where:nil];
@@ -1778,7 +1778,7 @@ static const void * const BGFMDBDispatchQueueSpecificKey = &BGFMDBDispatchQueueS
     NSAssert(name,@"唯一标识名不能为空!");
     dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
     @autoreleasepool {
-        NSString* condition = [NSString stringWithFormat:@"order by %@ asc",bg_sqlKey(bg_primaryKey)];
+        NSString* condition = [NSString stringWithFormat:@"order by %@ asc",bg_sqlKey(stringify(id))];
         [self queryQueueWithTableName:name conditions:condition complete:^(NSArray * _Nullable array) {
             NSMutableArray* resultM = nil;
             if(array&&array.count){
@@ -1876,7 +1876,7 @@ static const void * const BGFMDBDispatchQueueSpecificKey = &BGFMDBDispatchQueueS
         NSString* const tableName = @"BG_Dictionary";
         [self isExistWithTableName:tableName complete:^(BOOL isSuccess) {
             if (!isSuccess) {
-                [BGSelf createTableWithTableName:tableName keys:@[[NSString stringWithFormat:@"%@*i",bg_primaryKey],@"key*@\"NSString\"",@"value*@\"NSString\""] uniqueKey:@"key" complete:nil];
+                [BGSelf createTableWithTableName:tableName keys:@[[NSString stringWithFormat:@"%@*i",stringify(id)],@"key*@\"NSString\"",@"value*@\"NSString\""] uniqueKey:@"key" complete:nil];
             }
         }];
         __block NSInteger num = 0;
@@ -1939,7 +1939,7 @@ static const void * const BGFMDBDispatchQueueSpecificKey = &BGFMDBDispatchQueueS
     dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
     @autoreleasepool{
         NSString* const tableName = @"BG_Dictionary";
-        NSString* condition = [NSString stringWithFormat:@"order by %@ asc",bg_sqlKey(bg_primaryKey)];
+        NSString* condition = [NSString stringWithFormat:@"order by %@ asc",bg_sqlKey(stringify(id))];
         [self queryQueueWithTableName:tableName conditions:condition complete:^(NSArray * _Nullable array) {
             BOOL stopFlag = NO;
             for(NSDictionary* dict in array){

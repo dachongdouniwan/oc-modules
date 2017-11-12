@@ -8,15 +8,8 @@
 
 #import "_db_cache.h"
 
-static NSCache* keyCaches;
-@implementation NSCache (BGCache)
+@implementation _DBCache
 
-+(instancetype)bg_cache{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        keyCaches = [NSCache new];
-    });
-    return keyCaches;
-}
+@def_singleton( _DBCache )
 
 @end

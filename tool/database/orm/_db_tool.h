@@ -14,27 +14,20 @@
 @interface _DatabaseTool : NSObject
 
 /**
- json字符转json格式数据 .
- */
-+ (id _Nonnull)jsonWithString:(NSString* _Nonnull)jsonString;
-/**
- 字典转json字符 .
- */
-+(NSString* _Nonnull)dataToJson:(id _Nonnull)data;
-/**
  根据类获取变量名列表
  @onlyKey YES:紧紧返回key,NO:在key后面添加type.
  */
-+(NSArray* _Nonnull)getClassIvarList:(__unsafe_unretained _Nonnull Class)cla onlyKey:(BOOL)onlyKey;
++ (nonnull NSArray *)getClassIvarList:(nonnull __unsafe_unretained Class)cla onlyKey:(BOOL)onlyKey;
 
 /**
  抽取封装条件数组处理函数.
  */
-+(NSArray* _Nonnull)where:(NSArray* _Nonnull)where;
++ (nonnull NSArray *)where:(nonnull NSArray *)where;
+
 /**
  封装like语句获取函数
  */
-+(NSString* _Nonnull)getLikeWithKeyPathAndValues:(NSArray* _Nonnull)keyPathValues where:(BOOL)where;
++ (nonnull NSString *)getLikeWithKeyPathAndValues:(NSArray* _Nonnull)keyPathValues where:(BOOL)where;
 /**
  判断是不是主键.
  */

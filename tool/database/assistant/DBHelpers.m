@@ -766,7 +766,7 @@ NSArray *propertiesToMapColumnsForClass(Class targetClass){
     return nil;
 }
 
-- (NSString*)jsonString{
+- (NSString *)jsonString {
     
     NSData *jsonData = [self jsonData];
     if (jsonData.length) {

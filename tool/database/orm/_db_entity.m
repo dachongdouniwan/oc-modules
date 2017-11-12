@@ -6,37 +6,20 @@
 #import "_database.h"
 #import "_db_tool.h"
 
-@implementation NSObject ( ORMEntity )
+// ----------------------------------
+// MARK: 数据库 实体 协议
+// ----------------------------------
 
-//分类中只生成属性get,set函数的声明,没有声称其实现,所以要自己实现get,set函数.
-- (NSNumber *)_identifier {
-    return objc_getAssociatedObject(self, _cmd);
-}
+@implementation _Entity
 
-- (void)set_identifier:(NSNumber *)_identifier {
-    objc_setAssociatedObject(self,@selector(_identifier),_identifier,OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (NSString *)_createTime {
-    return objc_getAssociatedObject(self, _cmd);
-}
-
-- (void)set_createTime:(NSString *)_createTime {
-    objc_setAssociatedObject(self,@selector(_createTime),_createTime,OBJC_ASSOCIATION_COPY_NONATOMIC);
-}
-
-- (NSString *)_updateTime {
-    return objc_getAssociatedObject(self, _cmd);
-}
-
-- (void)set_updateTime:(NSString *)_updateTime {
-    objc_setAssociatedObject(self,@selector(_updateTime),_updateTime,OBJC_ASSOCIATION_COPY_NONATOMIC);
-}
+@def_prop_cate_strong( NSNumber *, id, setId)
+@def_prop_cate_strong( NSString *, createTime, setCreateTime)
+@def_prop_cate_strong( NSString *, updateTime, setUpdateTime)
 
 /**
  判断这个类的数据表是否已经存在.
  */
-+ (BOOL)_isExist {
++ (BOOL)isExist {
     __block BOOL result;
     [[_Database sharedInstance] isExistWithTableName:NSStringFromClass([self class]) complete:^(BOOL isSuccess) {
         result  = isSuccess;
@@ -48,7 +31,7 @@
 /**
  同步存储.
  */
-- (BOOL)_save {
+- (BOOL)save {
     __block BOOL result;
     [[_Database sharedInstance] saveObject:self ignoredKeys:nil complete:^(BOOL isSuccess) {
         result = isSuccess;
@@ -60,12 +43,49 @@
 /**
  异步存储.
  */
-- (void)_saveAsync:(DatabaseSuccessBlock)complete {
+- (void)saveAsync:(DatabaseSuccessBlock)complete {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0), ^{
-        BOOL flag = [self _save];
+        BOOL flag = [self save];
         bg_completeBlock(flag);
     });
 }
+
+/**
+ 同步存储或更新.
+ 当"唯一约束"或"主键"存在时，此接口会更新旧数据,没有则存储新数据.
+ 提示：“唯一约束”优先级高于"主键".
+ */
+- (BOOL)saveOrUpdate {
+    NSString *uniqueKey = [_DatabaseTool isRespondsToSelector:NSSelectorFromString(stringify(_uniqueKey)) forClass:[self class]];
+    if (uniqueKey) {
+        id uniqueKeyVlaue = [self valueForKey:uniqueKey];
+        NSInteger count = [[self class] _countWhere:@[uniqueKey,@"=",uniqueKeyVlaue]];
+        if (count) { //有数据存在就更新.
+            return [self _updateWhere:@[uniqueKey,@"=",uniqueKeyVlaue]];
+        } else { //没有就存储.
+            return [self save];
+        }
+    } else {
+        if (self.id == nil) {
+            return [self save];
+        } else {
+            return [self _updateWhere:@[stringify(id),@"=",self.id]];
+        }
+    }
+}
+
+/**
+ 异步存储或更新.
+ 当"唯一约束"或"主键"存在时，此接口会更新旧数据,没有则存储新数据.
+ 提示：“唯一约束”优先级高于"主键".
+ */
+- (void)saveOrUpdateAsync:(DatabaseSuccessBlock)complete {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0), ^{
+        BOOL result = [self saveOrUpdate];
+        bg_completeBlock(result);
+    });
+}
+
 /**
  同步存入对象数组.
  @array 存放对象的数组.(数组中存放的是同一种类型的数据)
@@ -120,40 +140,7 @@
         [self _saveOrUpdateArray:array ignoreKeys:ignoreKeys];
     });
 }
-/**
- 同步存储或更新.
- 当"唯一约束"或"主键"存在时，此接口会更新旧数据,没有则存储新数据.
- 提示：“唯一约束”优先级高于"主键".
- */
-- (BOOL)_saveOrUpdate {
-    NSString* uniqueKey = [_DatabaseTool isRespondsToSelector:NSSelectorFromString(stringify(_uniqueKey)) forClass:[self class]];
-    if (uniqueKey) {
-        id uniqueKeyVlaue = [self valueForKey:uniqueKey];
-        NSInteger count = [[self class] _countWhere:@[uniqueKey,@"=",uniqueKeyVlaue]];
-        if (count){//有数据存在就更新.
-            return [self _updateWhere:@[uniqueKey,@"=",uniqueKeyVlaue]];
-        }else{//没有就存储.
-            return [self _save];
-        }
-    }else{
-        if(self._identifier == nil){
-            return [self _save];
-        }else{
-            return [self _updateWhere:@[bg_primaryKey,@"=",self._identifier]];
-        }
-    }
-}
-/**
- 异步存储或更新.
- 当"唯一约束"或"主键"存在时，此接口会更新旧数据,没有则存储新数据.
- 提示：“唯一约束”优先级高于"主键".
- */
-- (void)_saveOrUpdateAsync:(DatabaseSuccessBlock)complete {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0), ^{
-        BOOL result = [self _saveOrUpdate];
-        bg_completeBlock(result);
-    });
-}
+
 /**
  同步存储.
  @ignoreKeys 忽略掉模型中的哪些key(即模型变量)不要存储.
@@ -272,7 +259,7 @@
  查找最后一条数据
  */
 + (id)_lastObject {
-    NSArray *array = [self _findAllWithLimit:1 orderBy:bg_primaryKey desc:YES];
+    NSArray *array = [self _findAllWithLimit:1 orderBy:stringify(id) desc:YES];
     return (array && array.count) ? array.firstObject : nil;
 }
 /**
@@ -430,14 +417,14 @@
  2017-07-19 16:17 即查询2017年7月19日16时17分的数据
  2017-07-19 16:17:53 即查询2017年7月19日16时17分53秒的数据
  */
-+ (NSArray *)_findWithType:(bg_dataTimeType)type dateTime:(NSString* _Nonnull)dateTime{
++ (NSArray *)_findWithType:(bg_dataTimeType)type dateTime:(nonnull NSString *)dateTime {
     NSMutableString* like = [NSMutableString string];
     [like appendFormat:@"'%@",dateTime];
     [like appendString:@"%'"];
     if(type == bg_createTime){
-        return [self _findFormatSqlConditions:@"where %@ like %@",bg_sqlKey(bg_createTimeKey),like];
-    }else{
-        return [self _findFormatSqlConditions:@"where %@ like %@",bg_sqlKey(bg_updateTimeKey),like];
+        return [self _findFormatSqlConditions:@"where %@ like %@",bg_sqlKey(stringify(createTime)),like];
+    } else {
+        return [self _findFormatSqlConditions:@"where %@ like %@",bg_sqlKey(stringify(updateTime)),like];
     }
 }
 /**
@@ -497,7 +484,7 @@
     NSString *conditions = [[NSString alloc] initWithFormat:format arguments:ap];
     va_end (ap);
     NSAssert([conditions hasPrefix:@"set"],@"更新条件要以set开头!");
-    NSString* setAppend = [NSString stringWithFormat:@"set %@=%@,",bg_sqlKey(bg_updateTimeKey),bg_sqlValue([_DatabaseTool stringWithDate:[NSDate new]])];
+    NSString* setAppend = [NSString stringWithFormat:@"set %@=%@,",bg_sqlKey(stringify(updateTime)),bg_sqlValue([_DatabaseTool stringWithDate:[NSDate new]])];
     conditions = [conditions stringByReplacingOccurrencesOfString:@"set" withString:setAppend];
     NSString* tableName = NSStringFromClass([self class]);
     //加入更新时间字段值.
@@ -681,19 +668,19 @@
  删除某一行数据
  */
 +(BOOL)_deleteWithRow:(NSInteger)row{
-    return [self _deleteFormatSqlConditions:@"where %@ in(select %@ from %@  limit %@,1)",bg_sqlKey(bg_primaryKey),bg_sqlKey(bg_primaryKey),NSStringFromClass([self class]),@(row)];
+    return [self _deleteFormatSqlConditions:@"where %@ in(select %@ from %@  limit %@,1)",bg_sqlKey(stringify(id)),bg_sqlKey(stringify(id)),NSStringFromClass([self class]),@(row)];
 }
 /**
  删除第一条数据
  */
 +(BOOL)_deleteFirstObject{
-    return [self _deleteFormatSqlConditions:@"where %@ in(select %@ from %@  limit 0,1)",bg_sqlKey(bg_primaryKey),bg_sqlKey(bg_primaryKey),NSStringFromClass([self class])];
+    return [self _deleteFormatSqlConditions:@"where %@ in(select %@ from %@  limit 0,1)",bg_sqlKey(stringify(id)),bg_sqlKey(stringify(id)),NSStringFromClass([self class])];
 }
 /**
  删除最后一条数据
  */
 + (BOOL)_deleteLastObject {
-    return [self _deleteFormatSqlConditions:@"where %@ in(select %@ from %@ order by %@ desc limit 0,1)",bg_sqlKey(bg_primaryKey),bg_sqlKey(bg_primaryKey),NSStringFromClass([self class]),bg_sqlKey(bg_primaryKey)];
+    return [self _deleteFormatSqlConditions:@"where %@ in(select %@ from %@ order by %@ desc limit 0,1)",bg_sqlKey(stringify(id)),bg_sqlKey(stringify(id)),NSStringFromClass([self class]),bg_sqlKey(stringify(id))];
 }
 
 /**
