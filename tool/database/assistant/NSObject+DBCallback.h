@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface NSObject (DBCallback)
+
 + (BOOL)shouldInsert:(NSObject *)model;
 + (void)modelWillInsert:(NSObject *)model;
 + (void)modelDidInsert:(NSObject *)model result:(BOOL)result;

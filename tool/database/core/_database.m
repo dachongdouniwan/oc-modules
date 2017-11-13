@@ -14,11 +14,13 @@
 
 static const void * const BGFMDBDispatchQueueSpecificKey = &BGFMDBDispatchQueueSpecificKey;
 
-@interface _Database()
-//数据库队列
-@property (nonatomic, strong) FMDatabaseQueue *queue;
-@property (nonatomic, strong) FMDatabase *db;
+@interface _Database () {
+    FMDatabaseQueue *_queue;
+    FMDatabase *_db;
+}
+
 @property (nonatomic, assign) BOOL inTransaction;
+
 //递归锁.
 //@property (nonatomic, strong) NSRecursiveLock *threadLock;
 
@@ -36,39 +38,16 @@ static const void * const BGFMDBDispatchQueueSpecificKey = &BGFMDBDispatchQueueS
 
 - (void)destroy {
     if (_changeBlocks){
-        [_changeBlocks removeAllObjects];//清除所有注册列表.
+        [_changeBlocks removeAllObjects];
+        
         _changeBlocks = nil;
     }
+    
     if (_semaphore) {
         _semaphore = 0x00;
     }
-    [self closeDB];
-}
-
-/**
- 关闭数据库.
- */
-- (void)closeDB {
-    if(_disableCloseDB)return;
     
-    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
-    if(!_inTransaction && _queue) {//没有事务的情况下就关闭数据库.
-        [_queue close];//关闭数据库.
-        _queue = nil;
-    }
-    dispatch_semaphore_signal(self.semaphore);
-}
-/**
- 删除数据库文件.
- */
-+(BOOL)deleteSqlite:(NSString*)sqliteName{
-    NSString* filePath = CachePath(([NSString stringWithFormat:@"%@.db",sqliteName]));
-    NSFileManager * file_manager = [NSFileManager defaultManager];
-    NSError* error;
-    if ([file_manager fileExistsAtPath:filePath]) {
-        [file_manager removeItemAtPath:filePath error:&error];
-    }
-    return error==nil;
+    [self closeDB];
 }
 
 - (instancetype)init {
@@ -101,7 +80,7 @@ static const void * const BGFMDBDispatchQueueSpecificKey = &BGFMDBDispatchQueueS
 }
 
 //事务操作
--(void)inTransaction:(BOOL (^_Nonnull)())block{
+- (void)inTransaction:(BOOL (^_Nonnull)())block {
     NSAssert(block, @"block is nil!");
     [self executeDB:^(FMDatabase * _Nonnull db) {
         _inTransaction = db.inTransaction;
@@ -132,24 +111,54 @@ static const void * const BGFMDBDispatchQueueSpecificKey = &BGFMDBDispatchQueueS
         return;
     }
     
+    @weakify(self)
     __weak typeof(self) weakSelf = self;
     [self.queue inDatabase:^(FMDatabase *db) {
-        __strong typeof(weakSelf) strongSelf = weakSelf;
-        strongSelf.db = db;
+        @strongify(self)
+        
+        self->_db = db;
         block(db);
-        strongSelf.db = nil;
+        self->_db = nil;
     }];
     
     //[self.threadLock unlock];//解锁
 }
 
 /**
+ 关闭数据库.
+ */
+- (void)closeDB {
+    if(_disableCloseDB)return;
+    
+    dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
+    if(!_inTransaction && _queue) {//没有事务的情况下就关闭数据库.
+        [_queue close];//关闭数据库.
+        _queue = nil;
+    }
+    dispatch_semaphore_signal(self.semaphore);
+}
+
+/**
+ 删除数据库文件.
+ */
++ (BOOL)deleteSqlite:(NSString *)sqliteName {
+    NSString* filePath = CachePath(([NSString stringWithFormat:@"%@.db",sqliteName]));
+    NSFileManager * file_manager = [NSFileManager defaultManager];
+    NSError* error;
+    if ([file_manager fileExistsAtPath:filePath]) {
+        [file_manager removeItemAtPath:filePath error:&error];
+    }
+    return error==nil;
+}
+
+
+/**
  注册数据变化监听.
  */
--(BOOL)registerChangeWithName:(NSString* const _Nonnull)name block:(DatabaseDealStateBlock)block{
+- (BOOL)observeWithName:(nonnull NSString * const)name block:(DatabaseDealStateBlock)block {
     if ([_changeBlocks.allKeys containsObject:name]){
-        NSArray* array = [name componentsSeparatedByString:@"*"];
-        NSString* reason = [NSString stringWithFormat:@"%@类注册监听名称%@重复,注册监听失败!",array.firstObject,array.lastObject];
+        NSArray *array = [name componentsSeparatedByString:@"*"];
+        NSString *reason = [NSString stringWithFormat:@"%@类注册监听名称%@重复,注册监听失败!",array.firstObject,array.lastObject];
         LOG(@"%@", reason);
         return NO;
     }else{
@@ -157,22 +166,24 @@ static const void * const BGFMDBDispatchQueueSpecificKey = &BGFMDBDispatchQueueS
         return YES;
     }
 }
+
 /**
  移除数据变化监听.
  */
--(BOOL)removeChangeWithName:(NSString* const _Nonnull)name{
+- (BOOL)unobserveWithName:(nonnull NSString * const)name {
     if ([_changeBlocks.allKeys containsObject:name]){
         [_changeBlocks removeObjectForKey:name];
         return YES;
-    }else{
+    } else {
         NSArray* array = [name componentsSeparatedByString:@"*"];
         NSString* reason = [NSString stringWithFormat:@"没有找到类%@对应的%@名称监听,移除监听失败!",array.firstObject,array.lastObject];
         LOG(@"%@", reason);
         return NO;
     }
 }
--(void)doChangeWithName:(NSString* const _Nonnull)name flag:(BOOL)flag state:(DatabaseOperation)state{
-    if(flag && _changeBlocks.count>0){
+
+- (void)doChangeWithName:(nonnull NSString * const)name flag:(BOOL)flag state:(DatabaseOperation)state {
+    if(flag && _changeBlocks.count > 0){
         //开一个子线程去执行block,防止死锁.
         dispatch_async(dispatch_get_global_queue(0,0), ^{
             [_changeBlocks enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop){

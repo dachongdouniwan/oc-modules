@@ -10,9 +10,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @singleton( _Database )
 
+@property (nonatomic, strong, readonly) FMDatabaseQueue *queue;
+@property (nonatomic, strong, readonly) FMDatabase *db;
+
 // 信号量.
-@property (nonatomic, strong) dispatch_semaphore_t _Nullable semaphore;
-@property (nonatomic, copy) NSString * _Nonnull sqliteName;
+@property (nonatomic, strong, nullable) dispatch_semaphore_t semaphore;
+@property (nonatomic, copy) NSString * sqliteName;
 
 // 设置操作过程中不可关闭数据库(即closeDB函数无效).
 @property (nonatomic, assign) BOOL disableCloseDB;
@@ -25,10 +28,10 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  删除数据库文件.
  */
-+ (BOOL)deleteSqlite:(NSString * _Nonnull)sqliteName;
++ (BOOL)deleteSqlite:(NSString *)sqliteName;
 
 //事务操作
-- (void)inTransaction:(BOOL (^_Nonnull)())block;
+- (void)inTransaction:(BOOL (^)())block;
 
 /**
  注册数据变化监听.
@@ -36,13 +39,14 @@ NS_ASSUME_NONNULL_BEGIN
  @name 注册名称,此字符串唯一,不可重复,移除监听的时候使用此字符串移除.
  @return YES: 注册监听成功; NO: 注册监听失败.
  */
-- (BOOL)registerChangeWithName:(NSString * const _Nonnull)name block:( nullable DatabaseDealStateBlock)block;
+- (BOOL)observeWithName:(NSString * const)name block:(DatabaseDealStateBlock)block;
+
 /**
  移除数据变化监听.
  @name 注册监听的时候使用的名称.
  @return YES: 移除监听成功; NO: 移除监听失败.
  */
-- (BOOL)removeChangeWithName:(NSString * const _Nonnull)name;
+- (BOOL)unobserveWithName:(NSString * const)name;
 
 #pragma mark --> 以下是直接存储一个对象的API
 
@@ -52,18 +56,19 @@ NS_ASSUME_NONNULL_BEGIN
  @ignoreKeys 忽略掉模型中的哪些key(即模型变量)不要存储,nil时全部存储.
  @complete 回调的block.
  */
-- (void)saveObject:(id _Nonnull)object ignoredKeys:(NSArray * const _Nullable)ignoredKeys complete:( nullable DatabaseSuccessBlock)complete;
-- (void)saveQueueObject:(id _Nonnull)object ignoredKeys:(NSArray * const _Nullable)ignoredKeys complete:(DatabaseSuccessBlock _Nullable)complete;
+- (void)saveObject:(id)object ignoredKeys:(nullable NSArray * const)ignoredKeys complete:(nullable DatabaseSuccessBlock)complete;
+- (void)saveQueueObject:(id)object ignoredKeys:(nullable NSArray * const)ignoredKeys complete:(nullable DatabaseSuccessBlock)complete;
 /**
  批量存储.
  */
-- (void)saveObjects:(NSArray * _Nonnull)array ignoredKeys:(NSArray * const _Nullable)ignoredKeys complete:(DatabaseSuccessBlock _Nullable)complete;
+- (void)saveObjects:(NSArray *)array ignoredKeys:(nullable NSArray * const)ignoredKeys complete:(nullable DatabaseSuccessBlock)complete;
 /**
  批量更新.
  */
-- (void)updateObjects:(NSArray * _Nonnull)array ignoredKeys:(NSArray * const _Nullable)ignoredKeys complete:(DatabaseSuccessBlock _Nullable)complete;
+- (void)updateObjects:(NSArray *)array ignoredKeys:(nullable NSArray * const)ignoredKeys complete:(nullable DatabaseSuccessBlock)complete;
 
-- (void)queryTableNamesWithComplete:(DatabaseCompleteBlcok _Nullable)completeHandler;
+- (void)queryTableNamesWithComplete:(nullable DatabaseCompleteBlcok)completeHandler;
+
 /**
  根据条件查询对象.
  @param cla 代表对应的类.
