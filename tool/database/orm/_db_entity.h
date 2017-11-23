@@ -197,6 +197,7 @@ NS_ASSUME_NONNULL_BEGIN
  不支持keypath的key,即嵌套的自定义类, 形式如@[@"user.name",@"=",@"习大大"]暂不支持.
  */
 - (BOOL)updateWhere:(NSArray *)where;
+
 /**
  同步更新数据.
  @where 条件数组，形式@[@"name",@"=",@"标哥",@"age",@"=>",@(25)],即更新name=标哥,age=>25的数据.
@@ -205,6 +206,7 @@ NS_ASSUME_NONNULL_BEGIN
  不支持keypath的key,即嵌套的自定义类, 形式如@[@"user.name",@"=",@"习大大"]暂不支持(有专门的keyPath更新接口).
  */
 - (BOOL)updateWhere:(NSArray *)where ignoreKeys:(NSArray * const)ignoreKeys;
+
 /**
  异步更新.
  @where 条件数组，形式@[@"name",@"=",@"标哥",@"age",@"=>",@(25)],即更新name=标哥,age=>25的数据;

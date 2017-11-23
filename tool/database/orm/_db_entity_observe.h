@@ -2,7 +2,7 @@
 #import "_db_entity.h"
 
 /**
- *
+ *  数据观察
  */
 
 @interface _Entity ( Observe )

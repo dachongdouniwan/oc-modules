@@ -875,27 +875,26 @@ void bg_cleanCache() {
     return arrM;
 }
 
-/**
- 根据对象获取要更新或插入的字典.
- */
-+ (nonnull NSDictionary *)getDictWithObject:(id)object ignoredKeys:(NSArray* const _Nullable)ignoredKeys isUpdate:(BOOL)update{
-    NSArray<BGModelInfo*>* infos = [BGModelInfo modelInfoWithObject:object];
-    NSMutableDictionary* valueDict = [NSMutableDictionary dictionary];
++ (NSDictionary *)getDictWithObject:(id)object ignoredKeys:(NSArray * const)ignoredKeys isUpdate:(BOOL)update {
+    NSArray<BGModelInfo *> *infos = [BGModelInfo modelInfoWithObject:object];
+    NSMutableDictionary *valueDict = [NSMutableDictionary dictionary];
     if (ignoredKeys) {
-        for(BGModelInfo* info in infos){
-            if(![ignoredKeys containsObject:info.propertyName]){
+        for (BGModelInfo *info in infos) {
+            if(! [ignoredKeys containsObject:info.propertyName]) {
                 valueDict[info.sqlColumnName] = info.sqlColumnValue;
             }
         }
-    }else{
-        for(BGModelInfo* info in infos){
+    } else {
+        for (BGModelInfo *info in infos) {
             valueDict[info.sqlColumnName] = info.sqlColumnValue;
         }
     }
-    //移除创建时间字段不做更新.
+    
+    // 移除创建时间字段不做更新.
     if (update) {
          [valueDict removeObjectForKey:[NSString stringWithFormat:@"%@%@",BG, stringify(createTime)]];
     }
+    
     return valueDict;
 }
 

@@ -39,7 +39,7 @@
 }
 
 - (NSString *)MD5String {
-    NSData * value = [self MD5Data];
+    NSData *value = [self MD5Data];
     if ( value ) {
         char			tmp[16];
         unsigned char *	hex = (unsigned char *)malloc( 2048 + 1 );

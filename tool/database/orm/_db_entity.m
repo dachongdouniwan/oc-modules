@@ -451,19 +451,16 @@
         return [self findFormatSqlConditions:@"where %@ like %@",bg_sqlKey(stringify(updateTime)),like];
     }
 }
-/**
- 同步更新数据.
- @where 条件数组，形式@[@"name",@"=",@"标哥",@"age",@"=>",@(25)],即更新name=标哥,age=>25的数据.
- 可以为nil,nil时更新所有数据;
- 不支持keypath的key,即嵌套的自定义类, 形式如@[@"user.name",@"=",@"习大大"]暂不支持(有专门的keyPath更新接口).
- */
+
 - (BOOL)updateWhere:(NSArray *)where {
     __block BOOL result;
     [[_Database sharedInstance] updateWithObject:self where:where ignoreKeys:nil complete:^(BOOL isSuccess) {
         result = isSuccess;
     }];
-    //关闭数据库
+    
+    // 关闭数据库
     [[_Database sharedInstance] closeDB];
+    
     return result;
 }
 /**
@@ -473,7 +470,7 @@
  @ignoreKeys 忽略哪些key不用更新.
  不支持keypath的key,即嵌套的自定义类, 形式如@[@"user.name",@"=",@"习大大"]暂不支持(有专门的keyPath更新接口).
  */
--(BOOL)updateWhere:(NSArray *)where ignoreKeys:(NSArray * const)ignoreKeys {
+- (BOOL)updateWhere:(NSArray *)where ignoreKeys:(NSArray * const)ignoreKeys {
     __block BOOL result;
     [[_Database sharedInstance] updateWithObject:self where:where ignoreKeys:ignoreKeys complete:^(BOOL isSuccess) {
         result = isSuccess;

@@ -1216,19 +1216,18 @@ static const void * const BGFMDBDispatchQueueSpecificKey = &BGFMDBDispatchQueueS
     dispatch_semaphore_signal(self.semaphore);
 }
 
-/**
- 判断类属性是否有改变,智能刷新.
- */
--(void)ifIvarChangeForClass:(Class)cla ignoredKeys:(NSArray*)ignoredkeys{
+- (void)ifIvarChangeForClass:(Class)cla ignoredKeys:(NSArray *)ignoredkeys {
     @autoreleasepool {
-        NSString* tableName = NSStringFromClass(cla);
-        NSMutableArray* newKeys = [NSMutableArray array];
-        NSMutableArray* sqlKeys = [NSMutableArray array];
-        [self executeDB:^(FMDatabase * _Nonnull db){
-            NSString* SQL = [NSString stringWithFormat:@"select * from %@ limit 0,1;",tableName];
-            FMResultSet* rs = [db executeQuery:SQL];
+        NSString *tableName = NSStringFromClass(cla);
+        NSMutableArray *newKeys = [NSMutableArray array];
+        NSMutableArray *sqlKeys = [NSMutableArray array];
+        
+        [self executeDB:^(FMDatabase * _Nonnull db) {
+            NSString *SQL = [NSString stringWithFormat:@"select * from %@ limit 0,1;",tableName];
+            FMResultSet *rs = [db executeQuery:SQL];
+            
             // 2.遍历结果集
-            if(rs.next){
+            if(rs.next) {
                 //获取数据库字段名集合.
                 int columnCount = [rs columnCount];
                 NSMutableArray* tempArrayM = [NSMutableArray array];
@@ -1263,16 +1262,19 @@ static const void * const BGFMDBDispatchQueueSpecificKey = &BGFMDBDispatchQueueS
             
         }];
         
-        if((sqlKeys.count==0) && (newKeys.count>0)){
+        if((sqlKeys.count == 0) && (newKeys.count > 0)) {
             //此处只是增加了新的列.
-            for(NSString* key in newKeys){
+            for (NSString *key in newKeys) {
+                
                 //添加新字段
                 [self addTable:tableName key:key complete:^(BOOL isSuccess){}];
             }
-        }else if (sqlKeys.count>0){
+        } else if (sqlKeys.count > 0) {
+            
             //字段发生改变,减少或名称变化,实行刷新数据库.
+            
             [self refreshQueueTable:tableName keys:[_DatabaseTool getClassIvarList:cla onlyKey:NO] complete:nil];
-        }else;
+        } else ;
     }
 }
 
@@ -1468,20 +1470,25 @@ static const void * const BGFMDBDispatchQueueSpecificKey = &BGFMDBDispatchQueueS
     dispatch_semaphore_signal(self.semaphore);
 }
 
--(void)updateQueueWithObject:(id _Nonnull)object where:(NSArray* _Nullable)where ignoreKeys:(NSArray* const _Nullable)ignoreKeys complete:(DatabaseSuccessBlock)complete{
-    NSDictionary* valueDict = [_DatabaseTool getDictWithObject:object ignoredKeys:ignoreKeys isUpdate:YES];
-    NSString* tableName = NSStringFromClass([object class]);
+- (void)updateQueueWithObject:(id)object
+                        where:(NSArray *)where
+                   ignoreKeys:(NSArray * const)ignoreKeys
+                     complete:(DatabaseSuccessBlock)complete {
+    NSDictionary *valueDict = [_DatabaseTool getDictWithObject:object ignoredKeys:ignoreKeys isUpdate:YES];
+    NSString *tableName = NSStringFromClass([object class]);
+    
     __block BOOL result = NO;
-    [self isExistWithTableName:tableName complete:^(BOOL isExist){
+    [self isExistWithTableName:tableName complete:^(BOOL isExist) {
         result = isExist;
     }];
     
-    if (!result){
-        //如果不存在就返回NO
+    if (!result) {
+        // 如果不存在就返回NO
         bg_completeBlock(NO);
-    }else{
-        //自动判断是否有字段改变,自动刷新数据库.
+    } else {
+        // 自动判断是否有字段改变,自动刷新数据库.
         [self ifIvarChangeForClass:[object class] ignoredKeys:ignoreKeys];
+        
         [self updateWithTableName:tableName valueDict:valueDict where:where complete:complete];
     }
     
@@ -1490,11 +1497,18 @@ static const void * const BGFMDBDispatchQueueSpecificKey = &BGFMDBDispatchQueueS
 /**
  根据条件改变对象数据.
  */
--(void)updateWithObject:(id _Nonnull)object where:(NSArray* _Nullable)where ignoreKeys:(NSArray* const _Nullable)ignoreKeys complete:(DatabaseSuccessBlock)complete{
+- (void)updateWithObject:(nonnull id)object
+                   where:(nullable NSArray *)where
+              ignoreKeys:(nullable NSArray * const)ignoreKeys
+                complete:(DatabaseSuccessBlock)complete {
+    
+    // 锁 应该做表吧？为什么锁库？OK么？
     dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
+    
     @autoreleasepool {
         [self updateQueueWithObject:object where:where ignoreKeys:ignoreKeys complete:complete];
     }
+    
     dispatch_semaphore_signal(self.semaphore);
 }
 

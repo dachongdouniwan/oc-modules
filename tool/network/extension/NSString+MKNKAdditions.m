@@ -28,21 +28,7 @@
 
 @implementation NSString (MKNKAdditions)
 
-+ (NSString *) md5StringFromData:(NSData*) data
-{
-    const char *cStr = data.bytes;
-    unsigned char result[16];
-    CC_MD5( cStr, (unsigned int) strlen(cStr), result);
-    return [NSString stringWithFormat:
-			@"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
-			result[0], result[1], result[2], result[3], 
-			result[4], result[5], result[6], result[7],
-			result[8], result[9], result[10], result[11],
-			result[12], result[13], result[14], result[15]
-			];      
-}
-
-- (NSString*) mk_urlEncodedString { // mk_ prefix prevents a clash with a private api
+- (NSString *)mk_urlEncodedString { // mk_ prefix prevents a clash with a private api
     
     CFStringRef encodedCFString = CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, 
                                                                         (__bridge CFStringRef) self, 
@@ -58,7 +44,7 @@
     return encodedString;
 }
 
-- (NSString*) urlDecodedString {
+- (NSString *)urlDecodedString {
 
     CFStringRef decodedCFString = CFURLCreateStringByReplacingPercentEscapesUsingEncoding(kCFAllocatorDefault, 
                                                                                           (__bridge CFStringRef) self, 

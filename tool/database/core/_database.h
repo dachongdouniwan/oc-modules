@@ -97,8 +97,11 @@ NS_ASSUME_NONNULL_BEGIN
  @param object 要更新的对象.
  @param where 数组的形式 @[@"key",@"=",@"value",@"key",@">=",@"value"],为nil时设置全部.
  @param complete 回调的block
+ 
+ fixme: 这里为什么有：ignoreKeys？？？既然是更新，更新什么就是什么，忽略是几个意思？
  */
 - (void)updateWithObject:(id _Nonnull)object where:(NSArray* _Nullable)where ignoreKeys:(NSArray* const _Nullable)ignoreKeys complete:( nullable DatabaseSuccessBlock)complete;
+
 /**
  根据keyPath改变对象数据.
  @param keyPathValues 数组,形式@[@"user.student.name",Equal,@"小芳",@"user.student.conten",Contains,@"书"]
