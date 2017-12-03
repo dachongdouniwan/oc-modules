@@ -38,6 +38,10 @@
     
 }
 
+- (void)prepare:(id)data {
+    
+}
+
 + (void)asynchronously:(ObjectBlock)createCompletion {
     BaseViewModel *vm = [[self alloc] init];
     

@@ -33,6 +33,8 @@
  */
 - (void)recover; // Load data from cache
 
+- (void)prepare:(id)data;
+
 /**
  *  alloc\init\recover
  */
